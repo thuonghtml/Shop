@@ -26,6 +26,7 @@ namespace Shop
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+            #region Assets_Admin
             bundles.Add(new StyleBundle("~/assets/css").Include(
                       "~/assets/plugins/bootstrap/dist/css/bootstrap.min.css",
                       "~/assets/icon/themify-icons/themify-icons.css",
@@ -76,6 +77,40 @@ namespace Shop
                        "~/assets/plugins/modernizr/feature-detects/css-scrollbars.js",
                        "~/assets/js/script.js",
                        "~/assets/js/common-pages.js"));
+            #endregion Assets_Admin
+            #region Assets_Client
+            bundles.Add(new StyleBundle("~/assets_client/css").Include(
+                       "~/assets_client/vendor/bootstrap/css/bootstrap.min.css",
+                       "~/assets_client/fonts/font-awesome-4.7.0/css/font-awesome.min.css",
+                       "~/assets_client/fonts/iconic/css/material-design-iconic-font.min.css",
+                       "~/assets_client/fonts/linearicons-v1.0.0/icon-font.min.css",
+                       "~/assets_client/vendor/animate/animate.css",
+                       "~/assets_client/vendor/css-hamburgers/hamburgers.min.css",
+                       "~/assets_client/vendor/animsition/css/animsition.min.css",
+                       "~/assets_client/vendor/select2/select2.min.css",
+                       "~/assets_client/vendor/daterangepicker/daterangepicker.css",
+                       "~/assets_client/vendor/slick/slick.css",
+                       "~/assets_client/vendor/MagnificPopup/magnific-popup.css",
+                       "~/assets_client/vendor/perfect-scrollbar/perfect-scrollbar.css",
+                       "~/assets_client/css/util.css",
+                       "~/assets_client/css/main.css"));
+            bundles.Add(new ScriptBundle("~/assets_client/js").Include(
+                       "~/assets_client/vendor/jquery/jquery-3.2.1.min.js",
+                       "~/assets_client/vendor/animsition/js/animsition.min.js",
+                       "~/assets_client/vendor/bootstrap/js/popper.js",
+                       "~/assets_client/vendor/bootstrap/js/bootstrap.min.js",
+                       "~/assets_client/vendor/select2/select2.min.js",
+                       "~/assets_client/vendor/daterangepicker/moment.min.js",
+                       "~/assets_client/vendor/daterangepicker/daterangepicker.js",
+                       "~/assets_client/vendor/slick/slick.min.js",
+                       "~/assets_client/js/slick-custom.js",
+                       "~/assets_client/vendor/parallax100/parallax100.js",
+                       "~/assets_client/vendor/MagnificPopup/jquery.magnific-popup.min.js",
+                       "~/assets_client/vendor/isotope/isotope.pkgd.min.js",
+                       "~/assets_client/vendor/sweetalert/sweetalert.min.js",
+                       "~/assets_client/vendor/perfect-scrollbar/perfect-scrollbar.min.js",
+                       "~/assets_client/js/main.js"));
+            #endregion Asset_Client
         }
     }
 }
