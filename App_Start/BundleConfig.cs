@@ -66,6 +66,16 @@ namespace Shop
                        "~/assets/js/demo-12.js",
                        "~/assets/js/jquery.mCustomScrollbar.concat.min.js",
                        "~/assets/js/jquery.mousewheel.min.js"));
+            bundles.Add(new ScriptBundle("~/asset/page/login/js").Include(
+                       "~/assets/plugins/jquery/dist/jquery.min.js",
+                       "~/assets/plugins/jquery-ui/jquery-ui.min.js",
+                       "~/assets/plugins/tether/dist/js/tether.min.js",
+                       "~/assets/plugins/bootstrap/dist/js/bootstrap.min.js",
+                       "~/assets/plugins/jquery-slimscroll/jquery.slimscroll.js",
+                       "~/assets/plugins/modernizr/modernizr.js",
+                       "~/assets/plugins/modernizr/feature-detects/css-scrollbars.js",
+                       "~/assets/js/script.js",
+                       "~/assets/js/common-pages.js"));
         }
     }
 }
