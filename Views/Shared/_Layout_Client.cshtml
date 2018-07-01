@@ -38,35 +38,35 @@
                     </a>
 
                     <!-- Menu desktop -->
-                    <div class="menu-desktop">
+                    <div class="menu-desktop" id="mymenu">
                         <ul class="main-menu">
                             <li class="active-menu">
-                                <a href="index.html">Home</a>
-                                <ul class="sub-menu">
+                                <a href="@Url.Action("Index", "Home")">Home</a>
+                                @*<ul class="sub-menu">
                                     <li><a href="index.html">Homepage 1</a></li>
                                     <li><a href="home-02.html">Homepage 2</a></li>
                                     <li><a href="home-03.html">Homepage 3</a></li>
-                                </ul>
+                                </ul>*@
                             </li>
 
                             <li>
-                                <a href="product.html">Shop</a>
+                                <a href="@Url.Action("Shop", "Home")">Shop</a>
                             </li>
 
                             <li class="label1" data-label1="hot">
-                                <a href="shoping-cart.html">Features</a>
+                                <a href="@Url.Action("Features", "Home")">Features</a>
                             </li>
 
                             <li>
-                                <a href="blog.html">Blog</a>
+                                <a href="@Url.Action("Blog", "Home")">Blog</a>
                             </li>
 
                             <li>
-                                <a href="About">About</a>
+                                <a href="@Url.Action("About", "Home")">About</a>
                             </li>
 
                             <li>
-                                <a href="Contact">Contact</a>
+                                <a href="@Url.Action("Contact", "Home")">Contact</a>
                             </li>
                         </ul>
                     </div>
@@ -678,6 +678,17 @@
 
         gtag('config', 'UA-23581568-13');
     </script>
-
+    <script type="text/javascript">
+        var path = window.location.pathname;
+        path = path.replace(/\/$/, "");
+        path = decodeURIComponent(path);
+        $(".main-menu a").each(function () {
+            var href = $(this).attr('href');
+            if (path.substring(0, href.length) === href) {
+                $(".main-menu li.active-menu").removeClass('active-menu');
+                $(this).closest('li').addClass('active-menu')
+            }
+        });
+    </script>
 </body>
 </html>
