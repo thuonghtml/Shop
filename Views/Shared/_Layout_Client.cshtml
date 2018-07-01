@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
     @Styles.Render("~/assets_client/css")
-  <!--===============================================================================================-->
+    <!--===============================================================================================-->
     @RenderSection("Css", required: false)
 </head>
 <body class="animsition">
@@ -21,11 +21,25 @@
                     <div class="left-top-bar">
                         Free shipping for standard order over $100
                     </div>
-                    <div class="right-top-bar flex-w h-full">
-                        <a href="/Account/Login" class="flex-c-m trans-04 p-lr-25">
-                            Login
-                        </a>
-                    </div>
+                    @if (User.Identity.Name == "")
+                    {
+                        <div class="right-top-bar flex-w h-full">
+                            <a href="@Url.Action("Login", "Account",new { returnUrl = HttpContext.Current.Request.Url.PathAndQuery })" class="flex-c-m trans-04 p-lr-25">
+                                Login
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            @User.Identity.Name
+                            <a href="@Url.Action("LogOff", "Account")">
+                                <img src="~/assets_client/images/icons/log-out-icon-1513550.png" style="padding-left:5px" width="20" height="20" />
+                            </a>
+
+                        </div>
+                    }
+
                 </div>
             </div>
 
@@ -33,7 +47,7 @@
                 <nav class="limiter-menu-desktop container">
 
                     <!-- Logo desktop -->
-                    <a href="#" class="logo">
+                    <a href="@Url.Action("Index", "Home")" class="logo">
                         <img src="~/assets_client/images/icons/logo-01.png" alt="IMG-LOGO">
                     </a>
 
@@ -43,10 +57,10 @@
                             <li class="active-menu">
                                 <a href="@Url.Action("Index", "Home")">Home</a>
                                 @*<ul class="sub-menu">
-                                    <li><a href="index.html">Homepage 1</a></li>
-                                    <li><a href="home-02.html">Homepage 2</a></li>
-                                    <li><a href="home-03.html">Homepage 3</a></li>
-                                </ul>*@
+                                        <li><a href="index.html">Homepage 1</a></li>
+                                        <li><a href="home-02.html">Homepage 2</a></li>
+                                        <li><a href="home-03.html">Homepage 3</a></li>
+                                    </ul>*@
                             </li>
 
                             <li>
@@ -130,45 +144,58 @@
                 </li>
 
                 <li>
-                    <div class="right-top-bar flex-w h-full">
-                        <a href="/Account/Login" class="flex-c-m p-lr-10 trans-04">
-                            Login
-                        </a>
-                    </div>
+                    @if (User.Identity.Name == "")
+                    {
+                        <div class="right-top-bar flex-w h-full">
+                            <a href="@Url.Action("Login", "Account",new { returnUrl = HttpContext.Current.Request.Url.PathAndQuery })" class="flex-c-m p-lr-10 trans-04">
+                                Login
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            @User.Identity.Name
+                            <a href="@Url.Action("LogOff", "Account")">
+                                <img src="~/assets_client/images/icons/log-out-icon-1513550.png" style="padding-left:5px" width="20" height="20" />
+                            </a>
+
+                        </div>
+                    }
                 </li>
             </ul>
 
             <ul class="main-menu-m">
                 <li>
-                    <a href="index.html">Home</a>
-                    <ul class="sub-menu-m">
+                    <a href="@Url.Action("Index", "Home")">Home</a>
+                    @*<ul class="sub-menu-m">
                         <li><a href="index.html">Homepage 1</a></li>
                         <li><a href="home-02.html">Homepage 2</a></li>
                         <li><a href="home-03.html">Homepage 3</a></li>
-                    </ul>
+                    </ul>*@
                     <span class="arrow-main-menu-m">
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
                     </span>
                 </li>
 
                 <li>
-                    <a href="product.html">Shop</a>
+                    <a href="@Url.Action("Shop", "Home")">Shop</a>
                 </li>
 
                 <li>
-                    <a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Features</a>
+                    <a href="@Url.Action("Features", "Home")" class="label1 rs1" data-label1="hot">Features</a>
                 </li>
 
                 <li>
-                    <a href="blog.html">Blog</a>
+                    <a href="@Url.Action("Blog", "Home")">Blog</a>
                 </li>
 
                 <li>
-                    <a href="About">About</a>
+                    <a href="@Url.Action("About", "Home")">About</a>
                 </li>
 
                 <li>
-                    <a href="Contact">Contact</a>
+                    <a href="@Url.Action("Contact", "Home")">Contact</a>
                 </li>
             </ul>
         </div>

@@ -17,7 +17,6 @@ namespace Shop.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
         public AccountController()
         {
         }
@@ -79,6 +78,7 @@ namespace Shop.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    ViewData["User"] = model.Email;
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -333,6 +333,7 @@ namespace Shop.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    ViewData["User"] = loginInfo.Email;
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -343,7 +344,45 @@ namespace Shop.Controllers
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        return RedirectToAction("Index", "Manage");
+                    }
+                    var user = new ApplicationUser
+                    {
+                        UserName = loginInfo.DefaultUserName,
+                        Email = loginInfo.Email,
+                        PhoneNumber = null
+
+                    };
+                    var result1 = await UserManager.CreateAsync(user);
+                    if (result1.Succeeded)
+                    {
+                        result1 = await UserManager.AddLoginAsync(user.Id, loginInfo.Login);
+                        if (result1.Succeeded)
+                        {
+                            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                            if (returnUrl == null)
+                            {
+                                return RedirectToAction("Index", "Home");
+                            }
+                            else
+                            {
+                                return RedirectToLocal(returnUrl);
+                            }
+                        }
+                    }
+                    AddErrors(result1);
+                    //return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                    //return Redirect(returnUrl);
+                    if (returnUrl == null)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToLocal(returnUrl);
+                    }
             }
         }
 
@@ -381,7 +420,14 @@ namespace Shop.Controllers
                     if (result.Succeeded)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        return RedirectToLocal(returnUrl);
+                        if (returnUrl == null)
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            return RedirectToLocal(returnUrl);
+                        }
                     }
                 }
                 AddErrors(result);
@@ -393,10 +439,11 @@ namespace Shop.Controllers
 
         //
         // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            //Request.Cookies.Remove(User.Identity.GetUserId());
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
