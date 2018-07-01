@@ -371,8 +371,6 @@ namespace Shop.Controllers
                 {
                     UserName = model.Email,
                     Email = model.Email,
-                    HomeTown = model.HomeTown,
-                    BirthDate = model.BirthDate,
                     PhoneNumber = model.PhoneNumber
 
                 };
