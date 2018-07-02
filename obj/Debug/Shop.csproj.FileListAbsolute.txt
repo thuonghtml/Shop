@@ -65,7 +65,6 @@ G:\WebSite\Shop\Shop\bin\Microsoft.AI.DependencyCollector.xml
 G:\WebSite\Shop\Shop\bin\Microsoft.AI.ServerTelemetryChannel.xml
 G:\WebSite\Shop\Shop\bin\Microsoft.AI.WindowsServer.xml
 G:\WebSite\Shop\Shop\bin\Microsoft.AI.Web.xml
-G:\WebSite\Shop\Shop\obj\Debug\Shop.csprojResolveAssemblyReference.cache
 G:\WebSite\Shop\Shop\obj\Debug\Shop.csproj.CoreCompileInputs.cache
 G:\WebSite\Shop\Shop\obj\Debug\Shop.dll
 G:\WebSite\Shop\Shop\obj\Debug\Shop.pdb
