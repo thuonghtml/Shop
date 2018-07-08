@@ -36,8 +36,11 @@ namespace Shop
                       "~/assets/pages/dashboard/amchart/css/amchart.css",
                       "~/assets/pages/dashboard/horizontal-timeline/css/style.css",
                       "~/assets/css/style.css",
+                      "~/assets/plugins/animate.css/animate.css",
                       "~/assets/css/linearicons.css",
                       "~/assets/css/simple-line-icons.css",
+                      "~/assets/pages/notification/notification.css",
+                      "~/assets/css/ionicons.css",
                       "~/assets/css/jquery.mCustomScrollbar.css"));
             bundles.Add(new ScriptBundle("~/assets/js").Include(
                        "~/assets/plugins/jquery/dist/jquery.min.js",
@@ -46,6 +49,7 @@ namespace Shop
                        "~/assets/plugins/bootstrap/dist/js/bootstrap.min.js",
                        "~/assets/plugins/jquery-slimscroll/jquery.slimscroll.js",
                        "~/assets/plugins/modernizr/modernizr.js",
+                       "~/assets/js/bootstrap-growl.min.js",
                        "~/assets/plugins/modernizr/feature-detects/css-scrollbars.js",
                        "~/assets/plugins/classie/classie.js",
                        "~/assets/plugins/d3/d3.js",
@@ -76,6 +80,8 @@ namespace Shop
                        "~/assets/plugins/modernizr/modernizr.js",
                        "~/assets/plugins/modernizr/feature-detects/css-scrollbars.js",
                        "~/assets/js/script.js",
+                       "~/assets/js/bootstrap-growl.min.js",
+                       "~/assets/pages/notification/notification.js",
                        "~/assets/js/common-pages.js"));
             #endregion Assets_Admin
             #region Assets_Client

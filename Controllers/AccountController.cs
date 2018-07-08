@@ -56,6 +56,7 @@ namespace Shop.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            ViewData["Login"] = null;
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -79,14 +80,19 @@ namespace Shop.Controllers
             {
                 case SignInStatus.Success:
                     ViewData["User"] = model.Email;
-                    return RedirectToLocal(returnUrl);
+                    if (User.IsInRole("Admin") == true)
+                        return RedirectToAction("Index", "Home");
+                    else
+                        return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    
+                    ModelState.AddModelError("errorLogin", "Tên đăng nhập hoặc mật khẩu không đúng!");
+                    ViewData["Login"] = ModelState["errorLogin"].Errors[0].ErrorMessage;
                     return View(model);
             }
         }
@@ -362,6 +368,7 @@ namespace Shop.Controllers
                         if (result1.Succeeded)
                         {
                             await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                            await this.UserManager.AddToRoleAsync(user.Id, "User");
                             if (returnUrl == null)
                             {
                                 return RedirectToAction("Index", "Home");

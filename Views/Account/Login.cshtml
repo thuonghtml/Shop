@@ -67,7 +67,7 @@
                                 @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "md-float-material", role = "form" }))
                                 {
                                     @Html.AntiForgeryToken()
-                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
                                 <div class="input-group">
                                     @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Username" })
                                     <span class="md-line"></span>
@@ -109,6 +109,7 @@
         </div>
         <!-- end of container-fluid -->
     </section>
+    @Html.Hidden("Login",ViewData["Login"])
     @Scripts.Render("~/asset/page/login/js")
 </body>
 
