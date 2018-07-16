@@ -72,7 +72,7 @@ namespace Shop.Controllers
             {
                 return View(model);
             }
-
+            var user = await UserManager.FindByNameAsync(model.Email);
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
@@ -80,7 +80,7 @@ namespace Shop.Controllers
             {
                 case SignInStatus.Success:
                     ViewData["User"] = model.Email;
-                    if (User.IsInRole("Admin") == true)
+                    if (await UserManager.IsInRoleAsync(user.Id, "Admin"))
                         return RedirectToAction("Index", "Home");
                     else
                         return RedirectToLocal(returnUrl);
