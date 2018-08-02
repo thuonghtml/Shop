@@ -13,5 +13,9 @@ namespace Shop.Controllers
         {
             return View();
         }
+        public ActionResult UserProfile()
+        {
+            return View();
+        }
     }
 }

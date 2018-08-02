@@ -117,6 +117,17 @@ namespace Shop
                        "~/assets_client/vendor/perfect-scrollbar/perfect-scrollbar.min.js",
                        "~/assets_client/js/main.js"));
             #endregion Asset_Client
+
+            #region User Profile
+            bundles.Add(new StyleBundle("~/assets/page/user_profile/css").Include(
+                    "~/assets/pages/advance-elements/css/bootstrap-datetimepicker.css"
+                ));
+            bundles.Add(new ScriptBundle("~/assets/page/user_profile/js").Include(
+                    "~/assets/pages/advance-elements/moment-with-locales.min.js",
+                    "~/assets/pages/advance-elements/bootstrap-datetimepicker.min.js",
+                    "~/assets/pages/user-profile.js"
+                ));
+            #endregion
         }
     }
 }
