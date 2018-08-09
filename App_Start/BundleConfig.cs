@@ -115,7 +115,8 @@ namespace Shop
                        "~/assets_client/vendor/isotope/isotope.pkgd.min.js",
                        "~/assets_client/vendor/sweetalert/sweetalert.min.js",
                        "~/assets_client/vendor/perfect-scrollbar/perfect-scrollbar.min.js",
-                       "~/assets_client/js/main.js"));
+                       "~/assets_client/js/main.js",
+                       "~/assets_client/page/home/index.js"));
             #endregion Asset_Client
 
             #region User Profile
