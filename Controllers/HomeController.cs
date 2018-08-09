@@ -27,6 +27,18 @@ namespace Shop.Controllers
 
             return View();
         }
+        public ActionResult ShopingCart()
+        {
+            return View();
+        }
+        public ActionResult Blog()
+        {
+            return View();
+        }
+        public ActionResult Blog_Detail()
+        {
+            return View();
+        }
     }
 }
 // Nguyễn Minh Thương 111
