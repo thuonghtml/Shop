@@ -16599,7 +16599,7 @@ body[themebg-pattern="pattern9"] {
 .pcoded .pcoded-navbar[active-item-theme="theme3"] .pcoded-item > li.active > a:after {
   color: #FFF !important; }
 .pcoded .pcoded-navbar[active-item-theme="theme4"] .pcoded-item > li.pcoded-hasmenu.active > a {
-  background: #1ABC9C !important; }
+ border-left-color: #1ABC9C !important; }
 .pcoded .pcoded-navbar[active-item-theme="theme4"] .pcoded-item li .pcoded-submenu li.active > a {
   color: #1ABC9C !important; }
 .pcoded .pcoded-navbar[active-item-theme="theme4"] .pcoded-item li.pcoded-hasmenu:hover > a {
