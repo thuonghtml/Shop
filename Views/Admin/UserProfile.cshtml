@@ -20,7 +20,7 @@
                     <div class="col-md-12">
                         <div class="media-left">
                             <a href="#" class="profile-image">
-                                <img class="user-img img-circle" src="~/assets/images/user-profile/user-img.jpg" alt="user-img">
+                                <img id="imageAvartar" name="imageAvartar" class="user-img img-circle" src="~/assets/images/user-profile/user-img.jpg" alt="user-img">
                             </a>
                         </div>
                         <div class="media-body row">
@@ -32,8 +32,9 @@
                             </div>
                             <div>
                                 <div class="pull-right cover-btn">
+                                    <input id="inputChangeAvartar" name="inputChangeAvartar" type="file" hidden accept="image/*" #file>
                                     @*<button type="button" class="btn btn-primary m-r-10 m-b-5"><i class="icofont icofont-plus"></i> Follow</button>*@
-                                    <button type="button" class="btn btn-primary m-b-5"><i class="icofont icofont-funky-man"></i> Change Avatar</button>
+                                    <button type="button" id="changeAvartar" name="changeAvartar" class="btn btn-primary m-b-5"><i class="icofont icofont-funky-man"></i> Change Avatar</button>
                                 </div>
                             </div>
                         </div>

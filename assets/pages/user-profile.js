@@ -297,5 +297,12 @@ $(document).ready(function() {
             });
 
         });
-    // Mini-color js ends
+        // Mini-color js ends
+        $('#changeAvartar').on('click', function (e) {
+            $('#inputChangeAvartar').trigger('click')
+        });
+        $('#inputChangeAvartar').change(function () {
+            $('#imageAvartar').attr('src', $(this).val())
+        });
+
 });

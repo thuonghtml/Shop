@@ -17,5 +17,29 @@ namespace Shop.Controllers
         {
             return View();
         }
+        public ActionResult Category()
+        {
+            return View();
+        }
+        public ActionResult Product()
+        {
+            return View();
+        }
+        public ActionResult Warehouse()
+        {
+            return View();
+        }
+        public ActionResult Bill()
+        {
+            return View();
+        }
+        public ActionResult Report()
+        {
+            return View();
+        }
+        public ActionResult Blog()
+        {
+            return View();
+        }
     }
 }

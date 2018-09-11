@@ -8,7 +8,7 @@
     <meta name="description" content="Codedthemes">
     <meta name="keywords" content="flat ui, admin flat ui, Admin , Responsive, Landing, Bootstrap, App, Template, Mobile, iOS, Android, apple, creative app">
     <meta name="author" content="Codedthemes">
-    <title>Layout_Admin</title>
+    <title>@ViewBag.Title</title>
     <!-- Favicon icon -->
     @*<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">*@
     <!-- Google font-->
@@ -158,11 +158,11 @@
                                     <div class="dummy-column">
                                         <h2>People</h2>
                                         <a class="dummy-media-object" href="#!">
-                                            <img class="round" src="http://0.gravatar.com/avatar/81b58502541f9445253f30497e53c280?s=50&d=identicon&r=G" alt="Sara Soueidan" />
+                                            <img class="round" src="~/assets_client/images/item-cart-01.jpg" alt="Sara Soueidan" />
                                             <h3>Sara Soueidan</h3>
                                         </a>
                                         <a class="dummy-media-object" href="#!">
-                                            <img class="round" src="http://1.gravatar.com/avatar/9bc7250110c667cd35c0826059b81b75?s=50&d=identicon&r=G" alt="Shaun Dona" />
+                                            <img class="round" src="~/assets_client/images/item-cart-01.jpg" alt="Shaun Dona" />
                                             <h3>Shaun Dona</h3>
                                         </a>
                                     </div>
@@ -419,8 +419,8 @@
                             </div>
                             <div class="pcoded-navigatio-lavel">MENU</div>
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class="active pcoded-trigger ">
-                                    <a href="index.html ">
+                                <li class="pcoded-trigger ">
+                                    <a href="@Url.Action("UserProfile", "Admin")">
                                         <span class="pcoded-micon"><i class="ti-user"></i></span>
                                         <span class="pcoded-mtext">User</span>
                                         <span class="pcoded-mcaret"></span>
@@ -429,7 +429,7 @@
                             </ul>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="pcoded-trigger ">
-                                    <a href="index.html ">
+                                    <a href="@Url.Action("Category", "Admin")">
                                         <span class="pcoded-micon"><i class="ti-menu-alt"></i></span>
                                         <span class="pcoded-mtext">Category</span>
                                         <span class="pcoded-mcaret"></span>
@@ -438,7 +438,7 @@
                             </ul>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="pcoded-trigger ">
-                                    <a href="index.html ">
+                                    <a href="@Url.Action("Product", "Admin")">
                                         <span class="pcoded-micon"><i class="ti-gift"></i></span>
                                         <span class="pcoded-mtext">Product</span>
                                         <span class="pcoded-mcaret"></span>
@@ -447,7 +447,7 @@
                             </ul>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="pcoded-trigger ">
-                                    <a href="index.html ">
+                                    <a href="@Url.Action("Warehouse", "Admin")">
                                         <span class="pcoded-micon"><i class="ti-home"></i></span>
                                         <span class="pcoded-mtext">Warehouse</span>
                                         <span class="pcoded-mcaret"></span>
@@ -456,7 +456,7 @@
                             </ul>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="pcoded-trigger ">
-                                    <a href="index.html ">
+                                    <a href="@Url.Action("Bill", "Admin")">
                                         <span class="pcoded-micon"><i class="ti-write"></i></span>
                                         <span class="pcoded-mtext">Bills</span>
                                         <span class="pcoded-mcaret"></span>
@@ -464,35 +464,33 @@
                                 </li>
                             </ul>
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class="active pcoded-hasmenu ">
+                                <li class="pcoded-hasmenu ">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="ti-bar-chart"></i></span>
                                         <span class="pcoded-mtext">Report</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                     <ul class="pcoded-submenu">
-                                        <li class="">
-                                            <a href="javascript:void(0)">
+                                        <li class="report">
+                                            <a href="@Url.Action("Report", "Admin")">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Revenue</span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
-                                        <li class="pcoded-hasmenu ">
-                                            <a href="javascript:void(0)">
-                                                <span class="pcoded-micon"><i class="ti-direction-alt"></i></span>
+                                        <li class="report">
+                                            <a href="@Url.Action("Report", "Admin")">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Selling Products</span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
                                     </ul>
                                 </li>
-
-
                             </ul>
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class="pcoded-trigger ">
-                                    <a href="index.html ">
+                                <li class="pcoded-trigger">
+                                    <a href="@Url.Action("Blog", "Admin")">
                                         <span class="pcoded-micon"><i class="ti-book"></i></span>
                                         <span class="pcoded-mtext">Blog</span>
                                         <span class="pcoded-mcaret"></span>
@@ -547,6 +545,26 @@
         var windowH = $(window).height() / 2;
         $('#myBtnTop').on("click", function () {
             $('html, body').animate({ scrollTop: 0 }, 300);
+        });
+
+        var path = window.location.pathname;
+        path = path.replace(/\/$/, "");
+        path = decodeURIComponent(path);
+        var listMenuAdminTrigger = $('.pcoded-left-item .pcoded-trigger');
+        var listMenuAdminHasmenu = $('.pcoded-left-item .pcoded-hasmenu');
+        $(".pcoded-trigger a").each(function (index,item) {
+            var href = $(this).attr('href');
+          
+            if (path.substring(0, href.length) === href) {
+                console.log(123)
+                $(listMenuAdminTrigger[index]).addClass('active')
+            }
+        });
+        $(".report a").each(function () {
+            var href = $(this).attr('href');
+            if (path.substring(0, href.length) === href) {
+                $(listMenuAdminHasmenu).addClass('active')
+            }
         });
     </script>
 </body>
