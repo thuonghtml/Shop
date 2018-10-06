@@ -145,5 +145,28 @@ namespace Shop.Models
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
         }
+    
+        public virtual ObjectResult<GetCategoryWithGender_Result> GetCategoryWithGender(Nullable<bool> gender)
+        {
+            var genderParameter = gender.HasValue ?
+                new ObjectParameter("Gender", gender) :
+                new ObjectParameter("Gender", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCategoryWithGender_Result>("GetCategoryWithGender", genderParameter);
+        }
+    
+        public virtual ObjectResult<string> RandomNVARCHAR()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("RandomNVARCHAR");
+        }
+    
+        public virtual ObjectResult<GetCategoryTable_Result> GetCategoryTable(Nullable<bool> gender)
+        {
+            var genderParameter = gender.HasValue ?
+                new ObjectParameter("Gender", gender) :
+                new ObjectParameter("Gender", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCategoryTable_Result>("GetCategoryTable", genderParameter);
+        }
     }
 }

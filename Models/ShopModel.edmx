@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="STORE_DATABASEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="STORE_DATABASEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <!--Errors Found During Generation:
 warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="__MigrationHistory">
@@ -30,7 +30,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="ClaimType" Type="nvarchar(max)" />
           <Property Name="ClaimValue" Type="nvarchar(max)" />
@@ -236,6 +236,18 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Conversation_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
           <End Role="Conversation" Type="Self.Conversation" Multiplicity="*" />
@@ -316,18 +328,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Product_Category">
-          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
-          <End Role="Product" Type="Self.Product" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Product">
-              <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Warehouse_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
           <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="*" />
@@ -341,6 +341,13 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           </ReferentialConstraint>
         </Association>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="GetCategoryTable" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Gender" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="GetCategoryWithGender" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Gender" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="RandomNVARCHAR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
           <Parameter Name="owner_id" Type="int" Mode="In" />
@@ -411,6 +418,10 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             <End Role="Product" EntitySet="Product" />
             <End Role="BillDetail" EntitySet="BillDetail" />
           </AssociationSet>
+          <AssociationSet Name="FK_Category" Association="Self.FK_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
           <AssociationSet Name="FK_Conversation_Product" Association="Self.FK_Conversation_Product">
             <End Role="Product" EntitySet="Product" />
             <End Role="Conversation" EntitySet="Conversation" />
@@ -435,17 +446,12 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             <End Role="Product" EntitySet="Product" />
             <End Role="FileAttach" EntitySet="FileAttach" />
           </AssociationSet>
-          <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
-            <End Role="Category" EntitySet="Category" />
-            <End Role="Product" EntitySet="Product" />
-          </AssociationSet>
           <AssociationSet Name="FK_Warehouse_Product" Association="Self.FK_Warehouse_Product">
             <End Role="Product" EntitySet="Product" />
             <End Role="Warehouse" EntitySet="Warehouse" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="STORE_DATABASEModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -461,7 +467,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="String" Nullable="false" annotation:StoreGeneratedPattern="Identity" MaxLength="128" Unicode="true" FixedLength="false" />
           <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -862,6 +868,13 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
+          <FunctionImport Name="GetCategoryWithGender" ReturnType="Collection(STORE_DATABASEModel.GetCategoryWithGender_Result)">
+          <Parameter Name="Gender" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="RandomNVARCHAR" ReturnType="Collection(String)" />
+          <FunctionImport Name="GetCategoryTable" ReturnType="Collection(STORE_DATABASEModel.GetCategoryTable_Result)">
+            <Parameter Name="Gender" Mode="In" Type="Boolean" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -873,6 +886,19 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetCategoryWithGender_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="CategoryName" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="ParentId" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="Type" Nullable="false" MaxLength="7" />
+        </ComplexType>
+        <ComplexType Name="GetCategoryTable_Result">
+          <Property Type="Int32" Name="Id" Nullable="true" />
+          <Property Type="String" Name="ParentName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="CategoryName" Nullable="true" MaxLength="500" />
+          <Property Type="Boolean" Name="Gender" Nullable="true" />
+          <Property Type="Boolean" Name="Status" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1095,6 +1121,28 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="STORE_DATABASEModel.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="STORE_DATABASEModel.Store.sp_upgraddiagrams" />
+          <FunctionImportMapping FunctionImportName="GetCategoryWithGender" FunctionName="STORE_DATABASEModel.Store.GetCategoryWithGender">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetCategoryWithGender_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="RandomNVARCHAR" FunctionName="STORE_DATABASEModel.Store.RandomNVARCHAR" />
+          <FunctionImportMapping FunctionImportName="GetCategoryTable" FunctionName="STORE_DATABASEModel.Store.GetCategoryTable">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetCategoryTable_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ParentName" ColumnName="ParentName" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

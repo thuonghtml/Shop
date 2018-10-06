@@ -41,7 +41,9 @@ namespace Shop
                       "~/assets/css/simple-line-icons.css",
                       "~/assets/pages/notification/notification.css",
                       "~/assets/css/ionicons.css",
-                      "~/assets/css/jquery.mCustomScrollbar.css"));
+                      "~/assets/css/jquery.mCustomScrollbar.css",
+                      "~/assets/plugins/jstree/themes/default/style.min.css"
+                      ));
             bundles.Add(new ScriptBundle("~/assets/js").Include(
                        "~/assets/plugins/jquery/dist/jquery.min.js",
                        "~/assets/plugins/jquery-ui/jquery-ui.min.js",
@@ -70,7 +72,8 @@ namespace Shop
                        "~/assets/js/pcoded.min.js",
                        "~/assets/js/demo-12.js",
                        "~/assets/js/jquery.mCustomScrollbar.concat.min.js",
-                       "~/assets/js/jquery.mousewheel.min.js"));
+                       "~/assets/js/jquery.mousewheel.min.js",
+                       "~/assets/plugins/jstree/jstree.min.js"));
             bundles.Add(new ScriptBundle("~/asset/page/login/js").Include(
                        "~/assets/plugins/jquery/dist/jquery.min.js",
                        "~/assets/plugins/jquery-ui/jquery-ui.min.js",
@@ -83,6 +86,16 @@ namespace Shop
                        "~/assets/js/bootstrap-growl.min.js",
                        "~/assets/pages/notification/notification.js",
                        "~/assets/js/common-pages.js"));
+            bundles.Add(new ScriptBundle("~/assets/page/warehouse/js").Include(
+                        "~/assets/pages/warehouse/warehouse.js"
+                ));
+            bundles.Add(new StyleBundle("~/assets/page/category/css").Include(
+                    "~/assets/plugins/DataTables/datatables.min.css"
+                ));
+            bundles.Add(new ScriptBundle("~/assets/page/category/js").Include(
+                        "~/assets/plugins/DataTables/datatables.min.js",
+                        "~/assets/pages/category/category.js"
+                ));
             #endregion Assets_Admin
             #region Assets_Client
             bundles.Add(new StyleBundle("~/assets_client/css").Include(
