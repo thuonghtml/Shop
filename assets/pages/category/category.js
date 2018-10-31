@@ -1,9 +1,10 @@
 ﻿$(document).ready(function () {
     // Begin Tag Add Category
     $("#divParentSearch").width($("#divParentCategory").width());
+    $("#divParentSearch_change").width($("#divParentCategory_change").width());
     $(window).resize(function () {
         $("#divParentSearch").width($("#divParentCategory").width());
-
+        $("#divParentSearch_change").width($("#divParentCategory_change").width());
     });
 
     var CheckGender = $('input[name=radio]:checked', '#GenderRadio').val() // 1 - Nam : 0 - Nữ : 2 - Couple
@@ -18,7 +19,7 @@
         $('#divParentSearch').hide();
         $('#inputCategory').click(function () {
             $('#divParentSearch').toggle();
-            $('#searchRegion').focus();
+            $('#searchCategory').focus();
         });
         $("#refreshCategory").click(function () {
             Refresh_Parent_Category();
@@ -42,6 +43,7 @@
         $.get('/Category/GetCategories', { gender: _gender }, function (data) {
             if (data !== null && data !== undefined && data !== "") {
                 dataCatrgories = data;
+                //console.log(dataCatrgories)
                 var datas = []
                 $.each(dataCatrgories, function (index, item) {
                     datas.push({
@@ -67,9 +69,10 @@
                 }).jstree({
                     'core': { 'data': datas, },
                     "plugins": [
+                        "wholerow",
                         "search",
                         "types",
-                        "wholerow",],
+                        ],
                     "types": {
                         "ao": {
                             "icon": "/assets/icon/IconCategory/Ao.png"
@@ -198,7 +201,7 @@
 
     //----------------------------
 
-    // Begin Tag List Category
+    // Begin Tag List Category - Delete Category
     var gender_tab = true
     var table = $('#tableCategory').DataTable({
         //"processing": true,
@@ -240,7 +243,7 @@
                 "render": function (data, type, row) {
                     return '<button type="button" class="btn btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-angle-double-down"></i></button>' +
                         '<div class="dropdown-menu dropdown-menu-right b-none contact-menu">' +
-                        '<a class="dropdown-item" href="#!" data-toggle="modal" data-target="#myEditCustomer"><i class="icofont icofont-edit"></i>Edit</a>' +
+                        '<a class="ChangeClass dropdown-item" href="#!" data-toggle="modal" data-target="#my_modal_EditCategory"  data-id="' + data + '"><i class="icofont icofont-edit"></i>Edit</a>' +
                         '<a href="#" id="abc" data-target="#my_modal" data-toggle="modal" class="identifyingClass dropdown-item" data-id="' + data + '"><i class="icofont icofont-ui-delete"></i> Delete</a>' +
                         '</div>';
                 }
@@ -289,6 +292,193 @@
         })
        
     })
-    // End Tag List Category
-    
+    // End Tag List Category - Delete Category
+
+    // Begin Modal Change Category
+    $(document).on('click', '.ChangeClass', function () {
+        var my_id_value = $(this).attr('data-id')
+        $(".modal-body #hiddenValue_change").val(my_id_value);
+        $.get('/Category/GetCategoryById', { CategoryId: my_id_value }, function (data) {
+            if (data !== null && data !== undefined && data !== "" && data.length >0) {
+                $('#GenderRadio_change input[name=radio_change]').each(function (index, item) {
+                    var val = $(this).attr('value');
+                    var check = null;
+                    if (val === "1") check = true;
+                    if (val === "0") check = false;
+                    if (data[0].Gender === check) {
+                        $(this).attr('checked', true);
+                        GetCategory_Change($(this).attr('value'));
+                        GetDataCategory_Change($(this).attr('value'))    
+                    }
+                    else {
+                        $(this).attr('checked', false);
+                    }
+                })
+                $('#input_Category_change').val(data[0].CategoryName);
+                $('#ValueParentCategory_change').val(data[0].ParentId);
+                $('#inputCategory_change').val(data[0].ParentName !== "" ? data[0].ParentName : "Không có phân cấp!");
+            }
+            else {
+                console.log('Lỗi load data')
+            }
+        });
+        //console.log($('#GenderRadio_tab'))
+
+    });
+    $('#my_modal_EditCategory').on('shown.bs.modal', function () {
+        console.log($("#divParentCategory_change").width())
+        $("#divParentSearch_change").width($("#divParentCategory_change").width())
+    });
+    var Refresh_Parent_Category_Change = function () {
+        $('#inputCategory_change').val("Select Parent Category Name")
+        $('#ValueParentCategory_change').val('');
+        $('#ParentCategory-tree_change').jstree("deselect_all");
+        $('#ParentCategory-tree_change').jstree("close_all");
+        $('#divParentSearch_change').hide();
+    }
+    var Render_Category_Tree_Change = function () {
+        $('#divParentSearch_change').hide();
+        $('#inputCategory_change').click(function () {
+            $('#divParentSearch_change').toggle();
+            $('#searchCategory_change').focus();
+        });
+        $("#refreshCategory_change").click(function () {
+            Refresh_Parent_Category_Change();
+        });
+        var to = false;
+        $('#searchCategory_change').keyup(function () {
+            if (to) { clearTimeout(to); }
+            to = setTimeout(function () {
+                var v = $('#searchCategory_change').val();
+                $('#ParentCategory-tree_change').jstree(true).search(v);
+            }, 250);
+        });
+    };
+    Render_Category_Tree_Change();
+    var GetCategory_Change = function (CheckGender_change) {
+        var _gender = null
+        if (parseInt(CheckGender_change) === 1)
+            _gender = true
+        if (parseInt(CheckGender_change) === 0)
+            _gender = false
+        $.get('/Category/GetCategories', { gender: _gender }, function (data) {
+            if (data !== null && data !== undefined && data !== "") {
+                dataCatrgories = data;
+                var datas = []
+                $.each(dataCatrgories, function (index, item) {
+                    datas.push({
+                        id: item.Id,
+                        parent: item.ParentId,
+                        text: item.CategoryName,
+                        type: item.Type
+                    });
+                });
+                $('#ParentCategory-tree_change').on('changed.jstree', function (e, data) {
+                    var i, j, r = [];
+                    for (i = 0, j = data.selected.length; i < j; i++) {
+                        r.push({
+                            'Id': data.instance.get_node(data.selected[i]).id,
+                            'Text': data.instance.get_node(data.selected[i]).text
+                        });
+                    }
+                    if (r.length > 0) {
+                        $('#inputCategory_change').val(r[0].Text)
+                        $('#ValueParentCategory_change').val(r[0].Id);
+                        $('#divParentSearch_change').hide();
+                    }
+                }).jstree({
+                    'core': { 'data': datas, },
+                    "plugins": [
+                        "wholerow",
+                        "search",
+                        "types",
+                        ],
+                    "types": {
+                        "ao": {
+                            "icon": "/assets/icon/IconCategory/Ao.png"
+                        },
+                        "quan": {
+                            "icon": "/assets/icon/IconCategory/Quan.png"
+                        },
+                        "giay": {
+                            "icon": "/assets/icon/IconCategory/Giay.jpg"
+                        },
+                        "phukien": {
+                            "icon": "/assets/icon/IconCategory/PK.jpg"
+                        }
+                    },
+                });
+
+            }
+
+        });
+    }
+    var GetDataCategory_Change = function (CheckGender_change) {
+        var datas = []
+        var _gender = null
+        if (parseInt(CheckGender_change) === 1)
+            _gender = true
+        if (parseInt(CheckGender_change) === 0)
+            _gender = false
+        $.get('/Category/GetCategories', { gender: _gender }, function (data) {
+            if (data !== null && data !== undefined && data !== "") {
+                dataCatrgories = data;
+                $.each(dataCatrgories, function (index, item) {
+                    datas.push({
+                        id: item.Id,
+                        parent: item.ParentId,
+                        text: item.CategoryName,
+                        type: item.Type
+                    });
+                });
+
+            }
+            $('#ParentCategory-tree_change').jstree(true).settings.core.data = datas
+            $('#ParentCategory-tree_change').jstree(true).refresh();
+            //Refresh_Parent_Category_Change();
+        });
+    }
+
+    $('#GenderRadio_change input').on('change', function () {
+        var CheckGender_change = $('input[name=radio_change]:checked', '#GenderRadio_change').val()
+        //console.log(CheckGender_change)
+        GetDataCategory_Change(CheckGender_change)
+        Refresh_Parent_Category_Change();
+    });
+
+    $("#btn_Save_Category").on("click", function () {
+        var gender_save = null;
+        var parentId = $('#ValueParentCategory_change').val() === "" ? '#' : $('#ValueParentCategory_change').val(),
+            categoryName = $('#input_Category_change').val(),
+            Id = $('#hiddenValue_change').val(),
+            gender = $('input[name=radio_change]:checked', '#GenderRadio_change').val()
+        if (gender == 0) {
+            gender_save = false;
+        } else if (gender == 1) {
+            gender_save = true;
+        }
+        console.log(parentId + " " + Id + " " + categoryName + " " + gender)
+        $("#my_modal_EditCategory").modal('hide')
+        $.ajax({
+            type: "POST",
+            url: "/Category/UpdateCategoryById",
+            data: {
+                Id: Id,
+                parentId: parentId,
+                categoryName: categoryName,
+                gender: gender_save
+            },
+            success: function (succ) {
+                //table.ajax.reload();
+                table.draw(false);
+                notify("top", "right", "icofont icofont-ui-check", "success", "animated fadeInRight", "animated fadeOutRight", '  ', 'Sửa đổi thành công');
+                GetDataCategory();
+            },
+            error: function (err) {
+                console.log(err)
+                notify("top", "right", "icofont icofont-ui-close", "danger", "animated fadeInRight", "animated fadeOutRight", '  ', 'Sửa đổi thất bại!');
+            }
+        })
+    })
+    // End Modal Change Category
 });

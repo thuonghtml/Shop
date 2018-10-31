@@ -146,15 +146,6 @@ namespace Shop.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
         }
     
-        public virtual ObjectResult<GetCategoryWithGender_Result> GetCategoryWithGender(Nullable<bool> gender)
-        {
-            var genderParameter = gender.HasValue ?
-                new ObjectParameter("Gender", gender) :
-                new ObjectParameter("Gender", typeof(bool));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCategoryWithGender_Result>("GetCategoryWithGender", genderParameter);
-        }
-    
         public virtual ObjectResult<string> RandomNVARCHAR()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("RandomNVARCHAR");
@@ -167,6 +158,24 @@ namespace Shop.Models
                 new ObjectParameter("Gender", typeof(bool));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCategoryTable_Result>("GetCategoryTable", genderParameter);
+        }
+    
+        public virtual ObjectResult<GetInfoCategoryById_Result> GetInfoCategoryById(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInfoCategoryById_Result>("GetInfoCategoryById", idParameter);
+        }
+    
+        public virtual ObjectResult<GetCategoryWithGender_Result1> GetCategoryWithGender(Nullable<bool> gender)
+        {
+            var genderParameter = gender.HasValue ?
+                new ObjectParameter("Gender", gender) :
+                new ObjectParameter("Gender", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCategoryWithGender_Result1>("GetCategoryWithGender", genderParameter);
         }
     }
 }

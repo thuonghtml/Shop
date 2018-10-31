@@ -438,7 +438,7 @@
                             </ul>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="pcoded-trigger ">
-                                    <a href="@Url.Action("Product", "Admin")">
+                                    <a href="@Url.Action("Index", "Product")">
                                         <span class="pcoded-micon"><i class="ti-gift"></i></span>
                                         <span class="pcoded-mtext">Product</span>
                                         <span class="pcoded-mcaret"></span>
@@ -447,7 +447,7 @@
                             </ul>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="pcoded-trigger ">
-                                    <a href="@Url.Action("Warehouse", "Admin")">
+                                    <a href="@Url.Action("Index", "Warehouse")">
                                         <span class="pcoded-micon"><i class="ti-home"></i></span>
                                         <span class="pcoded-mtext">Warehouse</span>
                                         <span class="pcoded-mcaret"></span>
@@ -556,7 +556,6 @@
             var href = $(this).attr('href');
           
             if (path.substring(0, href.length) === href) {
-                console.log(123)
                 $(listMenuAdminTrigger[index]).addClass('active')
             }
         });

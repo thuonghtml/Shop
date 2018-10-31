@@ -101,7 +101,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CategoryName" Type="nvarchar" MaxLength="300" />
-          <Property Name="Sex" Type="bit" />
+          <Property Name="Gender" Type="bit" />
           <Property Name="ParentId" Type="nvarchar" MaxLength="300" />
           <Property Name="Status" Type="int" />
         </EntityType>
@@ -134,7 +134,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="EmployeeName" Type="nvarchar" MaxLength="300" />
-          <Property Name="Sex" Type="bit" />
+          <Property Name="Gender" Type="bit" />
           <Property Name="Birthday" Type="date" />
           <Property Name="Address" Type="nvarchar(max)" />
           <Property Name="PhoneNumber" Type="varchar" MaxLength="20" />
@@ -347,6 +347,9 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
         <Function Name="GetCategoryWithGender" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Gender" Type="bit" Mode="In" />
         </Function>
+        <Function Name="GetInfoCategoryById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
         <Function Name="RandomNVARCHAR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
@@ -540,7 +543,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CategoryName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="Sex" Type="Boolean" />
+          <Property Name="Gender" Type="Boolean" />
           <Property Name="ParentId" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Int32" />
           <NavigationProperty Name="Products" Relationship="Self.FK_Product_Category" FromRole="Category" ToRole="Product" />
@@ -576,7 +579,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="EmployeeName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="Sex" Type="Boolean" />
+          <Property Name="Gender" Type="Boolean" />
           <Property Name="Birthday" Type="DateTime" Precision="0" />
           <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
@@ -868,12 +871,15 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
-          <FunctionImport Name="GetCategoryWithGender" ReturnType="Collection(STORE_DATABASEModel.GetCategoryWithGender_Result)">
-          <Parameter Name="Gender" Mode="In" Type="Boolean" />
-          </FunctionImport>
           <FunctionImport Name="RandomNVARCHAR" ReturnType="Collection(String)" />
           <FunctionImport Name="GetCategoryTable" ReturnType="Collection(STORE_DATABASEModel.GetCategoryTable_Result)">
-            <Parameter Name="Gender" Mode="In" Type="Boolean" />
+          <Parameter Name="Gender" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="GetInfoCategoryById" ReturnType="Collection(STORE_DATABASEModel.GetInfoCategoryById_Result)">
+          <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetCategoryWithGender" ReturnType="Collection(STORE_DATABASEModel.GetCategoryWithGender_Result1)">
+          <Parameter Name="Gender" Mode="In" Type="Boolean" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
@@ -899,6 +905,20 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Type="String" Name="CategoryName" Nullable="true" MaxLength="500" />
           <Property Type="Boolean" Name="Gender" Nullable="true" />
           <Property Type="Boolean" Name="Status" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetInfoCategoryById_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="CategoryName" Nullable="true" MaxLength="300" />
+          <Property Type="Boolean" Name="Gender" Nullable="true" />
+          <Property Type="Int32" Name="Status" Nullable="true" />
+          <Property Type="String" Name="ParentName" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="ParentId" Nullable="true" MaxLength="300" />
+        </ComplexType>
+        <ComplexType Name="GetCategoryWithGender_Result1">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="CategoryName" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="ParentId" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="Type" Nullable="false" MaxLength="7" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -981,9 +1001,9 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <EntitySetMapping Name="Categories">
             <EntityTypeMapping TypeName="STORE_DATABASEModel.Category">
               <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
-                <ScalarProperty Name="Sex" ColumnName="Sex" />
                 <ScalarProperty Name="ParentId" ColumnName="ParentId" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
               </MappingFragment>
@@ -1017,9 +1037,9 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <EntitySetMapping Name="Employees">
             <EntityTypeMapping TypeName="STORE_DATABASEModel.Employee">
               <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
-                <ScalarProperty Name="Sex" ColumnName="Sex" />
                 <ScalarProperty Name="Birthday" ColumnName="Birthday" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
@@ -1121,16 +1141,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="STORE_DATABASEModel.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="STORE_DATABASEModel.Store.sp_upgraddiagrams" />
-          <FunctionImportMapping FunctionImportName="GetCategoryWithGender" FunctionName="STORE_DATABASEModel.Store.GetCategoryWithGender">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetCategoryWithGender_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
-                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="RandomNVARCHAR" FunctionName="STORE_DATABASEModel.Store.RandomNVARCHAR" />
           <FunctionImportMapping FunctionImportName="GetCategoryTable" FunctionName="STORE_DATABASEModel.Store.GetCategoryTable">
             <ResultMapping>
@@ -1140,6 +1150,28 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
                 <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
                 <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetInfoCategoryById" FunctionName="STORE_DATABASEModel.Store.GetInfoCategoryById">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetInfoCategoryById_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ParentName" ColumnName="ParentName" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetCategoryWithGender" FunctionName="STORE_DATABASEModel.Store.GetCategoryWithGender">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetCategoryWithGender_Result1">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

@@ -119,35 +119,32 @@
         CheckGender = $('input[name=radio]:checked', '#GenderRadio').val()
         GetDataCategory()
     });
-    $('#ParentCategory-tree').on("select_node.jstree", function (e, data) { /*alert("node_id: " + data.node.id);*/
-       var selectValues = { "1": "test 1", "2": "test 2" };
-       $('#ProductNameSelect').find('option').remove().end();
-        for (key in selectValues) {
-            if (typeof (selectValues[key] == 'string')) {
-                $('#ProductNameSelect').append('<option value="' + key + '">' + selectValues[key] + '</option>');
-            }
-        }
-    })
-    function myFunction() {
-        var input, filter, table, tr, td, i;
-        input = document.getElementById("myInputSearch");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("myTableWarehouse");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[2];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-    $("#myInputSearch").on('keyup change', function () {
-        myFunction()
-    })
+
+
 });
 
-//$('#tree').on("select_node.jstree", function (e, data) { alert("node_id: " + data.node.id); })
+function myFunction(input) {
+    //$.each(input.files, function (i, file) {
+    //    var pReader = new FileReader();
+    //    pReader.addEventListener("load", function (e) {
+    //        var pic = e.target;
+    //        //result.append("<img class='thumbnail' src='" + pic.result + "'/>");
+    //        //show();
+    //        console.log(pic)
+    //    });
+    //    pReader.readAsDataURL(file);
+
+
+    //});
+    console.log($("#image_Product").prop("files"))
+    var files = new Array();
+    for (var i = 0; i < $("#image_Product").prop("files").length; i++) {
+        var file = {};
+        file.Name = $("#image_Product").prop("files")[i].name;
+        file.Path = $("#image_Product").val().split(', ')[i];
+        files.push(file);
+    }
+    console.log(files)
+    
+    //console.log(input.files[0].mozFullPath)
+}

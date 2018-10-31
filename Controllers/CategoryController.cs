@@ -64,7 +64,7 @@ namespace Shop.Controllers
                 {
                     CategoryName = categoryName
                     , ParentId = parentId
-                    , Sex = gender
+                    , Gender = gender
                     , Status = 1
                     , Products = null
                 };
@@ -103,6 +103,44 @@ namespace Shop.Controllers
             catch (Exception ex)
             {
                 return Json("Xóa thất bại! -- Lỗi:" +ex+ " !", JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetCategoryById(int CategoryId)
+        {
+            try
+            {
+                var category = db.GetInfoCategoryById(CategoryId);
+                return Json(category, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        [HttpPost]
+        public ActionResult UpdateCategoryById (int Id, string parentId, string categoryName, bool? gender)
+        {
+            try
+            {
+                Category cate = db.Categories.First(c=>c.Id== Id);
+                if (cate != null)
+                {
+                    cate.ParentId = parentId;
+                    cate.CategoryName = categoryName;
+                    cate.Gender = gender;
+                    db.SaveChanges();
+                    return Json(new { success = true, obj = cate }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex }, JsonRequestBehavior.AllowGet);
             }
         }
     }

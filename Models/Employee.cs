@@ -22,7 +22,7 @@ namespace Shop.Models
     
         public int Id { get; set; }
         public string EmployeeName { get; set; }
-        public Nullable<bool> Sex { get; set; }
+        public Nullable<bool> Gender { get; set; }
         public Nullable<System.DateTime> Birthday { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }

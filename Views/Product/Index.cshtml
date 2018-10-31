@@ -1,0 +1,184 @@
+﻿@model Shop.Models.Product
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section JavaScript {
+    @Scripts.Render("~/assets/page/product/js")
+}
+<div class="row">
+    <div class="col-sm-12">
+        <!-- Tab variant tab card start -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Product</h5>
+                <div class="card-header-right">
+                    <i class="icofont icofont-refresh"></i>
+                </div>
+            </div>
+            <div class="card-block tab-icon">
+                <!-- Row start -->
+                <div class="row">
+                    <div class="col-lg-12 col-xl-12">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs md-tabs " role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#home7" role="tab"><i class="ti-pencil"></i>Insert Product</a>
+                                <div class="slide"></div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#profile7" role="tab"><i class="ti-list"></i>List Product</a>
+                                <div class="slide"></div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#messages7" role="tab"><i class="ti-pencil-alt"></i>Change Product</a>
+                                <div class="slide"></div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#settings7" role="tab"><i class="icofont icofont-weed"></i>Product Detail</a>
+                                <div class="slide"></div>
+                            </li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content card-block">
+                            <div class="tab-pane active" id="home7" role="tabpanel">
+                                <div class="row m-b-20">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Gender</label>
+                                            <div class="col-sm-8">
+                                                <div class="form-radio">
+                                                    <div id="GenderRadio" class="group-add-on">
+                                                        <div class="radio radiofill radio-inline">
+                                                            <label>
+                                                                <input a id="Male" value="1" type="radio" name="radio" checked=""><i class="helper"></i> Male
+                                                            </label>
+                                                        </div>
+                                                        <div class="radio radiofill radio-inline">
+                                                            <label>
+                                                                <input id="Female" value="0" type="radio" name="radio"><i class="helper"></i> Female
+                                                            </label>
+                                                        </div>
+                                                        <div class="radio radiofill radio-inline">
+                                                            <label>
+                                                                <input id="Couple" value="2" type="radio" name="radio"><i class="helper"></i> Couple
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Category Name</label>
+                                            <div class="col-sm-8">
+                                                <div id="divParentCategory" class="input-group m-b-sm" style="margin-bottom: 0;">
+                                                    <input type="text" readonly class="form-control" value="Select Parent Category Name" id="inputCategory" aria-describedby="basic-addonRegion" />
+                                                    @Html.Hidden("ValueParentCategory")
+                                                    <span class="input-group-addon" id="basic-addonRegion" style="height: 37px;margin-top: 5px;">
+                                                        <a id="refreshCategory" data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                            <i class="icofont icofont-recycle" style="margin:auto; padding-right:0px"></i>
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                                <div id="divParentSearch" style="position: absolute; z-index: 1; background-color: #fff; margin-top:0px;">
+                                                    <input type="text" id="searchCategory" placeholder="Tìm kiếm" class="form-control" style="margin-top:0px" />
+                                                    <div data-spy="scroll" style="max-height:150px;overflow:scroll;  background-color: #fff;width: 100%;" id="ParentCategory-tree"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Product Name</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" placeholder="Product Name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Product Size</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" placeholder="Product Size">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Price </label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" placeholder="Price of Product">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Status</label>
+                                            <div class="col-sm-8">
+                                                <input type="file" id="image_Product" class="form-control" multiple accept='image/*' onchange="myFunction(this)">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Status</label>
+                                            <div class="col-sm-8">
+                                                <select id="statusProduct" class="form-control">
+                                                    <option value="1">Active</option>
+                                                    <option value="0">InActive</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <hr>
+                                            <button id="btnSave" class="btn btn-primary" style="float:right"><i class="ti-import"></i>Save</button>
+                                            <button class="btn btn-default" style="float:right;margin-right:10px"><i class="ti-na"></i>Cancel</button>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Image of Product</h6>
+                                        <div class="row">
+                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
+                                                <a href="~/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-gallery="example-gallery">
+                                                    <img src="~/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
+                                                <a href="~/assets/images/light-box/l2.jpg" data-toggle="lightbox" data-gallery="example-gallery">
+                                                    <img src="~/assets/images/light-box/sl2.jpg" class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
+                                                <a href="~/assets/images/light-box/l3.jpg" data-toggle="lightbox" data-gallery="example-gallery">
+                                                    <img src="~/assets/images/light-box/sl3.jpg" class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
+                                                <a href="~/assets/images/light-box/l4.jpg" data-toggle="lightbox" data-gallery="example-gallery">
+                                                    <img src="~/assets/images/light-box/sl4.jpg" class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
+                                                <a href="~/assets/images/light-box/l5.jpg" data-toggle="lightbox" data-gallery="example-gallery">
+                                                    <img src="~/assets/images/light-box/sl5.jpg" class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
+                                                <a href="~/assets/images/light-box/l6.jpg" data-toggle="lightbox" data-gallery="example-gallery">
+                                                    <img src="~/assets/images/light-box/sl6.jpg" class="img-fluid" alt="">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="profile7" role="tabpanel">
+                                <p class="m-0">2.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
+                            </div>
+                            <div class="tab-pane" id="messages7" role="tabpanel">
+                                <p class="m-0">3. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
+                            </div>
+                            <div class="tab-pane" id="settings7" role="tabpanel">
+                                <p class="m-0">4.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Row end -->
+            </div>
+        </div>
+        <!-- Tab variant tab card start -->
+    </div>
+</div>

@@ -35,6 +35,8 @@ namespace Shop
                       "~/assets/pages/menu-search/css/component.css",
                       "~/assets/pages/dashboard/amchart/css/amchart.css",
                       "~/assets/pages/dashboard/horizontal-timeline/css/style.css",
+                      "~/assets/plugins/ekko-lightbox/dist/ekko-lightbox.css",
+                      "~/assets/plugins/lightbox2/dist/css/lightbox.css",
                       "~/assets/css/style.css",
                       "~/assets/plugins/animate.css/animate.css",
                       "~/assets/css/linearicons.css",
@@ -68,6 +70,8 @@ namespace Shop
                        "~/assets/plugins/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js",
                        "~/assets/plugins/jquery-i18next/jquery-i18next.min.js",
                        "~/assets/pages/dashboard/custom-dashboard.js",
+                       "~/assets/plugins/ekko-lightbox/dist/ekko-lightbox.js",
+                       "~/assets/plugins/lightbox2/dist/js/lightbox.js",
                        "~/assets/js/script.js",
                        "~/assets/js/pcoded.min.js",
                        "~/assets/js/demo-12.js",
@@ -93,8 +97,15 @@ namespace Shop
                     "~/assets/plugins/DataTables/datatables.min.css"
                 ));
             bundles.Add(new ScriptBundle("~/assets/page/category/js").Include(
-                        "~/assets/plugins/DataTables/datatables.min.js",
+                        //"~/assets/plugins/DataTables.min.js",
+                        //"~/assets/plugins/DataTables/dataTables.altEditor.free.js",
                         "~/assets/pages/category/category.js"
+                ));
+            //bundles.Add(new StyleBundle("~/assets/page/product/css").Include(
+                    
+            //    ));
+            bundles.Add(new ScriptBundle("~/assets/page/product/js").Include(
+                    "~/assets/pages/product/product.js"
                 ));
             #endregion Assets_Admin
             #region Assets_Client
