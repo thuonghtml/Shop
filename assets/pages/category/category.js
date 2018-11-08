@@ -1,4 +1,8 @@
 ﻿$(document).ready(function () {
+    var RenderMess = function (type, mess) {
+        toastr.options = { "newestOnTop": true, "showMethod": "show", "hideMethod": "hide", "progressBar": true, };
+        toastr[type]("<strong>" + mess + "</strong>");
+    }
     // Begin Tag Add Category
     $("#divParentSearch").width($("#divParentCategory").width());
     $("#divParentSearch_change").width($("#divParentCategory_change").width());
@@ -7,7 +11,7 @@
         $("#divParentSearch_change").width($("#divParentCategory_change").width());
     });
 
-    var CheckGender = $('input[name=radio]:checked', '#GenderRadio').val() // 1 - Nam : 0 - Nữ : 2 - Couple
+    var CheckGender = $('input[name=radio]:checked', '#GenderRadio').val() // 1 - Nam : 2 - Nữ : 3 - Couple
     var Refresh_Parent_Category = function () {
         $('#inputCategory').val("Select Parent Category Name")
         $('#ValueParentCategory').val('');
@@ -35,12 +39,7 @@
     };
     Render_Category_Tree();
     var GetCategory = function (CheckGender) {
-        var _gender = null
-        if (parseInt(CheckGender) === 1)
-            _gender = true
-        if (parseInt(CheckGender) === 0)
-            _gender = false
-        $.get('/Category/GetCategories', { gender: _gender }, function (data) {
+        $.get('/Category/GetCategories', { gender: CheckGender }, function (data) {
             if (data !== null && data !== undefined && data !== "") {
                 dataCatrgories = data;
                 //console.log(dataCatrgories)
@@ -95,15 +94,10 @@
     }
     GetCategory(CheckGender);
     var GetDataCategory = function () {
-        var datas = []
-        var _gender = null
-        if (parseInt(CheckGender) === 1)
-            _gender = true
-        if (parseInt(CheckGender) === 0)
-            _gender = false
-        $.get('/Category/GetCategories', { gender: _gender }, function (data) {
+        $.get('/Category/GetCategories', { gender: CheckGender }, function (data) {
             if (data !== null && data !== undefined && data !== "") {
                 dataCatrgories = data;
+                var datas = []
                 $.each(dataCatrgories, function (index, item) {
                     datas.push({
                         id: item.Id,
@@ -123,86 +117,41 @@
         CheckGender = $('input[name=radio]:checked', '#GenderRadio').val()
         GetDataCategory()
     });
-    function notify(from, align, icon, type, animIn, animOut, title, mess) {
-        $.growl({
-            icon: icon,
-            title: title,
-            message: mess,
-            url: ''
-        }, {
-                element: 'body',
-                type: type,
-                allow_dismiss: true,
-                placement: {
-                    from: from,
-                    align: align
-                },
-                offset: {
-                    x: 30,
-                    y: 30
-                },
-                spacing: 10,
-                z_index: 999999,
-                delay: 2500,
-                timer: 1000,
-                url_target: '_blank',
-                mouse_over: false,
-                animate: {
-                    enter: animIn,
-                    exit: animOut
-                },
-                icon_type: 'class',
-                template: '<div data-growl="container" class="alert" role="alert">' +
-                '<button type="button" class="close" data-growl="dismiss">' +
-                '<span aria-hidden="true">&times;</span>' +
-                '<span class="sr-only">Close</span>' +
-                '</button>' +
-                '<span data-growl="icon"></span>' +
-                '<span data-growl="title"></span>' +
-                '<span data-growl="message"></span>' +
-                '<a href="#" data-growl="url"></a>' +
-                '</div>'
-            });
-    };
     $('#btnSave').on('click', function () {
         var category = $('#input_Category').val(),
             parentId = $('#ValueParentCategory').val() === "" ? '#' : $('#ValueParentCategory').val();
         if (category !== null && category !== undefined && category !== "") {
-            var _gender = null;
-            if (parseInt(CheckGender) === 1)
-                _gender = true
-            if (parseInt(CheckGender) === 0)
-                _gender = false
             $.ajax({
                 type: "POST",
                 url: "/Category/AddCategory",
                 data: {
                     parentId: parentId,
                     categoryName: category,
-                    gender: _gender
+                    gender: CheckGender
                 },
                 //contentType: "application/json; charset=utf-8",
                 //dataType: "json",
                 success: function (msg) {
-                    notify("top", "right", "fa fa-check", "success", "animated fadeInRight", "animated fadeOutRight", "AddCategory: ", msg);
+                    RenderMess("success", msg)
                     CheckGender = $('input[name=radio]:checked', '#GenderRadio').val()
                     GetDataCategory()
                     category = $('#input_Category').val('');
                 },
                 error: function (err) {
-                    notify("top", "right", "fa fa-check", "danger", "animated fadeInRight", "animated fadeOutRight", "Add Category: ", err);
+                    RenderMess("error", err)
                 }
             });
         }
         else
-            notify("top", "right", "fa fa-check", "warning", "animated fadeInRight", "animated fadeOutRight", "Add Category: ", "Bạn phải nhập Category Name");
+            RenderMess("error", "Bạn phải nhập Category Name");
     });
     // End Tag Add Category
 
     //----------------------------
 
     // Begin Tag List Category - Delete Category
-    var gender_tab = true
+
+    var _CheckGender = $('input[name=radio_tab]:checked', '#GenderRadio_tab').val()
     var table = $('#tableCategory').DataTable({
         //"processing": true,
         "serverSide": true,
@@ -210,7 +159,7 @@
 
             "url": "/Category/LoadDataTable",
             "data": function (d) {
-                d.gender = gender_tab
+                d.gender = _CheckGender
             },
             "type": "POST",
             "datatype": "json",
@@ -222,9 +171,9 @@
             {
                 "data": "Gender", "name": "Gender", "autoWidth": true, "orderable": false, "searchable": false
                 , "render": function (data, type, row) {
-                    if (data === true)
+                    if (data === 1)
                         return "Nam";
-                    else if (data === false)
+                    else if (data === 2)
                         return "Nữ";
                     else return "Couple";
                 }
@@ -251,16 +200,7 @@
         ]
     })
     $('#GenderRadio_tab input').on('change', function () {
-        var _CheckGender = $('input[name=radio_tab]:checked', '#GenderRadio_tab').val()
-        if (parseInt(_CheckGender) === 1) {
-            gender_tab = true
-        }
-        else if (parseInt(_CheckGender) === 0) {
-            gender_tab = false
-        }
-        else {
-            gender_tab = null
-        }
+        _CheckGender = $('input[name=radio_tab]:checked', '#GenderRadio_tab').val()
 
         table.ajax.reload();
     });
@@ -282,12 +222,12 @@
             success: function (mess) {
                 //table.ajax.reload();
                 table.draw(false);
-                notify("top", "right", "icofont icofont-ui-check", "success", "animated fadeInRight", "animated fadeOutRight", '  ', mess);
+                RenderMess("success", mess)
                 GetDataCategory();
             },
             error: function (err) {
                 console.log(err)
-                notify("top", "right", "icofont icofont-ui-close", "danger", "animated fadeInRight", "animated fadeOutRight", '  ', 'Xóa thất bại!');
+                RenderMess("error", "Xóa thất bại!");
             }
         })
        
@@ -301,11 +241,10 @@
         $.get('/Category/GetCategoryById', { CategoryId: my_id_value }, function (data) {
             if (data !== null && data !== undefined && data !== "" && data.length >0) {
                 $('#GenderRadio_change input[name=radio_change]').each(function (index, item) {
-                    var val = $(this).attr('value');
-                    var check = null;
-                    if (val === "1") check = true;
-                    if (val === "0") check = false;
-                    if (data[0].Gender === check) {
+                    var val = parseInt($(this).attr('value'));
+                    //console.log(val)
+                    //console.log(data[0].Gender)
+                    if (data[0].Gender === val) {
                         $(this).attr('checked', true);
                         GetCategory_Change($(this).attr('value'));
                         GetDataCategory_Change($(this).attr('value'))    
@@ -326,7 +265,7 @@
 
     });
     $('#my_modal_EditCategory').on('shown.bs.modal', function () {
-        console.log($("#divParentCategory_change").width())
+        //console.log($("#divParentCategory_change").width())
         $("#divParentSearch_change").width($("#divParentCategory_change").width())
     });
     var Refresh_Parent_Category_Change = function () {
@@ -355,13 +294,9 @@
         });
     };
     Render_Category_Tree_Change();
+    var CheckGender_change = $('input[name=radio_change]:checked', '#GenderRadio_change').val()
     var GetCategory_Change = function (CheckGender_change) {
-        var _gender = null
-        if (parseInt(CheckGender_change) === 1)
-            _gender = true
-        if (parseInt(CheckGender_change) === 0)
-            _gender = false
-        $.get('/Category/GetCategories', { gender: _gender }, function (data) {
+        $.get('/Category/GetCategories', { gender: CheckGender_change }, function (data) {
             if (data !== null && data !== undefined && data !== "") {
                 dataCatrgories = data;
                 var datas = []
@@ -415,12 +350,7 @@
     }
     var GetDataCategory_Change = function (CheckGender_change) {
         var datas = []
-        var _gender = null
-        if (parseInt(CheckGender_change) === 1)
-            _gender = true
-        if (parseInt(CheckGender_change) === 0)
-            _gender = false
-        $.get('/Category/GetCategories', { gender: _gender }, function (data) {
+        $.get('/Category/GetCategories', { gender: CheckGender_change }, function (data) {
             if (data !== null && data !== undefined && data !== "") {
                 dataCatrgories = data;
                 $.each(dataCatrgories, function (index, item) {
@@ -440,24 +370,19 @@
     }
 
     $('#GenderRadio_change input').on('change', function () {
-        var CheckGender_change = $('input[name=radio_change]:checked', '#GenderRadio_change').val()
+         CheckGender_change = $('input[name=radio_change]:checked', '#GenderRadio_change').val()
         //console.log(CheckGender_change)
         GetDataCategory_Change(CheckGender_change)
         Refresh_Parent_Category_Change();
     });
 
     $("#btn_Save_Category").on("click", function () {
-        var gender_save = null;
         var parentId = $('#ValueParentCategory_change').val() === "" ? '#' : $('#ValueParentCategory_change').val(),
             categoryName = $('#input_Category_change').val(),
             Id = $('#hiddenValue_change').val(),
             gender = $('input[name=radio_change]:checked', '#GenderRadio_change').val()
-        if (gender == 0) {
-            gender_save = false;
-        } else if (gender == 1) {
-            gender_save = true;
-        }
-        console.log(parentId + " " + Id + " " + categoryName + " " + gender)
+
+        //console.log(parentId + " " + Id + " " + categoryName + " " + gender)
         $("#my_modal_EditCategory").modal('hide')
         $.ajax({
             type: "POST",
@@ -466,17 +391,17 @@
                 Id: Id,
                 parentId: parentId,
                 categoryName: categoryName,
-                gender: gender_save
+                gender: gender
             },
             success: function (succ) {
                 //table.ajax.reload();
                 table.draw(false);
-                notify("top", "right", "icofont icofont-ui-check", "success", "animated fadeInRight", "animated fadeOutRight", '  ', 'Sửa đổi thành công');
+                RenderMess("success","Sửa đổi thành công!")
                 GetDataCategory();
             },
             error: function (err) {
                 console.log(err)
-                notify("top", "right", "icofont icofont-ui-close", "danger", "animated fadeInRight", "animated fadeOutRight", '  ', 'Sửa đổi thất bại!');
+                RenderMess("error", "Sửa đổi thất bại!")
             }
         })
     })

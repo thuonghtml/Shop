@@ -18,7 +18,7 @@ namespace Shop.Controllers
         {
             return View();
         }
-        public ActionResult GetCategories(bool? gender )
+        public ActionResult GetCategories(int? gender )
         {
             var catagories = db.GetCategoryWithGender(gender);
             if (catagories != null)
@@ -28,7 +28,7 @@ namespace Shop.Controllers
             else return null;
         }
         [HttpPost]
-        public ActionResult LoadDataTable(bool? gender )
+        public ActionResult LoadDataTable(int? gender )
         {
             var draw = Request.Form.GetValues("draw").FirstOrDefault();
             var start = Request.Form.GetValues("start").FirstOrDefault();
@@ -56,7 +56,7 @@ namespace Shop.Controllers
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult AddCategory(string parentId,string categoryName, bool? gender)
+        public ActionResult AddCategory(string parentId,string categoryName, int? gender)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace Shop.Controllers
             }
         }
         [HttpPost]
-        public ActionResult UpdateCategoryById (int Id, string parentId, string categoryName, bool? gender)
+        public ActionResult UpdateCategoryById (int Id, string parentId, string categoryName, int? gender)
         {
             try
             {

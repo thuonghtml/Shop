@@ -255,7 +255,18 @@ $(document).ready(function() {
     // Min View Mode
     $('#datetimepicker10').datetimepicker({
         viewMode: 'years',
-        format: 'MM/YYYY',
+        format: 'DD/MM/YYYY',
+        icons: {
+            time: "icofont icofont-clock-time",
+            date: "icofont icofont-ui-calendar",
+            up: "icofont icofont-rounded-up",
+            down: "icofont icofont-rounded-down",
+            next: "icofont icofont-rounded-right",
+            previous: "icofont icofont-rounded-left"
+        }
+    });
+    $('#datetimepickerBirthDate').datetimepicker({
+        format: 'DD/MM/YYYY',
         icons: {
             time: "icofont icofont-clock-time",
             date: "icofont icofont-ui-calendar",
@@ -304,5 +315,4 @@ $(document).ready(function() {
         $('#inputChangeAvartar').change(function () {
             $('#imageAvartar').attr('src', $(this).val())
         });
-
 });

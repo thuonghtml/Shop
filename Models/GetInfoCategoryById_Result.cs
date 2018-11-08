@@ -15,7 +15,8 @@ namespace Shop.Models
     {
         public int Id { get; set; }
         public string CategoryName { get; set; }
-        public Nullable<bool> Gender { get; set; }
+        public Nullable<int> Gender { get; set; }
+        public string Description { get; set; }
         public Nullable<int> Status { get; set; }
         public string ParentName { get; set; }
         public string ParentId { get; set; }

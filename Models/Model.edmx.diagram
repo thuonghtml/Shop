@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2963422aaf0a4fed9d3789cb2b8d1116" Name="Diagram1">
+        <EntityTypeShape EntityType="STORE_DATABASEModel.AspNetRole" Width="1.5" PointX="9.75" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.AspNetUserClaim" Width="1.5" PointX="14.25" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.AspNetUserLogin" Width="1.5" PointX="14.25" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.AspNetUser" Width="1.5" PointX="12" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.Bill" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.BillDetail" Width="1.5" PointX="7.5" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.Category" Width="1.5" PointX="3" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.Conversation" Width="1.5" PointX="7.5" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.Customer" Width="1.5" PointX="3" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.Employee" Width="1.5" PointX="3" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.FileAttach" Width="1.5" PointX="7.5" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.Menu" Width="1.5" PointX="0.75" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.Product" Width="1.5" PointX="5.25" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.sysdiagram" Width="1.5" PointX="9.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.Warehouse" Width="1.5" PointX="7.5" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.C__MigrationHistory" Width="1.5" PointX="9.75" PointY="10.625" IsExpanded="true" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_Bill_Customer" ManuallyRouted="false" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_Bill_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_BillDetail_Bill" ManuallyRouted="false" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_BillDetail_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_Category_Menu" ManuallyRouted="false" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_Conversation_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_FileAttach_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_Warehouse_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="STORE_DATABASEModel.AspNetUserRoles" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

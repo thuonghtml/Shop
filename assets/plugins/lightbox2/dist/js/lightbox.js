@@ -101,8 +101,7 @@
     this.$outerContainer = this.$lightbox.find('.lb-outerContainer');
     this.$container      = this.$lightbox.find('.lb-container');
     this.$image          = this.$lightbox.find('.lb-image');
-    this.$nav            = this.$lightbox.find('.lb-nav');
-
+    this.$nav = this.$lightbox.find('.lb-nav');
     // Store css values for future lookup
     this.containerPadding = {
       top: parseInt(this.$container.css('padding-top'), 10),
@@ -205,6 +204,7 @@
     var imageNumber = 0;
 
     function addToAlbum($link) {
+ 
       self.album.push({
         link: $link.attr('href'),
         title: $link.attr('data-title') || $link.attr('title')

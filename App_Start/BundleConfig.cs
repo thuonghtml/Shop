@@ -44,7 +44,9 @@ namespace Shop
                       "~/assets/pages/notification/notification.css",
                       "~/assets/css/ionicons.css",
                       "~/assets/css/jquery.mCustomScrollbar.css",
-                      "~/assets/plugins/jstree/themes/default/style.min.css"
+                      "~/assets/plugins/jstree/themes/default/style.min.css",
+                      "~/assets/plugins/toastr/toastr.min.css",
+                      "~/assets/plugins/DataTables/datatables.min.css"
                       ));
             bundles.Add(new ScriptBundle("~/assets/js").Include(
                        "~/assets/plugins/jquery/dist/jquery.min.js",
@@ -57,7 +59,7 @@ namespace Shop
                        "~/assets/plugins/modernizr/feature-detects/css-scrollbars.js",
                        "~/assets/plugins/classie/classie.js",
                        "~/assets/plugins/d3/d3.js",
-                       "~/assets/plugins/rickshaw/rickshaw.js",
+                       //"~/assets/plugins/rickshaw/rickshaw.js",
                        "~/assets/plugins/raphael/raphael.min.js",
                        "~/assets/plugins/morris.js/morris.js",
                        "~/assets/pages/dashboard/horizontal-timeline/js/main.js",
@@ -69,7 +71,7 @@ namespace Shop
                        "~/assets/plugins/i18next-xhr-backend/i18nextXHRBackend.min.js",
                        "~/assets/plugins/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js",
                        "~/assets/plugins/jquery-i18next/jquery-i18next.min.js",
-                       "~/assets/pages/dashboard/custom-dashboard.js",
+                       //"~/assets/pages/dashboard/custom-dashboard.js",
                        "~/assets/plugins/ekko-lightbox/dist/ekko-lightbox.js",
                        "~/assets/plugins/lightbox2/dist/js/lightbox.js",
                        "~/assets/js/script.js",
@@ -77,6 +79,7 @@ namespace Shop
                        "~/assets/js/demo-12.js",
                        "~/assets/js/jquery.mCustomScrollbar.concat.min.js",
                        "~/assets/js/jquery.mousewheel.min.js",
+                       "~/assets/plugins/toastr/toastr.min.js",
                        "~/assets/plugins/jstree/jstree.min.js"));
             bundles.Add(new ScriptBundle("~/asset/page/login/js").Include(
                        "~/assets/plugins/jquery/dist/jquery.min.js",
@@ -94,7 +97,7 @@ namespace Shop
                         "~/assets/pages/warehouse/warehouse.js"
                 ));
             bundles.Add(new StyleBundle("~/assets/page/category/css").Include(
-                    "~/assets/plugins/DataTables/datatables.min.css"
+                    //"~/assets/plugins/DataTables/datatables.min.css"
                 ));
             bundles.Add(new ScriptBundle("~/assets/page/category/js").Include(
                         //"~/assets/plugins/DataTables.min.js",

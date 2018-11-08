@@ -5,6 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @section JavaScript {
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     @Scripts.Render("~/assets/page/product/js")
 }
 <div class="row">
@@ -57,12 +59,12 @@
                                                         </div>
                                                         <div class="radio radiofill radio-inline">
                                                             <label>
-                                                                <input id="Female" value="0" type="radio" name="radio"><i class="helper"></i> Female
+                                                                <input id="Female" value="2" type="radio" name="radio"><i class="helper"></i> Female
                                                             </label>
                                                         </div>
                                                         <div class="radio radiofill radio-inline">
                                                             <label>
-                                                                <input id="Couple" value="2" type="radio" name="radio"><i class="helper"></i> Couple
+                                                                <input id="Couple" value="3" type="radio" name="radio"><i class="helper"></i> Couple
                                                             </label>
                                                         </div>
                                                     </div>
@@ -90,23 +92,17 @@
                                         <div class="form-group row">
                                             <label class="col-sm-4 col-form-label">Product Name</label>
                                             <div class="col-sm-8">
-                                                <input type="text" class="form-control" placeholder="Product Name">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Product Size</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" placeholder="Product Size">
+                                                <input id="productName" type="text" class="form-control" placeholder="Product Name">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-4 col-form-label">Price </label>
                                             <div class="col-sm-8">
-                                                <input type="text" class="form-control" placeholder="Price of Product">
+                                                <input id="productPrice" type="number" class="form-control" placeholder="Price of Product">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Status</label>
+                                            <label class="col-sm-4 col-form-label">Image</label>
                                             <div class="col-sm-8">
                                                 <input type="file" id="image_Product" class="form-control" multiple accept='image/*' onchange="myFunction(this)">
                                             </div>
@@ -120,52 +116,107 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Info Product</label>
+                                            <div class="col-sm-8">
+                                                <textarea id="productInfo" type="text" class="form-control" placeholder="Info Product"> </textarea>
+                                            </div>
+                                        </div>
                                         <div>
                                             <hr>
                                             <button id="btnSave" class="btn btn-primary" style="float:right"><i class="ti-import"></i>Save</button>
-                                            <button class="btn btn-default" style="float:right;margin-right:10px"><i class="ti-na"></i>Cancel</button>
+                                            <button id="btnCancel" class="btn btn-default" style="float:right;margin-right:10px"><i class="ti-na"></i>Cancel</button>
 
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <h6>Image of Product</h6>
-                                        <div class="row">
-                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
-                                                <a href="~/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-gallery="example-gallery">
-                                                    <img src="~/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
-                                                <a href="~/assets/images/light-box/l2.jpg" data-toggle="lightbox" data-gallery="example-gallery">
-                                                    <img src="~/assets/images/light-box/sl2.jpg" class="img-fluid" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
-                                                <a href="~/assets/images/light-box/l3.jpg" data-toggle="lightbox" data-gallery="example-gallery">
-                                                    <img src="~/assets/images/light-box/sl3.jpg" class="img-fluid" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
-                                                <a href="~/assets/images/light-box/l4.jpg" data-toggle="lightbox" data-gallery="example-gallery">
-                                                    <img src="~/assets/images/light-box/sl4.jpg" class="img-fluid" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
-                                                <a href="~/assets/images/light-box/l5.jpg" data-toggle="lightbox" data-gallery="example-gallery">
-                                                    <img src="~/assets/images/light-box/sl5.jpg" class="img-fluid" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
-                                                <a href="~/assets/images/light-box/l6.jpg" data-toggle="lightbox" data-gallery="example-gallery">
-                                                    <img src="~/assets/images/light-box/sl6.jpg" class="img-fluid" alt="">
-                                                </a>
-                                            </div>
+                                        <div class="row" id="viewImageProduct">
+                                            @*<div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
+                                                    <a href="~/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-gallery="example-gallery">
+                                                        <img src="~/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                                    </a>
+                                                </div>*@
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="tab-pane" id="profile7" role="tabpanel">
-                                <p class="m-0">2.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
+                                <div class="row m-b-20">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Gender</label>
+                                            <div class="col-sm-8">
+                                                <div class="form-radio">
+                                                    <div id="GenderRadio_list" class="group-add-on">
+                                                        <div class="radio radiofill radio-inline">
+                                                            <label>
+                                                                <input a id="Male_list" value="1" type="radio" name="radio_list" checked=""><i class="helper"></i> Male
+                                                            </label>
+                                                        </div>
+                                                        <div class="radio radiofill radio-inline">
+                                                            <label>
+                                                                <input id="Female_list" value="2" type="radio" name="radio_list"><i class="helper"></i> Female
+                                                            </label>
+                                                        </div>
+                                                        <div class="radio radiofill radio-inline">
+                                                            <label>
+                                                                <input id="Couple_list" value="3" type="radio" name="radio_list"><i class="helper"></i> Couple
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Category Name</label>
+                                            <div class="col-sm-8">
+                                                <div id="divParentCategory_list" class="input-group m-b-sm" style="margin-bottom: 0;">
+                                                    <input type="text" readonly class="form-control" value="Select Parent Category Name" id="inputCategory_list" aria-describedby="basic-addonRegion" />
+                                                    @Html.Hidden("ValueParentCategory_list")
+                                                    <span class="input-group-addon" id="basic-addonRegion" style="height: 37px;margin-top: 5px;">
+                                                        <a id="refreshCategory_list" data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                            <i class="icofont icofont-recycle" style="margin:auto; padding-right:0px"></i>
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                                <div id="divParentSearch_list" style="position: absolute; z-index: 1; background-color: #fff; margin-top:0px;">
+                                                    <input type="text" id="searchCategory_list" placeholder="Tìm kiếm" class="form-control" style="margin-top:0px" />
+                                                    <div data-spy="scroll" style="max-height:150px;overflow:scroll;  background-color: #fff;width: 100%;" id="ParentCategory-tree_list"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="data_table_main table-responsive dt-responsive">
+                                    <table id="tableProduct" class="table  table-striped table-bordered nowrap" style=" width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Category Name</th>
+                                                <th>Product Name</th>
+                                                <th>Price</th>
+                                                <th>Image</th>
+                                                <th>Gender</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        @*<tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Áo Thun</td>
+                                                    <td>Nam</td>
+                                                    <td>Áo</td>
+                                                    <td>Active</td>
+                                                    <td class="dropdown">
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>*@
+                                    </table>
+                                </div>
                             </div>
                             <div class="tab-pane" id="messages7" role="tabpanel">
                                 <p class="m-0">3. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
@@ -182,3 +233,69 @@
         <!-- Tab variant tab card start -->
     </div>
 </div>
+
+
+<!--Modal Change Product-->
+<div class="modal fade" id="my_modal_EditProduct" tabindex="-1" role="dialog" aria-labelledby="my_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Change Product</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body row">
+                <input type="hidden" name="hiddenValue_change" id="hiddenValue_change" value="" />
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Product Name</label>
+                        <div class="col-sm-8">
+                            <input id="productName_change" type="text" class="form-control" placeholder="Product Name">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Price </label>
+                        <div class="col-sm-8">
+                            <input id="productPrice_change" type="number" class="form-control" placeholder="Price of Product">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Image</label>
+                        <div class="col-sm-8">
+                            <input type="file" id="image_Product_change" class="form-control" multiple accept='image/*' onchange="myFunction_change(this)">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Status</label>
+                        <div class="col-sm-8">
+                            <select id="statusProduct_change" class="form-control">
+                                <option value="1">Active</option>
+                                <option value="0">InActive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Info Product</label>
+                        <div class="col-sm-8">
+                            <textarea id="productInfo_change" type="text" class="form-control" placeholder="Info Product"> </textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h6>Image of Product</h6>
+                    <div class="row" id="viewImageProduct_change">
+                        @*<div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
+                                <a href="~/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-gallery="example-gallery">
+                                    <img src="~/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                </a>
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn_Save_Product" type="button" class="btn btn-primary"><i class="ti-import"></i>Save</button>
+                <button id ="btn_Cancel_Product"type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Change Product-->
