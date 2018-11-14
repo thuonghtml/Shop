@@ -151,7 +151,6 @@ $(document).ready(function () {
             var file = document.getElementById("image_Product").files[i];
             formData.append("image_Product", file);
         }
-
         $.ajax({
             type: "POST",
             url: "/Product/AddProduct",
@@ -295,16 +294,7 @@ $(document).ready(function () {
             { "data": "CategoryName", "name": "CategoryName", "autoWidth": true, "searchable": false },
             { "data": "ProductName", "name": "ProductName", "autoWidth": true, "searchable": true },
             { "data": "NewPrice", "name": "NewPrice", "autoWidth": true, "searchable": false, "className": "text-right", "render": $.fn.dataTable.render.number(',') },
-            {
-                "data": "Gender", "name": "Gender", "autoWidth": true, "orderable": false, "searchable": false
-                , "render": function (data, type, row) {
-                    if (data === true)
-                        return "Nam";
-                    else if (data === false)
-                        return "Nữ";
-                    else return "Couple";
-                }
-            },
+            
             {
                 "data": "ImageList", "name": "ImageList", "autoWidth": true, "searchable": false, "orderable": false,
                 "render": function (data, type, row) {
@@ -319,6 +309,16 @@ $(document).ready(function () {
                     })
                     htmlreturn += '</div>'
                     return htmlreturn;
+                }
+            },
+            {
+                "data": "Gender", "name": "Gender", "autoWidth": true, "orderable": false, "searchable": false
+                , "render": function (data, type, row) {
+                    if (data === true)
+                        return "Nam";
+                    else if (data === false)
+                        return "Nữ";
+                    else return "Couple";
                 }
             },
             {

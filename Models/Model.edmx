@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="STORE_DATABASEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="STORE_DATABASEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <!--Errors Found During Generation:
 warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="__MigrationHistory">
@@ -151,12 +151,15 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Name="ImageLink" Type="nvarchar" MaxLength="1000" />
           <Property Name="DateCreate" Type="datetime" />
         </EntityType>
-        <EntityType Name="Menu">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="MasterData">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="200" />
+          <Property Name="Table" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -194,6 +197,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Name="NumberOfRemaining" Type="int" />
           <Property Name="DateCreate" Type="datetime" />
           <Property Name="Status" Type="int" />
+          <Property Name="DateUpdate" Type="datetime" />
         </EntityType>
         <Association Name="FK_Bill_Customer">
           <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
@@ -252,18 +256,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             </Principal>
             <Dependent Role="Product">
               <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Category_Menu">
-          <End Role="Menu" Type="Self.Menu" Multiplicity="0..1" />
-          <End Role="Category" Type="Self.Category" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Menu">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Category">
-              <PropertyRef Name="Gender" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -374,6 +366,12 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Parameter Name="gender" Type="int" Mode="In" />
           <Parameter Name="CategoryId" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetListWarehouse" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+          <Parameter Name="ProductId" Type="int" Mode="In" />
+          <Parameter Name="CategoryId" Type="int" Mode="In" />
+          <Parameter Name="Gender" Type="int" Mode="In" />
+        </Function>
         <Function Name="RandomNVARCHAR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
@@ -418,7 +416,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileAttach" EntityType="Self.FileAttach" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Menu" EntityType="Self.Menu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Warehouse" EntityType="Self.Warehouse" Schema="dbo" store:Type="Tables" />
@@ -429,6 +426,13 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
     [__MigrationHistory].[Model] AS [Model], 
     [__MigrationHistory].[ProductVersion] AS [ProductVersion]
     FROM [dbo].[__MigrationHistory] AS [__MigrationHistory]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="MasterData" EntityType="Self.MasterData" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [MasterData].[Id] AS [Id], 
+    [MasterData].[Description] AS [Description], 
+    [MasterData].[Table] AS [Table]
+    FROM [dbo].[MasterData] AS [MasterData]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_Bill_Customer" Association="Self.FK_Bill_Customer">
             <End Role="Customer" EntitySet="Customer" />
@@ -449,10 +453,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <AssociationSet Name="FK_Category" Association="Self.FK_Category">
             <End Role="Category" EntitySet="Category" />
             <End Role="Product" EntitySet="Product" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Category_Menu" Association="Self.FK_Category_Menu">
-            <End Role="Menu" EntitySet="Menu" />
-            <End Role="Category" EntitySet="Category" />
           </AssociationSet>
           <AssociationSet Name="FK_Conversation_Product" Association="Self.FK_Conversation_Product">
             <End Role="Product" EntitySet="Product" />
@@ -483,8 +483,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             <End Role="Warehouse" EntitySet="Warehouse" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="STORE_DATABASEModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -577,7 +576,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Name="ParentId" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Int32" />
           <NavigationProperty Name="Products" Relationship="Self.FK_Category" FromRole="Category" ToRole="Product" />
-          <NavigationProperty Name="Menu" Relationship="Self.FK_Category_Menu" FromRole="Category" ToRole="Menu" />
         </EntityType>
         <EntityType Name="Conversation">
           <Key>
@@ -629,14 +627,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Name="DateCreate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Product" Relationship="Self.FK_FileAttach_Product" FromRole="FileAttach" ToRole="Product" />
         </EntityType>
-        <EntityType Name="Menu">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Categories" Relationship="Self.FK_Category_Menu" FromRole="Menu" ToRole="Category" />
-        </EntityType>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="Id" />
@@ -679,6 +669,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Name="DateCreate" Type="DateTime" Precision="3" />
           <Property Name="Status" Type="Int32" />
           <NavigationProperty Name="Product" Relationship="Self.FK_Warehouse_Product" FromRole="Warehouse" ToRole="Product" />
+          <Property Name="DateUpdate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="C__MigrationHistory">
           <Key>
@@ -780,18 +771,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Category_Menu">
-          <End Role="Menu" Type="Self.Menu" Multiplicity="0..1" />
-          <End Role="Category" Type="Self.Category" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Menu">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Category">
-              <PropertyRef Name="Gender" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Conversation_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
           <End Role="Conversation" Type="Self.Conversation" Multiplicity="*" />
@@ -844,7 +823,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <EntitySet Name="Customers" EntityType="Self.Customer" />
           <EntitySet Name="Employees" EntityType="Self.Employee" />
           <EntitySet Name="FileAttaches" EntityType="Self.FileAttach" />
-          <EntitySet Name="Menus" EntityType="Self.Menu" />
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="Warehouses" EntityType="Self.Warehouse" />
@@ -877,10 +855,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             <End Role="Category" EntitySet="Categories" />
             <End Role="Product" EntitySet="Products" />
           </AssociationSet>
-          <AssociationSet Name="FK_Category_Menu" Association="Self.FK_Category_Menu">
-            <End Role="Menu" EntitySet="Menus" />
-            <End Role="Category" EntitySet="Categories" />
-          </AssociationSet>
           <AssociationSet Name="FK_Conversation_Product" Association="Self.FK_Conversation_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="Conversation" EntitySet="Conversations" />
@@ -898,13 +872,13 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
           <FunctionImport Name="GetCategoryTable" ReturnType="Collection(STORE_DATABASEModel.GetCategoryTable_Result)">
-            <Parameter Name="Gender" Mode="In" Type="Int32" />
+          <Parameter Name="Gender" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetCategoryWithGender" ReturnType="Collection(STORE_DATABASEModel.GetCategoryWithGender_Result)">
-            <Parameter Name="Gender" Mode="In" Type="Int32" />
+          <Parameter Name="Gender" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetInfoCategoryById" ReturnType="Collection(STORE_DATABASEModel.GetInfoCategoryById_Result)">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetListProduct" ReturnType="Collection(STORE_DATABASEModel.GetListProduct_Result)">
             <Parameter Name="id" Mode="In" Type="Int32" />
@@ -942,6 +916,13 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
+          <EntitySet Name="MasterDatas" EntityType="STORE_DATABASEModel.MasterData" />
+          <FunctionImport Name="GetListWarehouse" ReturnType="Collection(STORE_DATABASEModel.GetListWarehouse_Result)">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="ProductId" Mode="In" Type="Int32" />
+            <Parameter Name="CategoryId" Mode="In" Type="Int32" />
+            <Parameter Name="Gender" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="GetCategoryTable_Result">
           <Property Type="Int32" Name="Id" Nullable="true" />
@@ -991,6 +972,28 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="MasterData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Table" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="GetListWarehouse_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="ProductId" Nullable="true" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CategoryId" Nullable="true" />
+          <Property Type="String" Name="CategoryName" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="Size" Nullable="true" MaxLength="40" />
+          <Property Type="Double" Name="InputPrice" Nullable="true" />
+          <Property Type="Int32" Name="NumberOfImport" Nullable="true" />
+          <Property Type="Int32" Name="NumberOfRemaining" Nullable="true" />
+          <Property Type="Int32" Name="Status" Nullable="true" />
+          <Property Type="DateTime" Name="DateCreate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DateUpdate" Nullable="true" Precision="23" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1131,14 +1134,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Menus">
-            <EntityTypeMapping TypeName="STORE_DATABASEModel.Menu">
-              <MappingFragment StoreEntitySet="Menu">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="STORE_DATABASEModel.Product">
               <MappingFragment StoreEntitySet="Product">
@@ -1168,6 +1163,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <EntitySetMapping Name="Warehouses">
             <EntityTypeMapping TypeName="STORE_DATABASEModel.Warehouse">
               <MappingFragment StoreEntitySet="Warehouse">
+                <ScalarProperty Name="DateUpdate" ColumnName="DateUpdate" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="Size" ColumnName="Size" />
@@ -1276,6 +1272,33 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="STORE_DATABASEModel.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="STORE_DATABASEModel.Store.sp_upgraddiagrams" />
+          <EntitySetMapping Name="MasterDatas">
+            <EntityTypeMapping TypeName="STORE_DATABASEModel.MasterData">
+              <MappingFragment StoreEntitySet="MasterData">
+                <ScalarProperty Name="Table" ColumnName="Table" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetListWarehouse" FunctionName="STORE_DATABASEModel.Store.GetListWarehouse">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetListWarehouse_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="InputPrice" ColumnName="InputPrice" />
+                <ScalarProperty Name="NumberOfImport" ColumnName="NumberOfImport" />
+                <ScalarProperty Name="NumberOfRemaining" ColumnName="NumberOfRemaining" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
+                <ScalarProperty Name="DateUpdate" ColumnName="DateUpdate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

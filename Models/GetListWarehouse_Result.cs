@@ -10,20 +10,20 @@
 namespace Shop.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Warehouse
+    public partial class GetListWarehouse_Result
     {
         public int Id { get; set; }
         public Nullable<int> ProductId { get; set; }
+        public string ProductName { get; set; }
+        public Nullable<int> CategoryId { get; set; }
+        public string CategoryName { get; set; }
         public string Size { get; set; }
         public Nullable<double> InputPrice { get; set; }
         public Nullable<int> NumberOfImport { get; set; }
         public Nullable<int> NumberOfRemaining { get; set; }
-        public Nullable<System.DateTime> DateCreate { get; set; }
         public Nullable<int> Status { get; set; }
+        public Nullable<System.DateTime> DateCreate { get; set; }
         public Nullable<System.DateTime> DateUpdate { get; set; }
-    
-        public virtual Product Product { get; set; }
     }
 }

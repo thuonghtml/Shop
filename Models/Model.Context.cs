@@ -38,11 +38,11 @@ namespace Shop.Models
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<FileAttach> FileAttaches { get; set; }
-        public virtual DbSet<Menu> Menus { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<Warehouse> Warehouses { get; set; }
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
+        public virtual DbSet<MasterData> MasterDatas { get; set; }
     
         public virtual ObjectResult<GetCategoryTable_Result> GetCategoryTable(Nullable<int> gender)
         {
@@ -194,6 +194,27 @@ namespace Shop.Models
         public virtual int sp_upgraddiagrams()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
+        }
+    
+        public virtual ObjectResult<GetListWarehouse_Result> GetListWarehouse(Nullable<int> id, Nullable<int> productId, Nullable<int> categoryId, Nullable<int> gender)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            var productIdParameter = productId.HasValue ?
+                new ObjectParameter("ProductId", productId) :
+                new ObjectParameter("ProductId", typeof(int));
+    
+            var categoryIdParameter = categoryId.HasValue ?
+                new ObjectParameter("CategoryId", categoryId) :
+                new ObjectParameter("CategoryId", typeof(int));
+    
+            var genderParameter = gender.HasValue ?
+                new ObjectParameter("Gender", gender) :
+                new ObjectParameter("Gender", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetListWarehouse_Result>("GetListWarehouse", idParameter, productIdParameter, categoryIdParameter, genderParameter);
         }
     }
 }
