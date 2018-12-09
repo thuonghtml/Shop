@@ -167,14 +167,19 @@
                 success: function (data) {
                     //e.preventDefault();
                     if (data != null && data.success) {
+                        Refresh_Input_Warehouse();
+                        table.ajax.reload();
                         RenderMess("success", data.mess)
 
                     } else if (data != null && !data.success) {
+                        Refresh_Input_Warehouse();
                         RenderMess("error", data.mess)
                     }
                 },
                 error: function (xhr, status, errorThrown) {
                     //e.preventDefault();
+                    console.log(errorThrown)
+                    Refresh_Input_Warehouse();
                     RenderMess("error", errorThrown)
                 }
             })
@@ -182,6 +187,17 @@
 
     })
 
+    var Refresh_Input_Warehouse = function () {
+        Refresh_Parent_Category();
+        $('#ProductId').find('option').remove().end();
+        $('#ProductId').val(null).trigger('change');
+        $(".js-example-responsive").html('').select2();
+        $("#Size").val("");
+        $("#InputPrice").val("");
+        $("#NumberOfImport").val("");
+        $("#NumberOfRemaining").val("");
+
+    }
     //---------------------------------------------------------------
     var Refresh_Parent_Category_list = function () {
         $('#inputCategory_list').val("Select Parent Category Name")

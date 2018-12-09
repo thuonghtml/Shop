@@ -216,5 +216,19 @@ namespace Shop.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetListWarehouse_Result>("GetListWarehouse", idParameter, productIdParameter, categoryIdParameter, genderParameter);
         }
+    
+        public virtual ObjectResult<GetProductInMain_Result> GetProductInMain()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductInMain_Result>("GetProductInMain");
+        }
+    
+        public virtual ObjectResult<GetInfoProductById_Result> GetInfoProductById(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInfoProductById_Result>("GetInfoProductById", idParameter);
+        }
     }
 }

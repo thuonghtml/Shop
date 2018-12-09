@@ -7,6 +7,7 @@
 @section JavaScript {
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/assets/page/product/js")
 }
 <div class="row">
@@ -47,90 +48,102 @@
                             <div class="tab-pane active" id="home7" role="tabpanel">
                                 <div class="row m-b-20">
                                     <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Gender</label>
-                                            <div class="col-sm-8">
-                                                <div class="form-radio">
-                                                    <div id="GenderRadio" name ="GenderRadio" class="group-add-on">
-                                                        <div class="radio radiofill radio-inline">
-                                                            <label>
-                                                                <input a id="Male" value="1" type="radio" name="radio" checked=""><i class="helper"></i> Male
-                                                            </label>
-                                                        </div>
-                                                        <div class="radio radiofill radio-inline">
-                                                            <label>
-                                                                <input id="Female" value="2" type="radio" name="radio"><i class="helper"></i> Female
-                                                            </label>
-                                                        </div>
-                                                        <div class="radio radiofill radio-inline">
-                                                            <label>
-                                                                <input id="Couple" value="3" type="radio" name="radio"><i class="helper"></i> Couple
-                                                            </label>
+                                        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myFromProduct", @class = "validateDontSubmit" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Gender</label>
+                                                <div class="col-sm-8">
+                                                    <div class="form-radio">
+                                                        <div id="GenderRadio" name="GenderRadio" class="group-add-on">
+                                                            <div class="radio radiofill radio-inline">
+                                                                <label>
+                                                                    <input a id="Male" value="1" type="radio" name="radio" checked=""><i class="helper"></i> Male
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio radiofill radio-inline">
+                                                                <label>
+                                                                    <input id="Female" value="2" type="radio" name="radio"><i class="helper"></i> Female
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio radiofill radio-inline">
+                                                                <label>
+                                                                    <input id="Couple" value="3" type="radio" name="radio"><i class="helper"></i> Couple
+                                                                </label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Category Name</label>
-                                            <div class="col-sm-8">
-                                                <div id="divParentCategory" class="input-group m-b-sm" style="margin-bottom: 0;">
-                                                    <input type="text" readonly class="form-control" value="Select Parent Category Name" id="inputCategory" aria-describedby="basic-addonRegion" />
-                                                    @Html.Hidden("ValueParentCategory")
-                                                    <span class="input-group-addon" id="basic-addonRegion" style="height: 37px;margin-top: 5px;">
-                                                        <a id="refreshCategory" data-toggle="tooltip" data-placement="top" title="Refresh">
-                                                            <i class="icofont icofont-recycle" style="margin:auto; padding-right:0px"></i>
-                                                        </a>
-                                                    </span>
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Category Name</label>
+                                                <div class="col-sm-8">
+                                                    <div id="divParentCategory" class="input-group m-b-sm" style="margin-bottom: 0;">
+                                                        <input type="text" readonly class="form-control" value="Select Parent Category Name" id="inputCategory" aria-describedby="basic-addonRegion" />
+                                                        @Html.Hidden("ValueParentCategory")
+                                                        <span class="input-group-addon" id="basic-addonRegion" style="height: 37px;margin-top: 5px;">
+                                                            <a id="refreshCategory" data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                                <i class="icofont icofont-recycle" style="margin:auto; padding-right:0px"></i>
+                                                            </a>
+                                                        </span>
+                                                    </div>
+                                                    <div id="divParentSearch" style="position: absolute; z-index: 1; background-color: #fff; margin-top:0px;">
+                                                        <input type="text" id="searchCategory" placeholder="Tìm kiếm" class="form-control" style="margin-top:0px" />
+                                                        <div data-spy="scroll" style="max-height:150px;overflow:scroll;  background-color: #fff;width: 100%;" id="ParentCategory-tree"></div>
+                                                    </div>
                                                 </div>
-                                                <div id="divParentSearch" style="position: absolute; z-index: 1; background-color: #fff; margin-top:0px;">
-                                                    <input type="text" id="searchCategory" placeholder="Tìm kiếm" class="form-control" style="margin-top:0px" />
-                                                    <div data-spy="scroll" style="max-height:150px;overflow:scroll;  background-color: #fff;width: 100%;" id="ParentCategory-tree"></div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Product Name</label>
+                                                <div class="col-sm-8">
+                                                    @*<input id="productName" type="text" class="form-control" placeholder="Product Name">*@
+                                                    @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control", @id = "productName", @name = "productName", @placeholder = "Product Name" } })
+                                                    @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Product Name</label>
-                                            <div class="col-sm-8">
-                                                <input id="productName" type="text" class="form-control" placeholder="Product Name">
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Price </label>
+                                                <div class="col-sm-8">
+                                                    @*<input id="productPrice" type="number" class="form-control" placeholder="Price of Product">*@
+                                                    @Html.EditorFor(model => model.NewPrice, new { htmlAttributes = new { @class = "form-control", @id = "productPrice", @name = "productPrice", @placeholder = "Price of Product", @type = "number" } })
+                                                    @Html.ValidationMessageFor(model => model.NewPrice, "", new { @class = "text-danger" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Price </label>
-                                            <div class="col-sm-8">
-                                                <input id="productPrice" type="number" class="form-control" placeholder="Price of Product">
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Image</label>
+                                                <div class="col-sm-8">
+                                                    <input type="file" id="image_Product" name="image_Product" class="form-control" multiple accept='image/*' onchange="myFunction(this)">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Image</label>
-                                            <div class="col-sm-8">
-                                                <input type="file" id="image_Product" class="form-control" multiple accept='image/*' onchange="myFunction(this)">
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Status</label>
+                                                <div class="col-sm-8">
+                                                    <select id="statusProduct" name="statusProduct" class="form-control">
+                                                        <option value="1">Active</option>
+                                                        <option value="0">InActive</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Status</label>
-                                            <div class="col-sm-8">
-                                                <select id="statusProduct" class="form-control">
-                                                    <option value="1">Active</option>
-                                                    <option value="0">InActive</option>
-                                                </select>
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Info Product</label>
+                                                <div class="col-sm-8">
+                                                    @*<textarea id="productInfo" type="text" class="form-control" placeholder="Info Product"> </textarea>*@
+                                                    @*@Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @cols = "", @id = "productInfo", @name = "productInfo", @placeholder = "Info Product" } })*@
+                                                    @Html.TextAreaFor(model => model.Description, 0, 0, new { @class = "form-control", @id = "productInfo", @name = "productInfo", @placeholder = "Info Product" })
+                                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Info Product</label>
-                                            <div class="col-sm-8">
-                                                <textarea id="productInfo" type="text" class="form-control" placeholder="Info Product"> </textarea>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <hr>
-                                            <button id="btnSave" class="btn btn-primary" style="float:right"><i class="ti-import"></i>Save</button>
-                                            <button id="btnCancel" class="btn btn-default" style="float:right;margin-right:10px"><i class="ti-na"></i>Cancel</button>
+                                            <div>
+                                                <hr>
+                                                <button id="btnSave" class="btn btn-primary" style="float:right"><i class="ti-import"></i>Save</button>
+                                                <button id="btnCancel" class="btn btn-default" style="float:right;margin-right:10px"><i class="ti-na"></i>Cancel</button>
 
-                                        </div>
+                                            </div>
+                                        }
                                     </div>
                                     <div class="col-md-6">
-                                        <h6>Image of Product</h6>
+                                        <h6>You have selected <b id="totalImage">0</b> images for the product</h6>
                                         <div class="row" id="viewImageProduct">
                                             @*<div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
                                                     <a href="~/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-gallery="example-gallery">
@@ -138,6 +151,7 @@
                                                     </a>
                                                 </div>*@
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -243,58 +257,69 @@
                 <h4 class="modal-title" id="myModalLabel">Change Product</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
-            <div class="modal-body row">
-                <input type="hidden" name="hiddenValue_change" id="hiddenValue_change" value="" />
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Product Name</label>
-                        <div class="col-sm-8">
-                            <input id="productName_change" type="text" class="form-control" placeholder="Product Name">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myFromProduct_change", @class = "validateDontSubmit" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="modal-body row">
+                    <input type="hidden" name="hiddenValue_change" id="hiddenValue_change" value="" />
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Product Name</label>
+                            <div class="col-sm-8">
+                                @*<input id="productName_change" type="text" class="form-control" placeholder="Product Name">*@
+                                @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control", @id = "productName_change", @placeholder = "Product Name" } })
+                                @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Price </label>
+                            <div class="col-sm-8">
+                                @*<input id="productPrice_change" type="number" class="form-control" placeholder="Price of Product">*@
+                                @Html.EditorFor(model => model.NewPrice, new { htmlAttributes = new { @class = "form-control", @id = "productPrice_change", @name = "productPrice", @placeholder = "Price of Product", @type = "number" } })
+                                @Html.ValidationMessageFor(model => model.NewPrice, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Image</label>
+                            <div class="col-sm-8">
+                                <input type="file" id="image_Product_change" class="form-control" multiple accept='image/*' onchange="myFunction_change(this)">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Status</label>
+                            <div class="col-sm-8">
+                                <select id="statusProduct_change" name="statusProduct_change" class="form-control">
+                                    <option value="1">Active</option>
+                                    <option value="0">InActive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Info Product</label>
+                            <div class="col-sm-8">
+                                @*<textarea id="productInfo_change" type="text" class="form-control" placeholder="Info Product"> </textarea>*@
+                                @Html.TextAreaFor(model => model.Description, 0, 0, new { @class = "form-control", @id = "productInfo_change", @name = "productInfo", @placeholder = "Info Product" })
+                                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Price </label>
-                        <div class="col-sm-8">
-                            <input id="productPrice_change" type="number" class="form-control" placeholder="Price of Product">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Image</label>
-                        <div class="col-sm-8">
-                            <input type="file" id="image_Product_change" class="form-control" multiple accept='image/*' onchange="myFunction_change(this)">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Status</label>
-                        <div class="col-sm-8">
-                            <select id="statusProduct_change" class="form-control">
-                                <option value="1">Active</option>
-                                <option value="0">InActive</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Info Product</label>
-                        <div class="col-sm-8">
-                            <textarea id="productInfo_change" type="text" class="form-control" placeholder="Info Product"> </textarea>
+                    <div class="col-md-6">
+                        <h6>Image of Product</h6>
+                        <div class="row" id="viewImageProduct_change">
+                            @*<div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
+                                    <a href="~/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-gallery="example-gallery">
+                                        <img src="~/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                    </a>
+                                </div>*@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <h6>Image of Product</h6>
-                    <div class="row" id="viewImageProduct_change">
-                        @*<div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
-                                <a href="~/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-gallery="example-gallery">
-                                    <img src="~/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
-                                </a>
-                            </div>*@
-                    </div>
+                <div class="modal-footer">
+                    <button id="btn_Save_Product" type="button" class="btn btn-primary"><i class="ti-import"></i>Save</button>
+                    <button id="btn_Cancel_Product" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button id="btn_Save_Product" type="button" class="btn btn-primary"><i class="ti-import"></i>Save</button>
-                <button id ="btn_Cancel_Product"type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
+            }
         </div>
     </div>
 </div>

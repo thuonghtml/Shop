@@ -216,7 +216,7 @@
     [ +/- num product ]*/
     $('.btn-num-product-down').on('click', function(){
         var numProduct = Number($(this).next().val());
-        if(numProduct > 0) $(this).next().val(numProduct - 1);
+        if(numProduct > 1) $(this).next().val(numProduct - 1);
     });
 
     $('.btn-num-product-up').on('click', function(){
@@ -268,14 +268,14 @@
     
     /*==================================================================
     [ Show modal1 ]*/
-    $('.js-show-modal1').on('click',function(e){
-        e.preventDefault();
-        $('.js-modal1').addClass('show-modal1');
-    });
+    //$('.js-show-modal1').on('click',function(e){
+    //    e.preventDefault();
+    //    $('.js-modal1').addClass('show-modal1');
+    //});
 
-    $('.js-hide-modal1').on('click',function(){
-        $('.js-modal1').removeClass('show-modal1');
-    });
+    //$('.js-hide-modal1').on('click', function () {        
+    //    $('.js-modal1').removeClass('show-modal1');
+    //});
 
 
 

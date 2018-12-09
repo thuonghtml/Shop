@@ -361,6 +361,9 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
         <Function Name="GetInfoCategoryById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Id" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetInfoProductById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetListProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="int" Mode="In" />
           <Parameter Name="gender" Type="int" Mode="In" />
@@ -372,6 +375,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Parameter Name="CategoryId" Type="int" Mode="In" />
           <Parameter Name="Gender" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetProductInMain" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="RandomNVARCHAR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
@@ -923,6 +927,10 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             <Parameter Name="CategoryId" Mode="In" Type="Int32" />
             <Parameter Name="Gender" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="GetProductInMain" ReturnType="Collection(STORE_DATABASEModel.GetProductInMain_Result)" />
+          <FunctionImport Name="GetInfoProductById" ReturnType="Collection(STORE_DATABASEModel.GetInfoProductById_Result)">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="GetCategoryTable_Result">
           <Property Type="Int32" Name="Id" Nullable="true" />
@@ -994,6 +1002,24 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Type="Int32" Name="Status" Nullable="true" />
           <Property Type="DateTime" Name="DateCreate" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="DateUpdate" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="GetProductInMain_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="500" />
+          <Property Type="Double" Name="OldPrice" Nullable="true" />
+          <Property Type="Double" Name="NewPrice" Nullable="true" />
+          <Property Type="String" Name="ImageLink" Nullable="true" MaxLength="1000" />
+          <Property Type="Double" Name="Type" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetInfoProductById_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Description" Nullable="true" />
+          <Property Type="Double" Name="OldPrice" Nullable="true" />
+          <Property Type="Double" Name="NewPrice" Nullable="true" />
+          <Property Type="String" Name="Size" Nullable="false" MaxLength="17" />
+          <Property Type="String" Name="Color" Nullable="false" MaxLength="22" />
+          <Property Type="String" Name="ImageList" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1296,6 +1322,32 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
                 <ScalarProperty Name="DateUpdate" ColumnName="DateUpdate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetProductInMain" FunctionName="STORE_DATABASEModel.Store.GetProductInMain">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetProductInMain_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="OldPrice" ColumnName="OldPrice" />
+                <ScalarProperty Name="NewPrice" ColumnName="NewPrice" />
+                <ScalarProperty Name="ImageLink" ColumnName="ImageLink" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetInfoProductById" FunctionName="STORE_DATABASEModel.Store.GetInfoProductById">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetInfoProductById_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="OldPrice" ColumnName="OldPrice" />
+                <ScalarProperty Name="NewPrice" ColumnName="NewPrice" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="ImageList" ColumnName="ImageList" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

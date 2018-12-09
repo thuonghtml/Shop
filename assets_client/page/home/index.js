@@ -42,4 +42,35 @@
             });
         });
     });
+    var RenderContentProduct = function (data) {
+        $("#mymodal1").empty();
+        $("#mymodal1").append(data)
+        
+        $('.js-modal1').addClass('show-modal1');
+    }
+    $(".js-show-modal1").click(function () {
+        //debugger;
+        var $buttonClicked = $(this);
+        var id = $buttonClicked.attr('data-id');
+        var options = { "backdrop": "static", keyboard: true };
+        $.ajax({
+            type: "GET",
+            url: '/Home/GetProductByIdModal',
+            contentType: "application/json; charset=utf-8",
+            data: { "Id": id },
+            datatype: "json",
+            success: function (data) {
+                //debugger;  
+                RenderContentProduct(data);
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        });
+    });
+    //$(document).on('click', '.js-hide-modal1', function () {
+    //    $('#mymodal1').removeClass('show-modal1');
+    //})
+  
+   
 });

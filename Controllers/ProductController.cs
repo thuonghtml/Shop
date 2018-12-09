@@ -24,12 +24,12 @@ namespace Shop.Controllers
         {
             try
             {
-                int gender = int.Parse(form["gender"]);
-                int categoryId = int.Parse(form["categoryId"]);
-                string productName = Convert.ToString(form["productName"]);
-                string productInfo = Convert.ToString(form["productInfo"]);
-                double productPrice = double.Parse(form["productPrice"]);
-                int statusProduct = int.Parse(form["statusProduct"]);
+                int gender = int.Parse(form["radio"]);
+                int categoryId = int.Parse(form["ValueParentCategory"]);
+                string productName = Convert.ToString(form["ProductName"]);
+                string productInfo = Convert.ToString(form["Description"]);
+                double productPrice = double.Parse(form["NewPrice"]);
+                int statusProduct = int.Parse(form["statusProduct_change"]);
                 Product product = new Product
                 {
                     CategoryId = categoryId,
@@ -43,22 +43,24 @@ namespace Shop.Controllers
                 for (int i = 0; i < Request.Files.Count; i++)
                 {
                     HttpPostedFileBase file = Request.Files[i];
-
-                    var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") +"_"+Path.GetFileName(file.FileName);
-                    var orginalDirectory = new DirectoryInfo(Server.MapPath("~/Upload/Image"));
-                    string pathString = Path.Combine(orginalDirectory.ToString(), "");
-                    var path = string.Format("{0}\\{1}", pathString, fileName);
-                    file.SaveAs(path);
-                    FileAttach fileimg = new FileAttach
+                    if(file.FileName != "" && file.FileName != null)
                     {
-                        ProductId = product.Id,
-                        ImageLink = "Upload/Image/" + fileName.ToString(),
-                        DateCreate = DateTime.Now
-                    };
-                    db.FileAttaches.Add(fileimg);
+                        var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + Path.GetFileName(file.FileName);
+                        var orginalDirectory = new DirectoryInfo(Server.MapPath("~/Upload/Image"));
+                        string pathString = Path.Combine(orginalDirectory.ToString(), "");
+                        var path = string.Format("{0}\\{1}", pathString, fileName);
+                        file.SaveAs(path);
+                        FileAttach fileimg = new FileAttach
+                        {
+                            ProductId = product.Id,
+                            ImageLink = "Upload/Image/" + fileName.ToString(),
+                            DateCreate = DateTime.Now
+                        };
+                        db.FileAttaches.Add(fileimg);
+                    }           
                 }
                 db.SaveChanges();
-                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, mess = "Thêm sản phẩm " + productName + " thành công!" }, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)
             {
@@ -113,10 +115,10 @@ namespace Shop.Controllers
             try
             {
                 int Id = int.Parse(form["Id"]);
-                string productName = Convert.ToString(form["productName"]);
-                string productInfo = Convert.ToString(form["productInfo"]);
-                double productPrice = double.Parse(form["productPrice"]);
-                int statusProduct = int.Parse(form["statusProduct"]);
+                string productName = Convert.ToString(form["ProductName"]);
+                string productInfo = Convert.ToString(form["Description"]);
+                double productPrice = double.Parse(form["NewPrice"]);
+                int statusProduct = int.Parse(form["statusProduct_change"]);
                 var listimg = form["listimgdelete"].ToString();
                 var listimgdelete = JsonConvert.DeserializeObject<dynamic>(listimg);
                 Product product = db.Products.Single(p => p.Id == Id);
@@ -150,13 +152,27 @@ namespace Shop.Controllers
                     db.FileAttaches.Add(fileimg);
                 }
                 db.SaveChanges();
-                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, mess ="Cập nhật thông tin sản phẩm "+ productName +" thành công!" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
 
+        }
+
+        public ActionResult Details(int id)
+        {
+            try
+            {
+                var product = db.GetInfoProductById(id).First();
+                return View(product);
+            }
+            catch  (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
     }
 }
