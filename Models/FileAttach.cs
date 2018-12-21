@@ -18,6 +18,7 @@ namespace Shop.Models
         public Nullable<int> ProductId { get; set; }
         public string ImageLink { get; set; }
         public Nullable<System.DateTime> DateCreate { get; set; }
+        public Nullable<int> Status { get; set; }
     
         public virtual Product Product { get; set; }
     }

@@ -4,6 +4,9 @@
     ViewBag.Title = Model.ProductName;
     Layout = "~/Views/Shared/_Layout_Client.cshtml";
 }
+@section JavaScript {
+    @Scripts.Render("~/asset_client/detail/js")
+}
 <!-- Title page -->
 <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('../../assets_client/images/bg-01.jpg'); ">
     <h2 class="ltext-105 cl0 txt-center">
@@ -55,65 +58,67 @@
 
                     <!--  -->
                     <div class="p-t-33">
-                        <div class="flex-w flex-r-m p-b-10">
-                            <div class="size-203 flex-c-m respon6">
-                                Size
-                            </div>
+                        @if (Model != null && Model.Size != null && Model.Size != "")
+                        {
+                            <div class="flex-w flex-r-m p-b-10">
+                                <div class="size-203 flex-c-m respon6">
+                                    Size
+                                </div>
 
-                            <div class="size-204 respon6-next">
-                                <div class="rs1-select2 bor8 bg0">
-                                    @if (Model != null && Model.Size != null && Model.Size != "")
-                                    {
-                                        <select class="js-select2" name="time">
-                                            <option>Choose an option</option>
+                                <div class="size-204 respon6-next">
+                                    <div class="rs1-select2 bor8 bg0">
+
+                                        <select id="size_product" class="js-select2" name="time">
+                                            <option value="">Choose an option</option>
                                             @foreach (var item in Model.Size.Split(','))
                                             {
-                                                <option>Size @item</option>
+                                                <option value="@item">Size @item</option>
                                             }
                                         </select>
-                                    }
-                                    <div class="dropDownSelect2"></div>
+
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
+                        @if (Model != null && Model.Color != null && Model.Color != "")
+                        {
+                            <div class="flex-w flex-r-m p-b-10">
+                                <div class="size-203 flex-c-m respon6">
+                                    Color
+                                </div>
 
-                        <div class="flex-w flex-r-m p-b-10">
-                            <div class="size-203 flex-c-m respon6">
-                                Color
-                            </div>
+                                <div class="size-204 respon6-next">
+                                    <div class="rs1-select2 bor8 bg0">
 
-                            <div class="size-204 respon6-next">
-                                <div class="rs1-select2 bor8 bg0">
-                                    @if (Model != null && Model.Color != null && Model.Color != "")
-                                    {
-                                        <select class="js-select2" name="time">
-                                            <option>Choose an option</option>
+                                        <select id="color_product" class="js-select2" name="time">
+                                            <option value="">Choose an option</option>
                                             @foreach (var item in Model.Color.Split(','))
                                             {
-                                                <option>@item</option>
+                                                <option value="@item">@item</option>
                                             }
                                         </select>
-                                    }
-                                    <div class="dropDownSelect2"></div>
+
+                                        <div class="dropDownSelect2"></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
+                        }
                         <div class="flex-w flex-r-m p-b-10">
                             <div class="size-204 flex-w flex-m respon6-next">
                                 <div class="wrap-num-product flex-w m-r-20 m-tb-10">
-                                    <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+                                    <div id="down_detail" class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
                                         <i class="fs-16 zmdi zmdi-minus"></i>
                                     </div>
 
-                                    <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
+                                    <input id="num_product" class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
 
-                                    <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+                                    <div id="up_detail" class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                                         <i class="fs-16 zmdi zmdi-plus"></i>
                                     </div>
                                 </div>
 
-                                <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+                                <button data-id="@Model.Id" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
                                     Add to cart
                                 </button>
                             </div>
@@ -237,7 +242,33 @@
                         <div class="row">
                             <div class="col-sm-10 col-md-8 col-lg-6 m-lr-auto">
                                 <div class="p-b-30 m-lr-15-sm">
+
                                     <!-- Review -->
+                                    <div class="flex-w flex-t p-b-68">
+                                        <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
+                                            <img src="../../assets_client/images/avatar-01.jpg" alt="AVATAR">
+                                        </div>
+
+                                        <div class="size-207">
+                                            <div class="flex-w flex-sb-m p-b-17">
+                                                <span class="mtext-107 cl2 p-r-20">
+                                                    Ariana Grande
+                                                </span>
+
+                                                <span class="fs-18 cl11">
+                                                    <i class="zmdi zmdi-star"></i>
+                                                    <i class="zmdi zmdi-star"></i>
+                                                    <i class="zmdi zmdi-star"></i>
+                                                    <i class="zmdi zmdi-star"></i>
+                                                    <i class="zmdi zmdi-star-half"></i>
+                                                </span>
+                                            </div>
+
+                                            <p class="stext-102 cl6">
+                                                Quod autem in homine praestantissimum atque optimum est, id deseruit. Apud ceteros autem philosophos
+                                            </p>
+                                        </div>
+                                    </div>
                                     <div class="flex-w flex-t p-b-68">
                                         <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
                                             <img src="../../assets_client/images/avatar-01.jpg" alt="AVATAR">

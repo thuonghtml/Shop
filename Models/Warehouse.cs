@@ -23,6 +23,7 @@ namespace Shop.Models
         public Nullable<System.DateTime> DateCreate { get; set; }
         public Nullable<int> Status { get; set; }
         public Nullable<System.DateTime> DateUpdate { get; set; }
+        public string Color { get; set; }
     
         public virtual Product Product { get; set; }
     }

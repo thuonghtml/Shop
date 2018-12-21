@@ -1,0 +1,74 @@
+﻿@{
+    Layout = null;
+    List<Shop.Models.Cart> lstCart = ViewBag.Cart as List<Shop.Models.Cart> ;
+    double sum = 0;
+    if (lstCart !=null)
+    {
+       sum= lstCart.Sum(item => item.Price * item.Number);
+    }
+
+
+}
+<ul class="header-cart-wrapitem w-full">
+
+    @if (lstCart != null)
+    {
+        foreach (Shop.Models.Cart item in lstCart)
+        {
+            
+            <li class="header-cart-item flex-w flex-t m-b-12">
+                <div data-key="@item.Key" class="header-cart-item-img">
+                    <img src="../../@item.Photo" alt="IMG" width="60" height="80">
+                </div>
+
+                <div class="header-cart-item-txt p-t-8">
+                    <a target="_blank" href="@Url.Action("Details","Product", new { id = item.ProductId })" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+                        @item.ProductName
+                    </a>
+
+                    <span class="header-cart-item-info">
+                         @item.Number x @item.Price.ToString("#,##0") VNĐ
+                    </span>
+                </div>
+            </li>
+        }
+    }
+
+</ul>
+
+<div class="w-full">
+    <div id="total_right_cart" class="header-cart-total w-full p-tb-40">
+        Total: @sum.ToString("#,##0") VNĐ 
+    </div>
+
+    <div class="header-cart-buttons flex-w w-full">
+        <a href="@Url.Action("ShopingCart","Home")" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+            View Cart
+        </a>
+
+        <a href="shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+            Check Out
+        </a>
+    </div>
+</div>
+
+<script>
+    $('.header-cart-item-img').on('click', function () {
+        var key = $(this).attr("data-key");
+        var div = $(this)
+        $.ajax({
+            type: "GET",
+            url: "/Home/DeleteRowCart",
+            contentType: "application/json; charset=utf-8",
+            data: { "key": key },
+            success: function (result) {
+                div.parent().remove();  // Remove Line
+                $("#total_right_cart").html('Total: '+result.total+' VNĐ')    //Change Total
+                $('#cart_icon').attr("data-notify", result.count)      // Change number Cart icon
+            },
+            error: function () {
+                swal("Lỗi", "Có lỗi khi xóa line giỏ hàng", "error");
+            }
+        })
+    })
+</script>

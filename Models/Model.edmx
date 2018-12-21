@@ -150,6 +150,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Name="ProductId" Type="int" />
           <Property Name="ImageLink" Type="nvarchar" MaxLength="1000" />
           <Property Name="DateCreate" Type="datetime" />
+          <Property Name="Status" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -198,6 +199,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Name="DateCreate" Type="datetime" />
           <Property Name="Status" Type="int" />
           <Property Name="DateUpdate" Type="datetime" />
+          <Property Name="Color" Type="nchar" MaxLength="100" />
         </EntityType>
         <Association Name="FK_Bill_Customer">
           <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
@@ -364,6 +366,11 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
         <Function Name="GetInfoProductById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Id" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetInfoProductCart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductId" Type="int" Mode="In" />
+          <Parameter Name="Size" Type="nvarchar" Mode="In" />
+          <Parameter Name="Color" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="GetListProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="int" Mode="In" />
           <Parameter Name="gender" Type="int" Mode="In" />
@@ -375,7 +382,9 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Parameter Name="CategoryId" Type="int" Mode="In" />
           <Parameter Name="Gender" Type="int" Mode="In" />
         </Function>
-        <Function Name="GetProductInMain" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetProductInMain" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CategoryId" Type="int" Mode="In" />
+        </Function>
         <Function Name="RandomNVARCHAR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
@@ -630,6 +639,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Name="ImageLink" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="DateCreate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Product" Relationship="Self.FK_FileAttach_Product" FromRole="FileAttach" ToRole="Product" />
+          <Property Name="Status" Type="Int32" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -674,6 +684,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Name="Status" Type="Int32" />
           <NavigationProperty Name="Product" Relationship="Self.FK_Warehouse_Product" FromRole="Warehouse" ToRole="Product" />
           <Property Name="DateUpdate" Type="DateTime" Precision="3" />
+          <Property Name="Color" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="C__MigrationHistory">
           <Key>
@@ -927,9 +938,16 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             <Parameter Name="CategoryId" Mode="In" Type="Int32" />
             <Parameter Name="Gender" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="GetProductInMain" ReturnType="Collection(STORE_DATABASEModel.GetProductInMain_Result)" />
+          <FunctionImport Name="GetProductInMain" ReturnType="Collection(STORE_DATABASEModel.GetProductInMain_Result)" >
+          <Parameter Name="CategoryId" Mode="In" Type="Int32" />
+          </FunctionImport>
           <FunctionImport Name="GetInfoProductById" ReturnType="Collection(STORE_DATABASEModel.GetInfoProductById_Result)">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetInfoProductCart" ReturnType="Collection(STORE_DATABASEModel.GetInfoProductCart_Result)">
+            <Parameter Name="ProductId" Mode="In" Type="Int32" />
+            <Parameter Name="Size" Mode="In" Type="String" />
+            <Parameter Name="Color" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="GetCategoryTable_Result">
@@ -1002,6 +1020,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Type="Int32" Name="Status" Nullable="true" />
           <Property Type="DateTime" Name="DateCreate" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="DateUpdate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Color" Nullable="true" MaxLength="100" />
         </ComplexType>
         <ComplexType Name="GetProductInMain_Result">
           <Property Type="Int32" Name="Id" Nullable="false" />
@@ -1020,6 +1039,13 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Type="String" Name="Size" Nullable="false" MaxLength="17" />
           <Property Type="String" Name="Color" Nullable="false" MaxLength="22" />
           <Property Type="String" Name="ImageList" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetInfoProductCart_Result">
+          <Property Type="Int32" Name="ProductId" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="500" />
+          <Property Type="Double" Name="NewPrice" Nullable="true" />
+          <Property Type="String" Name="ImageLink" Nullable="true" MaxLength="1000" />
+          <Property Type="Int32" Name="NumberOfRemaining" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1153,6 +1179,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <EntitySetMapping Name="FileAttaches">
             <EntityTypeMapping TypeName="STORE_DATABASEModel.FileAttach">
               <MappingFragment StoreEntitySet="FileAttach">
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="ImageLink" ColumnName="ImageLink" />
@@ -1189,6 +1216,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <EntitySetMapping Name="Warehouses">
             <EntityTypeMapping TypeName="STORE_DATABASEModel.Warehouse">
               <MappingFragment StoreEntitySet="Warehouse">
+                <ScalarProperty Name="Color" ColumnName="Color" />
                 <ScalarProperty Name="DateUpdate" ColumnName="DateUpdate" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
@@ -1322,6 +1350,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
                 <ScalarProperty Name="DateUpdate" ColumnName="DateUpdate" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -1348,6 +1377,17 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
                 <ScalarProperty Name="Size" ColumnName="Size" />
                 <ScalarProperty Name="Color" ColumnName="Color" />
                 <ScalarProperty Name="ImageList" ColumnName="ImageList" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetInfoProductCart" FunctionName="STORE_DATABASEModel.Store.GetInfoProductCart">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetInfoProductCart_Result">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="NewPrice" ColumnName="NewPrice" />
+                <ScalarProperty Name="ImageLink" ColumnName="ImageLink" />
+                <ScalarProperty Name="NumberOfRemaining" ColumnName="NumberOfRemaining" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

@@ -1,4 +1,4 @@
-
+﻿
 (function ($) {
     "use strict";
 
@@ -194,7 +194,19 @@
 
     /*==================================================================
     [ Cart ]*/
-    $('.js-show-cart').on('click',function(){
+    $('.js-show-cart').on('click', function () {
+        $.ajax({
+            type: "GET",
+            url: "/Home/ViewCartRight",
+            contentType: "application/json; charset=utf-8",
+            data: null,
+            success: function (result) {
+                $('#view_right_cart').html(result)
+            },
+            error: function () {
+                swal("Lỗi", "Có lỗi khi xem giỏ hàng", "error");
+            }
+        })
         $('.js-panel-cart').addClass('show-header-cart');
     });
 
@@ -214,16 +226,24 @@
 
     /*==================================================================
     [ +/- num product ]*/
-    $('.btn-num-product-down').on('click', function(){
+    //$('.btn-num-product-down').on('click', function(){
+    //    var numProduct = Number($(this).next().val());
+    //    if(numProduct > 1) $(this).next().val(numProduct - 1);
+    //});
+
+    //$('.btn-num-product-up').on('click', function(){
+    //    var numProduct = Number($(this).prev().val());
+    //    $(this).prev().val(numProduct + 1);
+    //});
+    $('#down_detail').on('click', function () {
         var numProduct = Number($(this).next().val());
-        if(numProduct > 1) $(this).next().val(numProduct - 1);
+        if (numProduct > 1) $(this).next().val(numProduct - 1);
     });
 
-    $('.btn-num-product-up').on('click', function(){
+    $('#up_detail').on('click', function () {
         var numProduct = Number($(this).prev().val());
         $(this).prev().val(numProduct + 1);
     });
-
     /*==================================================================
     [ Rating ]*/
     $('.wrap-rating').each(function(){

@@ -131,7 +131,7 @@ namespace Shop.Controllers
                     cate.CategoryName = categoryName;
                     cate.Gender = gender;
                     db.SaveChanges();
-                    return Json(new { success = true, obj = cate }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = true, obj = categoryName }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {

@@ -166,14 +166,14 @@ $(document).ready(function () {
                     if (data != null && data.success) {
                         Refresh_InputAddProduct();
                         $("#viewImageProduct").empty();
-                        $("#totalImage").append('0');
+                        $("#totalImage").html('0');
                         table.ajax.reload();
                         RenderMess("success", data.mess)
 
                     } else if (data != null && !data.success) {
                         Refresh_InputAddProduct();
                         $("#viewImageProduct").empty();
-                        $("#totalImage").append('0');
+                        $("#totalImage").html('0');
                         RenderMess("error", data.mess)
                     }
                 },
@@ -181,7 +181,7 @@ $(document).ready(function () {
                     //e.preventDefault();
                     Refresh_InputAddProduct();
                     $("#viewImageProduct").empty();
-                    $("#totalImage").append('0');
+                    $("#totalImage").html('0');
                     RenderMess("error", errorThrown)
                 }
             })
@@ -229,7 +229,8 @@ $(document).ready(function () {
         e.preventDefault();
         Refresh_InputAddProduct();
         $("#viewImageProduct").empty();
-        $("#totalImage").append('0')
+        $("#totalImage").empty()
+        $("#totalImage").text('0')
     })
     // #endregion -- End Tab Insert Product ---
     //---------------------------------------------------------------------------------------------------------
@@ -375,9 +376,9 @@ $(document).ready(function () {
             {
                 "data": "Gender", "name": "Gender", "autoWidth": true, "orderable": false, "searchable": false
                 , "render": function (data, type, row) {
-                    if (data === true)
+                    if (data === 1)
                         return "Nam";
-                    else if (data === false)
+                    else if (data === 2)
                         return "Nữ";
                     else return "Couple";
                 }
@@ -492,7 +493,7 @@ $(document).ready(function () {
                     } else if (data != null && !data.success) {
                         Refresh_InputAddProduct();
                         $("#viewImageProduct").empty();
-                        $("#totalImage").append('0');
+                        $("#totalImage").html('0');
                         RenderMess("error", data.mess)
                     }
                 },
@@ -540,6 +541,37 @@ $(document).ready(function () {
         fileImageChange = [];
         $("#my_modal_EditProduct").modal('hide')
     })
+    $(document).on('click', '.identifyingClass', function () {
+        var my_id_value = $(this).attr('data-id')
+        $(".modal-body #hiddenValue").val(my_id_value);
+    });
+
+    $("#btn_OK1").on("click", function () {
+        console.log($("#hiddenValue").val())
+        $("#my_modal").modal('hide')
+        $.ajax({
+            type: "GET",
+            url: "/Product/DeleteProduct",
+            data: {
+                id: parseInt($("#hiddenValue").val())
+            },
+            success: function (result) {
+                //table.ajax.reload();
+                if (result.success) {
+                    table.draw(false);
+                    RenderMess("success", result.mess)
+                }
+                else {
+                    RenderMess("error", "Xóa thất bại!");
+                }
+            },
+            error: function (err) {
+                console.log(err)
+                RenderMess("error", "Xóa thất bại!");
+            }
+        })
+
+    })
 });
 
 function myFunction(f) {
@@ -556,7 +588,7 @@ function myFunction(f) {
         var l_File_Name_Str = l_File_Name.replace('.', '');
         if (/^[\w ]*$/.test(l_File_Name_Str) == false) {
             $(f).val('');
-            $("#totalImage").append('0')
+            $("#totalImage").html('0')
             alert('Cảnh báo: Tên file phải không dấu, không khoảng trắng và không có kí tự đặc biệt!');
             return;
         }
@@ -564,7 +596,7 @@ function myFunction(f) {
             var inValid = /\s/;
             if (inValid.test(l_File_Name_Str)) {
                 $(f).val('');
-                $("#totalImage").append('0');
+                $("#totalImage").html('0');
                 alert('Cảnh báo: Tên file không để khoảng trắng!');
                 return;
             }
@@ -583,7 +615,7 @@ function myFunction(f) {
         });
         pReader.readAsDataURL(file);
     });
-    $("#totalImage").append(f.files.length)
+    $("#totalImage").html(f.files.length)
 }
 function myFunction_change(f) {
     $.each(f.files, function (index, item) {

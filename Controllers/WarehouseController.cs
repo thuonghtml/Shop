@@ -37,6 +37,7 @@ namespace Shop.Controllers
                 int productId = int.Parse(form["ProductId"]);
                 string size = Convert.ToString(form["Size"]);
                 double price = Convert.ToDouble(form["InputPrice"]);
+                string color = Convert.ToString(form["Color"]);
                 int numberImport = int.Parse(form["NumberOfImport"]);
                 int numberOfRemaining = int.Parse(form["NumberOfRemaining"]);
                 var product = db.Products.Where(p => p.Id == productId && p.Status == 1).Select(p => new { p.Id, p.ProductName }).ToList();
@@ -46,13 +47,14 @@ namespace Shop.Controllers
                 }
                 else
                 {
-                    Warehouse ware = db.Warehouses.FirstOrDefault(w => w.ProductId == productId && w.Size.Contains(size));
-                    if (ware == null) // nếu chưa tồn tại sản phẩm có cùng size
+                    var ware = db.Warehouses.Where(w => w.ProductId == productId && w.Status == 1 && w.Size.Equals(size) && w.Color.Equals(color)).ToList();
+                    if (ware.Count == 0) // nếu chưa tồn tại sản phẩm có cùng size & color
                     {
                         Warehouse warehouse_add = new Warehouse
                         {
                             ProductId = productId,
                             Size = size,
+                            Color = color,
                             InputPrice = price,
                             NumberOfImport = numberImport,
                             NumberOfRemaining = numberOfRemaining,
@@ -61,7 +63,7 @@ namespace Shop.Controllers
                         };
                         db.Warehouses.Add(warehouse_add);
                         db.SaveChanges();
-                        return Json(new { success = true, mess = "Nhập kho sản phẩm: "+ product[0].ProductName+" thành công!!!" }, JsonRequestBehavior.AllowGet);
+                        return Json(new { success = true, mess = "Nhập kho sản phẩm: "+ product[0].ProductName + " thành công!!!" }, JsonRequestBehavior.AllowGet);
                     }
                     else // Đã tồn tại sản phẩm có cùng size
                     {
@@ -76,7 +78,7 @@ namespace Shop.Controllers
             }
         }
 
-        public ActionResult LoadDataTable(int? gender, int? categoryId)
+        public ActionResult LoadDataTable(int? gender, int? categoryId, int? productId )
         {
             var draw = Request.Form.GetValues("draw").FirstOrDefault();
             var start = Request.Form.GetValues("start").FirstOrDefault();
@@ -87,7 +89,7 @@ namespace Shop.Controllers
             int pageSize = length != null ? Convert.ToInt32(length) : 0;
             int skip = start != null ? Convert.ToInt32(start) : 0;
             int recordsTotal = 0;
-            var listWarehouse = db.GetListWarehouse(null,null,categoryId,gender).ToList();
+            var listWarehouse = db.GetListWarehouse(null,productId,categoryId,gender).ToList();
 
             if (!(string.IsNullOrEmpty(searchvalue)))
             {
@@ -103,7 +105,26 @@ namespace Shop.Controllers
 
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data }, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult DeleteWarehouse(int id)
+        {
+            try
+            {
+                var war = db.Warehouses.Single(p => p.Id == id);
+                if (war != null)
+                {
+                    war.Status = 0;   
+                    db.SaveChanges();
+                    return Json(new { success = true, mess = "Đã xóa thành công " + war.Product.ProductName +" - "+war.Size +" - "+war.Color}, JsonRequestBehavior.AllowGet);
+                }
+                else
+                    return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
+        }
     }
 
 }

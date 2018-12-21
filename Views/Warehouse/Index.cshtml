@@ -119,6 +119,35 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
+                                            @Html.LabelFor(model => model.Color, htmlAttributes: new { @class = "col-sm-4 col-form-label" })
+                                            <div class="col-md-8">
+                                                <select name="Color" id="Color" class="form-control">
+                                                    <option value="">Choose color</option>
+                                                    <option value="#000000" style="background-color: Black;color: #FFFFFF;">Black</option>
+                                                    <option value="#808080" style="background-color: Gray;">Gray</option>
+                                                    <option value="#A9A9A9" style="background-color: DarkGray;">DarkGray</option>
+                                                    <option value="#D3D3D3" style="background-color: LightGrey;">LightGray</option>
+                                                    <option value="#FFFFFF" style="background-color: White;">White</option>
+                                                    <option value="#7FFFD4" style="background-color: Aquamarine;">Aquamarine</option>
+                                                    <option value="#0000FF" style="background-color: Blue;">Blue</option>
+                                                    <option value="#000080" style="background-color: Navy;color: #FFFFFF;">Navy</option>
+                                                    <option value="#800080" style="background-color: Purple;color: #FFFFFF;">Purple</option>
+                                                    <option value="#FF1493" style="background-color: DeepPink;">DeepPink</option>
+                                                    <option value="#EE82EE" style="background-color: Violet;">Violet</option>
+                                                    <option value="#FFC0CB" style="background-color: Pink;">Pink</option>
+                                                    <option value="#006400" style="background-color: DarkGreen;color: #FFFFFF;">DarkGreen</option>
+                                                    <option value="#008000" style="background-color: Green;color: #FFFFFF;">Green</option>
+                                                    <option value="#9ACD32" style="background-color: YellowGreen;">YellowGreen</option>
+                                                    <option value="#FFFF00" style="background-color: Yellow;">Yellow</option>
+                                                    <option value="#FFA500" style="background-color: Orange;">Orange</option>
+                                                    <option value="#FF0000" style="background-color: Red;">Red</option>
+                                                    <option value="#A52A2A" style="background-color: Brown;">Brown</option>
+                                                    <option value="#DEB887" style="background-color: BurlyWood;">BurlyWood</option>
+                                                    <option value="#F5F5DC" style="background-color: Beige;">Beige</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
                                             <label class="col-sm-4 col-form-label">Input Price</label>
                                             <div class="col-sm-8">
                                                 @*<input type="text" class="form-control" placeholder="Product Size">*@
@@ -193,6 +222,12 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Product Name</label>
+                                            <div class="col-sm-8">
+                                                <select id="ProductId_list" name="ProductId_list" class="js-example-responsive"></select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 @*<input type="text" id="myInputSearch" class="form-control" placeholder="Search for names.." title="Type in a name">*@
@@ -205,6 +240,7 @@
                                             <th>Category Name</th>
                                             <th>Product Name</th>
                                             <th>Size</th>
+                                            <th>Color</th>
                                             <th>Input Price</th>
                                             <th>Number Import</th>
                                             <th>Number Remaining</th>
@@ -237,3 +273,23 @@
         <!-- Tab variant tab card start -->
     </div>
 </div>
+<!---- Modal Delete---->
+<div class="modal fade" id="my_modal" tabindex="-1" role="dialog" aria-labelledby="my_modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Notification</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                Do you want delete record???<br />
+                <input type="hidden" name="hiddenValue" id="hiddenValue" value="" />
+            </div>
+            <div class="modal-footer">
+                <button id="btn_OK1" type="button" class="btn btn-primary">OK</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!---- Modal Delete---->

@@ -217,9 +217,13 @@ namespace Shop.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetListWarehouse_Result>("GetListWarehouse", idParameter, productIdParameter, categoryIdParameter, genderParameter);
         }
     
-        public virtual ObjectResult<GetProductInMain_Result> GetProductInMain()
+        public virtual ObjectResult<GetProductInMain_Result> GetProductInMain(Nullable<int> categoryId)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductInMain_Result>("GetProductInMain");
+            var categoryIdParameter = categoryId.HasValue ?
+                new ObjectParameter("CategoryId", categoryId) :
+                new ObjectParameter("CategoryId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductInMain_Result>("GetProductInMain", categoryIdParameter);
         }
     
         public virtual ObjectResult<GetInfoProductById_Result> GetInfoProductById(Nullable<int> id)
@@ -229,6 +233,23 @@ namespace Shop.Models
                 new ObjectParameter("Id", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInfoProductById_Result>("GetInfoProductById", idParameter);
+        }
+    
+        public virtual ObjectResult<GetInfoProductCart_Result> GetInfoProductCart(Nullable<int> productId, string size, string color)
+        {
+            var productIdParameter = productId.HasValue ?
+                new ObjectParameter("ProductId", productId) :
+                new ObjectParameter("ProductId", typeof(int));
+    
+            var sizeParameter = size != null ?
+                new ObjectParameter("Size", size) :
+                new ObjectParameter("Size", typeof(string));
+    
+            var colorParameter = color != null ?
+                new ObjectParameter("Color", color) :
+                new ObjectParameter("Color", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInfoProductCart_Result>("GetInfoProductCart", productIdParameter, sizeParameter, colorParameter);
         }
     }
 }

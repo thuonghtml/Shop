@@ -63,6 +63,8 @@
                     }
                     if (r.length > 0) {
                         $('#inputCategory').val(r[0].Text)
+                        $('#ProductId').val(null).trigger('change');
+                        $("#ProductId").html('').select2();
                         $('#ValueParentCategory').val(r[0].Id);
                         $('#divParentSearch').hide();
                     }
@@ -118,12 +120,23 @@
         CheckGender = $('input[name=radio]:checked', '#GenderRadio').val()
         GetDataCategory()
         $('#ProductId').val(null).trigger('change');
-        $(".js-example-responsive").html('').select2();
+        $("#ProductId").html('').select2();
     });
     $('#ParentCategory-tree').on("select_node.jstree", function (e, data) { /*alert("node_id: " + data.node.id);*/
         $('#ProductId').find('option').remove().end();
         $.get('/Warehouse/GetProductByCategoryId', { id: data.node.id }, function (result) {
-            $(".js-example-responsive").select2({
+            $("#ProductId").select2({
+                data: result
+            })
+        })
+    })
+    $('#ParentCategory-tree_list').on("select_node.jstree", function (e, data) { /*alert("node_id: " + data.node.id);*/
+        $('#ProductId').find('option').remove().end();
+        console.log(data.node.id)
+        $.get('/Warehouse/GetProductByCategoryId', { id: data.node.id }, function (result) {
+            var choose = { id: "null", text: "Choose product name" }
+            result.unshift(choose)
+            $("#ProductId_list").select2({
                 data: result
             })
         })
@@ -168,7 +181,8 @@
                     //e.preventDefault();
                     if (data != null && data.success) {
                         Refresh_Input_Warehouse();
-                        table.ajax.reload();
+                        //table.ajax.reload();
+                        table.draw(false);
                         RenderMess("success", data.mess)
 
                     } else if (data != null && !data.success) {
@@ -191,7 +205,7 @@
         Refresh_Parent_Category();
         $('#ProductId').find('option').remove().end();
         $('#ProductId').val(null).trigger('change');
-        $(".js-example-responsive").html('').select2();
+        $("#ProductId").html('').select2();
         $("#Size").val("");
         $("#InputPrice").val("");
         $("#NumberOfImport").val("");
@@ -251,8 +265,10 @@
                     if (r.length > 0) {
 
                         $('#inputCategory_list').val(r[0].Text)
-                        $('#ValueParentCategory_list').val(r[0].Id);
-
+                        $('#ValueParentCategory_list').val(r[0].Id); 
+                        $('#ProductId_list').val(null).trigger('change');
+                        $("#ProductId_list").html('').select2();
+                        table.draw(false);
                         $('#divParentSearch_list').hide();
                     }
                 }).jstree({
@@ -308,12 +324,16 @@
         "serverSide": true,
         "scrollX": true,
         "scrollCollapse": true,
+        "fixedHeader": {
+            header: true
+        },
         "ajax": {
 
             "url": "/Warehouse/LoadDataTable",
             "data": function (d) {
                 d.gender = CheckGender_list,
-                d.categoryid = $('#ValueParentCategory_list').val()
+                d.categoryid = $('#ValueParentCategory_list').val(),
+                d.productId = $('#ProductId_list').val()
             },
             "type": "POST",
             "datatype": "json",
@@ -323,6 +343,7 @@
             { "data": "CategoryName", "name": "CategoryName", "autoWidth": true, "searchable": false },
             { "data": "ProductName", "name": "ProductName", "autoWidth": true, "searchable": true },
             { "data": "Size", "name": "Size", "autoWidth": true, "searchable": false, "className": "text-center" },
+            { "data": "Color", "name": "Color", "autoWidth": true, "searchable": false, "className": "text-center" },
             { "data": "InputPrice", "name": "InputPrice", "autoWidth": true, "searchable": false, "className": "text-right", "render": $.fn.dataTable.render.number(',') },
             { "data": "NumberOfImport", "name": "NumberOfImport", "autoWidth": true, "searchable": false, "className": "text-center" },
             { "data": "NumberOfRemaining", "name": "NumberOfRemaining", "autoWidth": true, "searchable": false, "className": "text-center" },
@@ -350,9 +371,49 @@
         ]
     })
     $('#GenderRadio_list input').on('change', function () {
-        CheckGender_list = $('input[name=radio_list]:checked', '#GenderRadio_list').val()
+        CheckGender_list = $('input[name=radio_list]:checked', '#GenderRadio_list').val() 
         GetDataCategory_list()
-        table.ajax.reload();
+        $('#ProductId_list').val(null).trigger('change');
+        $("#ProductId_list").html('').select2();
+        //table.ajax.reload();
+        table.draw(false);
+    });
+    $(document).on('click', '.identifyingClass', function () {
+        var my_id_value = $(this).attr('data-id')
+        $(".modal-body #hiddenValue").val(my_id_value);
+    });
+    $("#btn_OK1").on("click", function () {
+        console.log($("#hiddenValue").val())
+        $("#my_modal").modal('hide')
+        $.ajax({
+            type: "GET",
+            url: "/Warehouse/DeleteWarehouse",
+            data: {
+                id: parseInt($("#hiddenValue").val())
+            },
+            success: function (result) {
+                //table.ajax.reload();
+                if (result.success) {
+                    RenderMess("success", result.mess)
+                    table.draw(false);
+                    
+                }
+                else {
+                    RenderMess("error", "Xóa thất bại!");
+                }
+            },
+            error: function (err) {
+                console.log(err)
+                RenderMess("error", "Xóa thất bại!");
+            }
+        })
+
+    })
+    $("#ProductId_list")
+    $('#ProductId_list').on('select2:select', function (e) {
+        //var data = e.params.data;
+        //console.log($(this).val());
+        table.draw(false)
     });
 });
 

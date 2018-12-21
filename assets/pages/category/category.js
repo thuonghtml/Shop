@@ -349,6 +349,7 @@
         });
     }
     var GetDataCategory_Change = function (CheckGender_change) {
+        console.log(CheckGender_change)
         var datas = []
         $.get('/Category/GetCategories', { gender: CheckGender_change }, function (data) {
             if (data !== null && data !== undefined && data !== "") {
@@ -381,7 +382,7 @@
             categoryName = $('#input_Category_change').val(),
             Id = $('#hiddenValue_change').val(),
             gender = $('input[name=radio_change]:checked', '#GenderRadio_change').val()
-
+        console.log(parentId, categoryName, Id, gender)
         //console.log(parentId + " " + Id + " " + categoryName + " " + gender)
         $("#my_modal_EditCategory").modal('hide')
         $.ajax({

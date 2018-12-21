@@ -97,7 +97,7 @@ namespace Shop
                         "~/assets/pages/warehouse/warehouse.js"
                 ));
             bundles.Add(new StyleBundle("~/assets/page/category/css").Include(
-                    //"~/assets/plugins/DataTables/datatables.min.css"
+                //"~/assets/plugins/DataTables/datatables.min.css"
                 ));
             bundles.Add(new ScriptBundle("~/assets/page/category/js").Include(
                         //"~/assets/plugins/DataTables.min.js",
@@ -105,7 +105,7 @@ namespace Shop
                         "~/assets/pages/category/category.js"
                 ));
             //bundles.Add(new StyleBundle("~/assets/page/product/css").Include(
-                    
+
             //    ));
             bundles.Add(new ScriptBundle("~/assets/page/product/js").Include(
                     "~/assets/pages/product/product.js"
@@ -142,8 +142,21 @@ namespace Shop
                        "~/assets_client/vendor/isotope/isotope.pkgd.min.js",
                        "~/assets_client/vendor/sweetalert/sweetalert.min.js",
                        "~/assets_client/vendor/perfect-scrollbar/perfect-scrollbar.min.js",
-                       "~/assets_client/js/main.js",
-                       "~/assets_client/page/home/index.js"));
+                       "~/assets_client/js/main.js"
+                       ));
+            bundles.Add(new ScriptBundle("~/assets_client/home/js").Include(
+                        "~/assets_client/page/home/index.js"
+                ));
+            bundles.Add(new ScriptBundle("~/assets_client/shop/js").Include(
+                        "~/assets_client/page/Shop/Shop.js"
+                ));
+            bundles.Add(new ScriptBundle("~/asset_client/detail/js").Include(
+                        "~/assets_client/page/Detail/details.js"
+                ));
+            bundles.Add(new ScriptBundle("~/assets_client/cart/js").Include( 
+                        "~/assets_client/page/Cart/min/numeral.min.js",  
+                       "~/assets_client/page/Cart/Cart.js"
+                ));
             #endregion Asset_Client
 
             #region User Profile

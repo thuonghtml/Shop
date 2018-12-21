@@ -29,7 +29,7 @@ namespace Shop.Controllers
                 string productName = Convert.ToString(form["ProductName"]);
                 string productInfo = Convert.ToString(form["Description"]);
                 double productPrice = double.Parse(form["NewPrice"]);
-                int statusProduct = int.Parse(form["statusProduct_change"]);
+                int statusProduct = int.Parse(form["statusProduct"]);
                 Product product = new Product
                 {
                     CategoryId = categoryId,
@@ -54,7 +54,8 @@ namespace Shop.Controllers
                         {
                             ProductId = product.Id,
                             ImageLink = "Upload/Image/" + fileName.ToString(),
-                            DateCreate = DateTime.Now
+                            DateCreate = DateTime.Now,
+                            Status = 1
                         };
                         db.FileAttaches.Add(fileimg);
                     }           
@@ -130,7 +131,7 @@ namespace Shop.Controllers
                 product.DateUpdate = DateTime.Now;
                 foreach (int item in listimgdelete)
                 {
-                    FileAttach fi = new FileAttach { Id = item};
+                    FileAttach fi = new FileAttach { Id = item};  
                     db.Entry(fi).State = EntityState.Deleted;
                     
                 }
@@ -160,11 +161,44 @@ namespace Shop.Controllers
             }
 
         }
-
+        public ActionResult DeleteProduct(int id)
+        {
+            try
+            {
+                var product = db.Products.Single(p => p.Id == id);
+                if (product != null)
+                {
+                    product.Status = 0;
+                    foreach (var item in product.FileAttaches) // Xóa file 
+                    {
+                        item.Status = 0;
+                    }
+                    foreach(var item in product.Warehouses)  // Xóa line trong kho
+                    {
+                        item.Status = 0;
+                    }
+                    db.SaveChanges();
+                    return Json(new { success = true, mess ="Đã xóa thành công "+ product.ProductName }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                    return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+         
+        }
         public ActionResult Details(int id)
         {
             try
             {
+                ViewBag.CartCount = 0;
+                if (Session["Cart"] != null)
+                {
+                    List<Cart> list = Session["Cart"] as List<Cart>;
+                    ViewBag.CartCount = list.Count;
+                }
                 var product = db.GetInfoProductById(id).First();
                 return View(product);
             }

@@ -25,5 +25,6 @@ namespace Shop.Models
         public Nullable<int> Status { get; set; }
         public Nullable<System.DateTime> DateCreate { get; set; }
         public Nullable<System.DateTime> DateUpdate { get; set; }
+        public string Color { get; set; }
     }
 }
