@@ -11,7 +11,11 @@ namespace Shop.Controllers
         // GET: Admin
         public ActionResult Index()
         {
-            return View();
+            //if (User.IsInRole("Admin"))
+            
+                return View();
+            
+           
         }
         public ActionResult UserProfile()
         {

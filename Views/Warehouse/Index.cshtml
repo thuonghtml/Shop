@@ -122,28 +122,28 @@
                                             @Html.LabelFor(model => model.Color, htmlAttributes: new { @class = "col-sm-4 col-form-label" })
                                             <div class="col-md-8">
                                                 <select name="Color" id="Color" class="form-control">
+
                                                     <option value="">Choose color</option>
-                                                    <option value="#000000" style="background-color: Black;color: #FFFFFF;">Black</option>
-                                                    <option value="#808080" style="background-color: Gray;">Gray</option>
-                                                    <option value="#A9A9A9" style="background-color: DarkGray;">DarkGray</option>
-                                                    <option value="#D3D3D3" style="background-color: LightGrey;">LightGray</option>
-                                                    <option value="#FFFFFF" style="background-color: White;">White</option>
-                                                    <option value="#7FFFD4" style="background-color: Aquamarine;">Aquamarine</option>
-                                                    <option value="#0000FF" style="background-color: Blue;">Blue</option>
-                                                    <option value="#000080" style="background-color: Navy;color: #FFFFFF;">Navy</option>
-                                                    <option value="#800080" style="background-color: Purple;color: #FFFFFF;">Purple</option>
-                                                    <option value="#FF1493" style="background-color: DeepPink;">DeepPink</option>
-                                                    <option value="#EE82EE" style="background-color: Violet;">Violet</option>
-                                                    <option value="#FFC0CB" style="background-color: Pink;">Pink</option>
-                                                    <option value="#006400" style="background-color: DarkGreen;color: #FFFFFF;">DarkGreen</option>
-                                                    <option value="#008000" style="background-color: Green;color: #FFFFFF;">Green</option>
-                                                    <option value="#9ACD32" style="background-color: YellowGreen;">YellowGreen</option>
-                                                    <option value="#FFFF00" style="background-color: Yellow;">Yellow</option>
-                                                    <option value="#FFA500" style="background-color: Orange;">Orange</option>
-                                                    <option value="#FF0000" style="background-color: Red;">Red</option>
-                                                    <option value="#A52A2A" style="background-color: Brown;">Brown</option>
-                                                    <option value="#DEB887" style="background-color: BurlyWood;">BurlyWood</option>
-                                                    <option value="#F5F5DC" style="background-color: Beige;">Beige</option>
+                                                    <option value="Black" style="background-color: Black;color: #FFFFFF;">Màu đen</option>
+                                                    <option value="Gray" style="background-color: Gray;">Màu xám</option>
+                                                    <option value="DarkGray" style="background-color: DarkGray;">Màu xám đen</option>
+                                                    <option value="LightGray" style="background-color: LightGrey;">Xám nhạt</option>
+                                                    <option value="White" style="background-color: White;">Màu trắng</option>
+                                                    <option value="Aquamarine" style="background-color: Aquamarine;">Aquamarine</option>
+                                                    <option value="Blue" style="background-color: Blue;">Màu xanh da trời</option>
+                                                    <option value="Navy" style="background-color: Navy;color: #FFFFFF;">Màu hải quân</option>
+                                                    <option value="Purple" style="background-color: Purple;color: #FFFFFF;">Màu tím</option>
+                                                    <option value="DeepPink" style="background-color: DeepPink;">Màu hồng đậm</option>
+                                                    <option value="Violet" style="background-color: Violet;">Màu tím đậm</option>
+                                                    <option value="Pink" style="background-color: Pink;">Màu hồng</option>
+                                                    <option value="DarkGreen" style="background-color: DarkGreen;color: #FFFFFF;">Màu xanh lá cây đậm</option>
+                                                    <option value="Green" style="background-color: Green;color: #FFFFFF;">Màu xanh lá</option>
+                                                    <option value="Green" style="background-color: YellowGreen;">Màu xanh lá nhạt</option>
+                                                    <option value="Yellow" style="background-color: Yellow;">Màu vàng</option>
+                                                    <option value="Orange" style="background-color: Orange;">Màu cam</option>
+                                                    <option value="Red" style="background-color: Red;">Màu đỏ</option>
+                                                    <option value="Brown" style="background-color: Brown;">Màu nâu</option>
+                                                    <option value="BurlyWood" style="background-color: BurlyWood;">Màu gỗ lớn</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -293,3 +293,88 @@
     </div>
 </div>
 <!---- Modal Delete---->
+<!--Modal Change Product-->
+<div class="modal fade" id="my_modal_EditWarehouse" tabindex="-1" role="dialog" aria-labelledby="my_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Change Warehouse</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myFromWarehouse_change", @class = "validateDontSubmit" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="modal-body row">
+                    <input type="hidden" name="hiddenValue_change" id="hiddenValue_change" value="" />
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Category Name</label>
+                            <div class="col-sm-8">
+                                @*<input id="productName_change" type="text" class="form-control" placeholder="Product Name">*@
+                                @Html.EditorFor(model => model.Product.Category.CategoryName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "productName_change", @placeholder = "Category Name" } })
+                                @Html.ValidationMessageFor(model => model.Product.Category.CategoryName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Product Name</label>
+                            <div class="col-sm-8">
+                                @*<input id="productPrice_change" type="number" class="form-control" placeholder="Price of Product">*@
+                                @Html.EditorFor(model => model.Product.ProductName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "productPrice_change", @name = "productPrice", @placeholder = "Product Name" } })
+                                @Html.ValidationMessageFor(model => model.Product.ProductName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Input Price </label>
+                            <div class="col-sm-8">
+                                @*<input id="productPrice_change" type="number" class="form-control" placeholder="Price of Product">*@
+                                @Html.EditorFor(model => model.InputPrice, new { htmlAttributes = new { @class = "form-control", @id = "productPrice_change", @name = "productPrice", @placeholder = "Price of Product", @type = "number" } })
+                                @Html.ValidationMessageFor(model => model.InputPrice, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        @*<div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Status</label>
+                                <div class="col-sm-8">
+                                    <select id="statusProduct_change" name="statusProduct_change" class="form-control">
+                                        <option value="1">Active</option>
+                                        <option value="0">InActive</option>
+                                    </select>
+                                </div>
+                            </div>*@
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Number Import </label>
+                            <div class="col-sm-8">
+                                @*<input id="productPrice_change" type="number" class="form-control" placeholder="Price of Product">*@
+                                @Html.EditorFor(model => model.NumberOfImport, new { htmlAttributes = new { @class = "form-control", @id = "productPrice_change", @name = "productPrice", @placeholder = "Price of Product", @type = "number" } })
+                                @Html.ValidationMessageFor(model => model.NumberOfImport, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Number Remaining </label>
+                            <div class="col-sm-8">
+                                @*<input id="productPrice_change" type="number" class="form-control" placeholder="Price of Product">*@
+                                @Html.EditorFor(model => model.NumberOfRemaining, new { htmlAttributes = new { @class = "form-control", @id = "productPrice_change", @name = "productPrice", @placeholder = "Price of Product", @type = "number" } })
+                                @Html.ValidationMessageFor(model => model.NumberOfRemaining, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col-md-6">
+                        <h6>Image of Product</h6>
+                        <div class="row" id="viewImageProduct_change">*@
+                    @*<div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
+                            <a href="~/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-gallery="example-gallery">
+                                <img src="~/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                            </a>
+                        </div>*@
+                    @*</div>
+                        </div>*@
+                </div>
+                <div class="modal-footer">
+                    <button id="btn_Save_Warehouse" type="button" class="btn btn-primary"><i class="ti-import"></i>Save</button>
+                    <button id="btn_Cancel_Warehouse" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--Modal Change Product-->

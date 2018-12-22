@@ -125,6 +125,10 @@ namespace Shop.Controllers
             }
 
         }
+        //public ActionResult GetInfoWarehouseById(int id)
+        //{
+
+        //}
     }
 
 }

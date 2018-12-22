@@ -97,7 +97,7 @@
                                             @foreach (var item in product.Color.Split(','))
                                             {
 
-                                                <option value="@item">item</option>
+                                                <option data-color="AA" value="@item">@item</option>
                                             }
                                         </select>
                                        
@@ -159,6 +159,16 @@
                 dropdownParent: $(this).next('.dropDownSelect2')
             });
         })
+        //if ($('#color_product').length > 0) {
+        //    color_product = $("#color_product").val();
+        //    $('#color_product').on('select2:select', function (e) {
+        //        // Do something
+        //        //console.log($('#color_product').select2("data")[0].element.dataset['color'])
+        //        $("#color_product").parent().css("background-color", $("#color_product").val());
+              
+        //    });
+        //}
+        //$('#select2-color_product-result-pw0l-#D3D3D3').css("background-color", "yellow")  
         $("#down").on('click', function () {
             var numProduct = Number($(this).next().val());
             if (numProduct > 1) $(this).next().val(numProduct - 1);

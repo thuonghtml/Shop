@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
@@ -68,7 +69,63 @@ namespace Shop
             app.UseGoogleAuthentication(
                 clientId: "1029674611467-f4opp289qvh8dvag11gnn1o1ldo8fcmf.apps.googleusercontent.com",
                 clientSecret: "8FhfDDHHEm_8v9OraDFIHeAy");
-     
+            createRolesandUsers();
+        }
+        public void createRolesandUsers()
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            // In Startup iam creating first Admin Role and creating a default Admin User
+            if (!roleManager.RoleExists("Admin"))
+            {
+
+                // first we create Admin rool
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "Admin";
+                roleManager.Create(role);
+
+                //Here we create a Admin super user who will maintain the website
+
+                var user = new ApplicationUser();
+                user.UserName = "Thuong";
+                user.Email = "thuonghtml123@gmail.com";
+
+                string userPWD = "123456a@";
+
+                var chkUser = UserManager.Create(user, userPWD);
+
+                //Add default User to Role Admin
+                if (chkUser.Succeeded)
+                {
+                    var result1 = UserManager.AddToRole(user.Id, "Admin");
+
+                }
+            }
+
+            // creating Creating Manager role
+            if (!roleManager.RoleExists("Manager"))
+            {
+                var role = new IdentityRole();
+                role.Name = "Manager";
+                roleManager.Create(role);
+
+            }
+
+            // creating Creating Employee role
+            if (!roleManager.RoleExists("Employee"))
+            {
+                var role = new IdentityRole();
+                role.Name = "Employee";
+                roleManager.Create(role);    
+            }
+            if (!roleManager.RoleExists("Customers"))
+            {
+                var role = new IdentityRole();
+                role.Name = "Customers";
+                roleManager.Create(role);
+            }
         }
     }
 }
