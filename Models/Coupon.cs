@@ -12,27 +12,24 @@ namespace Shop.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Customer
+    public partial class Coupon
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Customer()
+        public Coupon()
         {
             this.Bills = new HashSet<Bill>();
         }
     
         public int Id { get; set; }
-        public string CustomerName { get; set; }
-        public Nullable<System.DateTime> Birthday { get; set; }
-        public Nullable<bool> Gender { get; set; }
-        public string Address { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
+        public string CouponCode { get; set; }
+        public Nullable<double> Price { get; set; }
+        public Nullable<System.DateTime> DateCreate { get; set; }
+        public Nullable<System.DateTime> DateBegin { get; set; }
+        public Nullable<System.DateTime> DateEnd { get; set; }
         public Nullable<int> Status { get; set; }
-        public Nullable<System.DateTime> TimeCreate { get; set; }
-        public Nullable<System.DateTime> TimeUpdate { get; set; }
-        public string UserId { get; set; }
+        public Nullable<int> Quantity { get; set; }
+        public Nullable<int> QuantityRemaining { get; set; }
     
-        public virtual AspNetUser AspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bill> Bills { get; set; }
     }

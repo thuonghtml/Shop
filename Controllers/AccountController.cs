@@ -17,6 +17,7 @@ namespace Shop.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private STORE_DATABASEEntities db = new STORE_DATABASEEntities();
         ApplicationDbContext context;
         public AccountController()
         {
@@ -372,9 +373,21 @@ namespace Shop.Controllers
                         {
                             await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                             await this.UserManager.AddToRoleAsync(user.Id, "Customers");
+                            //them Lay thong tin khach hang
+                            Customer customer = new Customer
+                            {
+                                CustomerName = user.UserName,
+                                Email = user.Email,
+                                PhoneNumber = user.PhoneNumber,
+                                TimeCreate = DateTime.Now,
+                                Status = 1,
+                                UserId = user.Id
+                            };
+                            db.Customers.Add(customer);
+                            db.SaveChanges();  
                             if (returnUrl == null)
                             {
-                                return RedirectToAction("Index", "Home");
+                                return RedirectToAction("Index", "Home");       
                             }
                             else
                             {

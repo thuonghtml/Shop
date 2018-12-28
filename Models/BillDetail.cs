@@ -21,8 +21,11 @@ namespace Shop.Models
         public Nullable<double> Price { get; set; }
         public Nullable<int> Quantity { get; set; }
         public Nullable<double> ToMoney { get; set; }
+        public string Color { get; set; }
+        public string Size { get; set; }
+        public Nullable<int> Status { get; set; }
     
-        public virtual Bill Bill { get; set; }
         public virtual Product Product { get; set; }
+        public virtual Bill Bill { get; set; }
     }
 }

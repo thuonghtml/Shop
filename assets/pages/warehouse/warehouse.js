@@ -1,4 +1,7 @@
 ﻿$(document).ready(function () {
+    $("a[data-toggle=\"tab\"]").on("shown.bs.tab", function (e) {
+        $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+    });
     var RenderMess = function (type, mess) {
         toastr.options = { "newestOnTop": true, "showMethod": "show", "hideMethod": "hide", "progressBar": true, };
         toastr[type]("<strong>" + mess + "</strong>");
@@ -363,7 +366,7 @@
                 "render": function (data, type, row) {
                     return '<button type="button" class="btn btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-angle-double-down"></i></button>' +
                         '<div class="dropdown-menu dropdown-menu-right b-none contact-menu">' +
-                        '<a class="ChangeClass dropdown-item" href="#!" data-toggle="modal" data-target="#my_modal_EditProduct"  data-id="' + data + '"><i class="icofont icofont-edit"></i>Edit</a>' +
+                        '<a class="ChangeClass dropdown-item" href="#!" data-toggle="modal" data-target="#my_modal_EditWarehouse"  data-id="' + data + '"><i class="icofont icofont-edit"></i>Edit</a>' +
                         '<a href="#" id="abc" data-target="#my_modal" data-toggle="modal" class="identifyingClass dropdown-item" data-id="' + data + '"><i class="icofont icofont-ui-delete"></i> Delete</a>' +
                         '</div>';
                 }
@@ -414,6 +417,15 @@
         //var data = e.params.data;
         //console.log($(this).val());
         table.draw(false)
+    });
+    $('#btn_Cancel_Warehouse').on("click", function () {
+        $("#my_modal_EditWarehouse").modal('hide')
+    })
+    $(document).on('click', '.ChangeClass', function () {
+        var my_id_value = $(this).attr('data-id')
+        $(".modal-body #hiddenValue_change").val(my_id_value);  
+        //console.log($('#GenderRadio_tab'))
+
     });
 });
 

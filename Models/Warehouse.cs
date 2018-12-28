@@ -19,6 +19,7 @@ namespace Shop.Models
         public string Size { get; set; }
         public Nullable<double> InputPrice { get; set; }
         public Nullable<int> NumberOfImport { get; set; }
+        public Nullable<int> NumberOrder { get; set; }
         public Nullable<int> NumberOfRemaining { get; set; }
         public Nullable<System.DateTime> DateCreate { get; set; }
         public Nullable<int> Status { get; set; }

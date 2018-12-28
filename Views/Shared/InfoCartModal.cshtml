@@ -1,0 +1,114 @@
+﻿@model Shop.Models.Customer
+
+<div class="container">
+    <div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
+        <button class="how-pos3 hov3 trans-04 js-hide-modal2">
+            <img src="~/assets_client/images/icons/icon-close.png" alt="CLOSE" />
+        </button>
+
+        <div class="row">
+            <div class="col-md-6 col-lg-7 p-b-30">
+                <table style="margin-left:20px; margin-right:60px" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Product Name</th>
+                            <th>Size</th>
+                            <th>Color</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Into Money</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_content_bill">
+                        <tr>
+                            <td style="text-align:center">1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                        </tr>
+                        <tr>
+
+                            <td colspan="6" style="text-align:right">5</td>
+                            <td>6</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myFromInfoCustomer", @class = "validateDontSubmit col-md-8 col-lg-5 p-b-30" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="col-md-12 col-lg-12 p-b-30">
+                    @*<div class="p-r-50 p-t-5 p-lr-0-lg">*@
+                    <h4 style="text-align:center" class="mtext-105 cl2 js-name-detail p-b-14">
+                        Thông Tin Khách Hàng
+                    </h4>
+                    <!--  -->
+                    <div class="p-t-33">
+                        <div class="flex-w flex-r-m p-b-10">
+                            <div class="size-203 flex-c-m respon6">
+                                Full Name
+                            </div>
+
+                            <div class="size-204 respon6-next">
+                                @Html.TextBoxFor(m => m.CustomerName, new { @class = "stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5", @style = "border-radius:0px;width:100%;", @placeholder = "Full Name" })
+                                @* <input style="border-radius:0px;width:100%;" class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Full Name">*@
+                                @Html.ValidationMessageFor(m => m.CustomerName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="flex-w flex-r-m p-b-10">
+                            <div class="size-203 flex-c-m respon6">
+                                Phone
+                            </div>
+
+                            <div class="size-204 respon6-next">
+                                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5", @style = "border-radius:0px;width:100%;", @placeholder = "Phone Number" })
+                                @*<input style="border-radius:0px;width:100%;" class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Phone Number">*@
+                                @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="flex-w flex-r-m p-b-10">
+                            <div class="size-203 flex-c-m respon6">
+                                Email
+                            </div>
+
+                            <div class="size-204 respon6-next">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5", @style = "border-radius:0px;width:100%;", @type = "email", @placeholder = "Email" })
+                                @*<input style="border-radius:0px;width:100%;" class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Email">*@
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="flex-w flex-r-m p-b-10">
+                            <div class="size-203 flex-c-m respon6">
+                                Address
+                            </div>
+
+                            <div class="size-204 respon6-next">
+                                @Html.TextBoxFor(m => m.Address, new { @class = "stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5", @style = "border-radius:0px;width:100%;", @placeholder = "Address" })
+                                @*<input style="border-radius:0px;width:100%;" class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Address">*@
+                                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="flex-w flex-r-m p-b-10">
+                            <div class="size-203 flex-c-m respon6">
+                                Note
+                            </div>
+                            <div class="size-204 respon6-next">
+                                <input id="Note" style="border-radius:0px;width:100%;" class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="Note" placeholder="Note">
+                            </div>
+                        </div>
+                        <button id="btn_order" style="border-radius:0px;width:335px;margin-left:105px" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 ">
+                            Order
+                        </button>
+                    </div>
+
+                    @*</div>*@
+                </div>
+            }
+        </div>
+    </div>
+</div>

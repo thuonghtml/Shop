@@ -189,24 +189,6 @@ namespace Shop.Controllers
             }
          
         }
-        public ActionResult Details(int id)
-        {
-            try
-            {
-                ViewBag.CartCount = 0;
-                if (Session["Cart"] != null)
-                {
-                    List<Cart> list = Session["Cart"] as List<Cart>;
-                    ViewBag.CartCount = list.Count;
-                }
-                var product = db.GetInfoProductById(id).First();
-                return View(product);
-            }
-            catch  (Exception ex)
-            {
-                throw ex;
-            }
-            
-        }
+        
     }
 }

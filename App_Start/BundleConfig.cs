@@ -96,6 +96,10 @@ namespace Shop
             bundles.Add(new ScriptBundle("~/assets/page/warehouse/js").Include(
                         "~/assets/pages/warehouse/warehouse.js"
                 ));
+            bundles.Add(new ScriptBundle("~/assets/page/bill/js").Include(
+                        "~/assets/pages/advance-elements/moment-with-locales.min.js",
+                        "~/assets/pages/bill/bill.js"
+                ));
             bundles.Add(new StyleBundle("~/assets/page/category/css").Include(
                 //"~/assets/plugins/DataTables/datatables.min.css"
                 ));

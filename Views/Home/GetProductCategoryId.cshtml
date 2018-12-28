@@ -240,7 +240,7 @@
 
                     <div class="block2-txt flex-w flex-t p-t-14">
                         <div class="block2-txt-child1 flex-col-l ">
-                            <a target="_blank" href="@Url.Action("Details","Product", new { id = product.Id })" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                            <a target="_blank" href="@Url.Action("Details","Home", new { id = product.Id })" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
                                 @product.ProductName
                             </a>
 
@@ -288,6 +288,7 @@
 
 }
 <script>
+    var categoryId = '@ViewBag.Type'
     var RenderContentProduct = function (data) {
         $("#mymodal1").empty();
         $("#mymodal1").append(data)
@@ -319,11 +320,12 @@
         e.preventDefault();
         if (!($(this).parent().hasClass('active'))) {
             var href = $(this).attr("href")
+            console.log(href)
             $.ajax({
                 type: "GET",
                 url: href,
                 contentType: "application/json; charset=utf-8",
-                data: { "Id": null },
+                data: { "categoryId": categoryId },
                 success: function (data) {
                     //debugger;
                     $("#contentFrame").html(data)

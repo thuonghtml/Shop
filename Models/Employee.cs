@@ -18,6 +18,7 @@ namespace Shop.Models
         public Employee()
         {
             this.Bills = new HashSet<Bill>();
+            this.Bills1 = new HashSet<Bill>();
         }
     
         public int Id { get; set; }
@@ -28,9 +29,14 @@ namespace Shop.Models
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public Nullable<int> Status { get; set; }
-        public Nullable<int> Permission { get; set; }
+        public Nullable<System.DateTime> TimeCreate { get; set; }
+        public Nullable<System.DateTime> TimeUpdate { get; set; }
+        public string UserId { get; set; }
     
+        public virtual AspNetUser AspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bill> Bills { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Bill> Bills1 { get; set; }
     }
 }

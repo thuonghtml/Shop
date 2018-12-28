@@ -1,5 +1,17 @@
 ﻿$(document).ready(function () {
-    $.get("/Home/GetProductCategoryId", null, function (data) {
+
+    function getUrlVars() {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+    var type = getUrlVars().type
+    $.get("/Home/GetProductCategoryId", { categoryId: type }, function (data) {
         $("#contentFrame").html(data)
     })  
     $("#search-product").on("keyup", function () {

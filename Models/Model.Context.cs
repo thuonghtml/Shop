@@ -31,18 +31,19 @@ namespace Shop.Models
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
-        public virtual DbSet<Bill> Bills { get; set; }
         public virtual DbSet<BillDetail> BillDetails { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Conversation> Conversations { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
-        public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<FileAttach> FileAttaches { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
-        public virtual DbSet<Warehouse> Warehouses { get; set; }
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
         public virtual DbSet<MasterData> MasterDatas { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<Warehouse> Warehouses { get; set; }
+        public virtual DbSet<Bill> Bills { get; set; }
+        public virtual DbSet<Coupon> Coupons { get; set; }
     
         public virtual ObjectResult<GetCategoryTable_Result> GetCategoryTable(Nullable<int> gender)
         {
@@ -250,6 +251,24 @@ namespace Shop.Models
                 new ObjectParameter("Color", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInfoProductCart_Result>("GetInfoProductCart", productIdParameter, sizeParameter, colorParameter);
+        }
+    
+        public virtual ObjectResult<GetFeaturedProducts_Result> GetFeaturedProducts(Nullable<int> type)
+        {
+            var typeParameter = type.HasValue ?
+                new ObjectParameter("type", type) :
+                new ObjectParameter("type", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetFeaturedProducts_Result>("GetFeaturedProducts", typeParameter);
+        }
+    
+        public virtual ObjectResult<GetListBill_Result> GetListBill(Nullable<int> status)
+        {
+            var statusParameter = status.HasValue ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetListBill_Result>("GetListBill", statusParameter);
         }
     }
 }

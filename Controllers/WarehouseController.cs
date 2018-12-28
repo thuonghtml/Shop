@@ -57,6 +57,7 @@ namespace Shop.Controllers
                             Color = color,
                             InputPrice = price,
                             NumberOfImport = numberImport,
+                            NumberOrder = 0,
                             NumberOfRemaining = numberOfRemaining,
                             Status = 1,
                             DateCreate = DateTime.Now

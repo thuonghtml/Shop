@@ -1,6 +1,9 @@
 ﻿var fileImageChange = [];
 var listImgDelete = [];
 $(document).ready(function () {
+    $("a[data-toggle=\"tab\"]").on("shown.bs.tab", function (e) {
+        $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+    });
     var RenderMess = function (type, mess) {
         toastr.options = { "newestOnTop": true, "showMethod": "show", "hideMethod": "hide", "progressBar": true, };
         toastr[type]("<strong>" + mess + "</strong>");

@@ -76,12 +76,19 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CustomerId" Type="int" />
+          <Property Name="EmployeeId" Type="int" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="500" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="500" />
+          <Property Name="Email" Type="nvarchar" MaxLength="200" />
+          <Property Name="Note" Type="nvarchar(max)" />
           <Property Name="NumberOfProduct" Type="int" />
-          <Property Name="IntoMoney" Type="float" />
+          <Property Name="Total" Type="float" />
           <Property Name="DateCreate" Type="datetime" />
           <Property Name="DateConfirmed" Type="datetime" />
-          <Property Name="EmployeeId" Type="int" />
           <Property Name="Status" Type="int" />
+          <Property Name="EmployeeConfirm" Type="int" />
+          <Property Name="CouponCode" Type="nchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="BillDetail">
           <Key>
@@ -94,6 +101,9 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Name="Price" Type="float" />
           <Property Name="Quantity" Type="int" />
           <Property Name="ToMoney" Type="float" />
+          <Property Name="Color" Type="nvarchar" MaxLength="200" />
+          <Property Name="Size" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="int" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -116,17 +126,35 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Name="DateCreate" Type="datetime" />
           <Property Name="Status" Type="bit" />
         </EntityType>
+        <EntityType Name="Coupon">
+          <Key>
+            <PropertyRef Name="CouponCode" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CouponCode" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="Price" Type="float" />
+          <Property Name="DateCreate" Type="datetime" />
+          <Property Name="DateBegin" Type="datetime" />
+          <Property Name="DateEnd" Type="datetime" />
+          <Property Name="Status" Type="int" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="QuantityRemaining" Type="int" />
+        </EntityType>
         <EntityType Name="Customer">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CustomerName" Type="nvarchar" MaxLength="300" />
           <Property Name="Birthday" Type="date" />
-          <Property Name="Sex" Type="bit" />
+          <Property Name="Gender" Type="bit" />
           <Property Name="Address" Type="nvarchar" MaxLength="500" />
           <Property Name="PhoneNumber" Type="varchar" MaxLength="20" />
           <Property Name="Email" Type="nvarchar" MaxLength="300" />
+          <Property Name="Status" Type="int" />
+          <Property Name="TimeCreate" Type="datetime" />
+          <Property Name="TimeUpdate" Type="datetime" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
@@ -140,7 +168,9 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Name="PhoneNumber" Type="varchar" MaxLength="20" />
           <Property Name="Email" Type="nvarchar" MaxLength="300" />
           <Property Name="Status" Type="int" />
-          <Property Name="Permission" Type="int" />
+          <Property Name="TimeCreate" Type="datetime" />
+          <Property Name="TimeUpdate" Type="datetime" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="FileAttach">
           <Key>
@@ -195,12 +225,25 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Name="Size" Type="nvarchar" MaxLength="40" />
           <Property Name="InputPrice" Type="float" />
           <Property Name="NumberOfImport" Type="int" />
+          <Property Name="NumberOrder" Type="int" />
           <Property Name="NumberOfRemaining" Type="int" />
           <Property Name="DateCreate" Type="datetime" />
           <Property Name="Status" Type="int" />
           <Property Name="DateUpdate" Type="datetime" />
           <Property Name="Color" Type="nchar" MaxLength="100" />
         </EntityType>
+        <Association Name="FK_Bill_Coupon">
+          <End Role="Coupon" Type="Self.Coupon" Multiplicity="0..1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Coupon">
+              <PropertyRef Name="CouponCode" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="CouponCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Bill_Customer">
           <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
           <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
@@ -222,6 +265,18 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             </Principal>
             <Dependent Role="Bill">
               <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_Employee1">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="EmployeeConfirm" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -270,6 +325,18 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             </Principal>
             <Dependent Role="Conversation">
               <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="Customer" Type="Self.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -329,6 +396,18 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Employee_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_FileAttach_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
           <End Role="FileAttach" Type="Self.FileAttach" Multiplicity="*" />
@@ -360,6 +439,9 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
         <Function Name="GetCategoryWithGender" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Gender" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetFeaturedProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="type" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetInfoCategoryById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Id" Type="int" Mode="In" />
         </Function>
@@ -370,6 +452,9 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Parameter Name="ProductId" Type="int" Mode="In" />
           <Parameter Name="Size" Type="nvarchar" Mode="In" />
           <Parameter Name="Color" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="GetListBill" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Status" Type="int" Mode="In" />
         </Function>
         <Function Name="GetListProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="int" Mode="In" />
@@ -426,6 +511,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <EntitySet Name="BillDetail" EntityType="Self.BillDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Conversation" EntityType="Self.Conversation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Coupon" EntityType="Self.Coupon" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileAttach" EntityType="Self.FileAttach" Schema="dbo" store:Type="Tables" />
@@ -447,11 +533,19 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
     [MasterData].[Table] AS [Table]
     FROM [dbo].[MasterData] AS [MasterData]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_Bill_Coupon" Association="Self.FK_Bill_Coupon">
+            <End Role="Coupon" EntitySet="Coupon" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
           <AssociationSet Name="FK_Bill_Customer" Association="Self.FK_Bill_Customer">
             <End Role="Customer" EntitySet="Customer" />
             <End Role="Bill" EntitySet="Bill" />
           </AssociationSet>
           <AssociationSet Name="FK_Bill_Employee" Association="Self.FK_Bill_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Bill" EntitySet="Bill" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_Employee1" Association="Self.FK_Bill_Employee1">
             <End Role="Employee" EntitySet="Employee" />
             <End Role="Bill" EntitySet="Bill" />
           </AssociationSet>
@@ -471,6 +565,10 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             <End Role="Product" EntitySet="Product" />
             <End Role="Conversation" EntitySet="Conversation" />
           </AssociationSet>
+          <AssociationSet Name="FK_Customer_AspNetUsers" Association="Self.FK_Customer_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Customer" EntitySet="Customer" />
+          </AssociationSet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -486,6 +584,10 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_AspNetUsers" Association="Self.FK_Employee_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Employee" EntitySet="Employee" />
           </AssociationSet>
           <AssociationSet Name="FK_FileAttach_Product" Association="Self.FK_FileAttach_Product">
             <End Role="Product" EntitySet="Product" />
@@ -548,22 +650,8 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
-        </EntityType>
-        <EntityType Name="Bill">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CustomerId" Type="Int32" />
-          <Property Name="NumberOfProduct" Type="Int32" />
-          <Property Name="IntoMoney" Type="Double" />
-          <Property Name="DateCreate" Type="DateTime" Precision="3" />
-          <Property Name="DateConfirmed" Type="DateTime" Precision="3" />
-          <Property Name="EmployeeId" Type="Int32" />
-          <Property Name="Status" Type="Int32" />
-          <NavigationProperty Name="Customer" Relationship="Self.FK_Bill_Customer" FromRole="Bill" ToRole="Customer" />
-          <NavigationProperty Name="Employee" Relationship="Self.FK_Bill_Employee" FromRole="Bill" ToRole="Employee" />
-          <NavigationProperty Name="BillDetails" Relationship="Self.FK_BillDetail_Bill" FromRole="Bill" ToRole="BillDetail" />
+          <NavigationProperty Name="Customers" Relationship="STORE_DATABASEModel.FK_Customer_AspNetUsers" FromRole="AspNetUser" ToRole="Customer" />
+          <NavigationProperty Name="Employees" Relationship="STORE_DATABASEModel.FK_Employee_AspNetUsers" FromRole="AspNetUser" ToRole="Employee" />
         </EntityType>
         <EntityType Name="BillDetail">
           <Key>
@@ -576,8 +664,11 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Name="Price" Type="Double" />
           <Property Name="Quantity" Type="Int32" />
           <Property Name="ToMoney" Type="Double" />
-          <NavigationProperty Name="Bill" Relationship="Self.FK_BillDetail_Bill" FromRole="BillDetail" ToRole="Bill" />
           <NavigationProperty Name="Product" Relationship="Self.FK_BillDetail_Product" FromRole="BillDetail" ToRole="Product" />
+          <Property Name="Color" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Size" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
+          <NavigationProperty Name="Bill" Relationship="STORE_DATABASEModel.FK_BillDetail_Bill" FromRole="BillDetail" ToRole="Bill" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -601,34 +692,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Name="DateCreate" Type="DateTime" Precision="3" />
           <Property Name="Status" Type="Boolean" />
           <NavigationProperty Name="Product" Relationship="Self.FK_Conversation_Product" FromRole="Conversation" ToRole="Product" />
-        </EntityType>
-        <EntityType Name="Customer">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="CustomerName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="Birthday" Type="DateTime" Precision="0" />
-          <Property Name="Sex" Type="Boolean" />
-          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Email" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Bills" Relationship="Self.FK_Bill_Customer" FromRole="Customer" ToRole="Bill" />
-        </EntityType>
-        <EntityType Name="Employee">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EmployeeName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="Gender" Type="Boolean" />
-          <Property Name="Birthday" Type="DateTime" Precision="0" />
-          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Email" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="Int32" />
-          <Property Name="Permission" Type="Int32" />
-          <NavigationProperty Name="Bills" Relationship="Self.FK_Bill_Employee" FromRole="Employee" ToRole="Bill" />
         </EntityType>
         <EntityType Name="FileAttach">
           <Key>
@@ -658,7 +721,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <NavigationProperty Name="Category" Relationship="Self.FK_Category" FromRole="Product" ToRole="Category" />
           <NavigationProperty Name="Conversations" Relationship="Self.FK_Conversation_Product" FromRole="Product" ToRole="Conversation" />
           <NavigationProperty Name="FileAttaches" Relationship="Self.FK_FileAttach_Product" FromRole="Product" ToRole="FileAttach" />
-          <NavigationProperty Name="Warehouses" Relationship="Self.FK_Warehouse_Product" FromRole="Product" ToRole="Warehouse" />
+          <NavigationProperty Name="Warehouses" Relationship="STORE_DATABASEModel.FK_Warehouse_Product" FromRole="Product" ToRole="Warehouse" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -669,22 +732,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="Warehouse">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductId" Type="Int32" />
-          <Property Name="Size" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
-          <Property Name="InputPrice" Type="Double" />
-          <Property Name="NumberOfImport" Type="Int32" />
-          <Property Name="NumberOfRemaining" Type="Int32" />
-          <Property Name="DateCreate" Type="DateTime" Precision="3" />
-          <Property Name="Status" Type="Int32" />
-          <NavigationProperty Name="Product" Relationship="Self.FK_Warehouse_Product" FromRole="Warehouse" ToRole="Product" />
-          <Property Name="DateUpdate" Type="DateTime" Precision="3" />
-          <Property Name="Color" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="C__MigrationHistory">
           <Key>
@@ -723,42 +770,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             </Principal>
             <Dependent Role="AspNetUserLogins">
               <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Bill_Customer">
-          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
-          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Bill">
-              <PropertyRef Name="CustomerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Bill_Employee">
-          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
-          <End Role="Bill" Type="Self.Bill" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Employee">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Bill">
-              <PropertyRef Name="EmployeeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_BillDetail_Bill">
-          <End Role="Bill" Type="Self.Bill" Multiplicity="0..1" />
-          <End Role="BillDetail" Type="Self.BillDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Bill">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="BillDetail">
-              <PropertyRef Name="BillId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -810,18 +821,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Warehouse_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
-          <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Warehouse">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="AspNetUserRoles">
           <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
@@ -831,16 +830,12 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
-          <EntitySet Name="Bills" EntityType="Self.Bill" />
           <EntitySet Name="BillDetails" EntityType="Self.BillDetail" />
           <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="Conversations" EntityType="Self.Conversation" />
-          <EntitySet Name="Customers" EntityType="Self.Customer" />
-          <EntitySet Name="Employees" EntityType="Self.Employee" />
           <EntitySet Name="FileAttaches" EntityType="Self.FileAttach" />
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
-          <EntitySet Name="Warehouses" EntityType="Self.Warehouse" />
           <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -849,18 +844,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Bill_Customer" Association="Self.FK_Bill_Customer">
-            <End Role="Customer" EntitySet="Customers" />
-            <End Role="Bill" EntitySet="Bills" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Bill_Employee" Association="Self.FK_Bill_Employee">
-            <End Role="Employee" EntitySet="Employees" />
-            <End Role="Bill" EntitySet="Bills" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BillDetail_Bill" Association="Self.FK_BillDetail_Bill">
-            <End Role="Bill" EntitySet="Bills" />
-            <End Role="BillDetail" EntitySet="BillDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_BillDetail_Product" Association="Self.FK_BillDetail_Product">
             <End Role="Product" EntitySet="Products" />
@@ -877,10 +860,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <AssociationSet Name="FK_FileAttach_Product" Association="Self.FK_FileAttach_Product">
             <End Role="Product" EntitySet="Products" />
             <End Role="FileAttach" EntitySet="FileAttaches" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Warehouse_Product" Association="Self.FK_Warehouse_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="Warehouse" EntitySet="Warehouses" />
           </AssociationSet>
           <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
@@ -949,6 +928,49 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             <Parameter Name="Size" Mode="In" Type="String" />
             <Parameter Name="Color" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="Employees" EntityType="STORE_DATABASEModel.Employee" />
+          <EntitySet Name="Customers" EntityType="STORE_DATABASEModel.Customer" />
+          <AssociationSet Name="FK_Customer_AspNetUsers" Association="STORE_DATABASEModel.FK_Customer_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_AspNetUsers" Association="STORE_DATABASEModel.FK_Employee_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <FunctionImport Name="GetFeaturedProducts" ReturnType="Collection(STORE_DATABASEModel.GetFeaturedProducts_Result)">
+          <Parameter Name="type" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetListBill" ReturnType="Collection(STORE_DATABASEModel.GetListBill_Result)">
+          <Parameter Name="Status" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Warehouses" EntityType="STORE_DATABASEModel.Warehouse" />
+          <AssociationSet Name="FK_Warehouse_Product" Association="STORE_DATABASEModel.FK_Warehouse_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="Warehouse" EntitySet="Warehouses" />
+          </AssociationSet>
+          <EntitySet Name="Bills" EntityType="STORE_DATABASEModel.Bill" />
+          <EntitySet Name="Coupons" EntityType="STORE_DATABASEModel.Coupon" />
+          <AssociationSet Name="FK_Bill_Coupon" Association="STORE_DATABASEModel.FK_Bill_Coupon">
+            <End Role="Coupon" EntitySet="Coupons" />
+            <End Role="Bill" EntitySet="Bills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_Customer" Association="STORE_DATABASEModel.FK_Bill_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Bill" EntitySet="Bills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_Employee" Association="STORE_DATABASEModel.FK_Bill_Employee">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Bill" EntitySet="Bills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_Employee1" Association="STORE_DATABASEModel.FK_Bill_Employee1">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Bill" EntitySet="Bills" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BillDetail_Bill" Association="STORE_DATABASEModel.FK_BillDetail_Bill">
+            <End Role="Bill" EntitySet="Bills" />
+            <End Role="BillDetail" EntitySet="BillDetails" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="GetCategoryTable_Result">
           <Property Type="Int32" Name="Id" Nullable="true" />
@@ -1047,6 +1069,222 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Type="String" Name="ImageLink" Nullable="true" MaxLength="1000" />
           <Property Type="Int32" Name="NumberOfRemaining" Nullable="true" />
         </ComplexType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Gender" Type="Boolean" />
+          <Property Name="Birthday" Type="DateTime" Precision="0" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="TimeCreate" Type="DateTime" Precision="3" />
+          <Property Name="TimeUpdate" Type="DateTime" Precision="3" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="STORE_DATABASEModel.FK_Employee_AspNetUsers" FromRole="Employee" ToRole="AspNetUser" />
+          <NavigationProperty Name="Bills" Relationship="STORE_DATABASEModel.FK_Bill_Employee" FromRole="Employee" ToRole="Bill" />
+          <NavigationProperty Name="Bills1" Relationship="STORE_DATABASEModel.FK_Bill_Employee1" FromRole="Employee" ToRole="Bill" />
+          </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerName" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Birthday" Type="DateTime" Precision="0" />
+          <Property Name="Gender" Type="Boolean" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="TimeCreate" Type="DateTime" Precision="3" />
+          <Property Name="TimeUpdate" Type="DateTime" Precision="3" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="STORE_DATABASEModel.FK_Customer_AspNetUsers" FromRole="Customer" ToRole="AspNetUser" />
+          <NavigationProperty Name="Bills" Relationship="STORE_DATABASEModel.FK_Bill_Customer" FromRole="Customer" ToRole="Bill" />
+        </EntityType>
+        <Association Name="FK_Customer_AspNetUsers">
+          <End Type="STORE_DATABASEModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="STORE_DATABASEModel.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_AspNetUsers">
+          <End Type="STORE_DATABASEModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="STORE_DATABASEModel.Employee" Role="Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetFeaturedProducts_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="500" />
+          <Property Type="Double" Name="OldPrice" Nullable="true" />
+          <Property Type="Double" Name="NewPrice" Nullable="true" />
+          <Property Type="String" Name="ImageLink" Nullable="true" MaxLength="1000" />
+          <Property Type="Double" Name="Type" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetListBill_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="true" />
+          <Property Type="Int32" Name="EmployeeId" Nullable="true" />
+          <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="PhoneNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Note" Nullable="true" />
+          <Property Type="Int32" Name="NumberOfProduct" Nullable="true" />
+          <Property Type="Double" Name="Total" Nullable="true" />
+          <Property Type="DateTime" Name="DateCreate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DateConfirmed" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="Status" Nullable="true" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="EmployeeConfirm" Nullable="true" />
+          <Property Type="String" Name="EmployeeName" Nullable="true" MaxLength="300" />
+        </ComplexType>
+        <EntityType Name="Warehouse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Int32" />
+          <Property Name="Size" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="InputPrice" Type="Double" />
+          <Property Name="NumberOfImport" Type="Int32" />
+          <Property Name="NumberOrder" Type="Int32" />
+          <Property Name="NumberOfRemaining" Type="Int32" />
+          <Property Name="DateCreate" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="DateUpdate" Type="DateTime" Precision="3" />
+          <Property Name="Color" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Product" Relationship="STORE_DATABASEModel.FK_Warehouse_Product" FromRole="Warehouse" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_Warehouse_Product">
+          <End Type="STORE_DATABASEModel.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="STORE_DATABASEModel.Warehouse" Role="Warehouse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Warehouse">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Bill">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="EmployeeId" Type="Int32" />
+          <Property Name="CustomerName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NumberOfProduct" Type="Int32" />
+          <Property Name="Total" Type="Double" />
+          <Property Name="DateCreate" Type="DateTime" Precision="3" />
+          <Property Name="DateConfirmed" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="EmployeeConfirm" Type="Int32" />
+          <Property Name="CouponCode" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Coupon" Relationship="STORE_DATABASEModel.FK_Bill_Coupon" FromRole="Bill" ToRole="Coupon" />
+          <NavigationProperty Name="Customer" Relationship="STORE_DATABASEModel.FK_Bill_Customer" FromRole="Bill" ToRole="Customer" />
+          <NavigationProperty Name="Employee" Relationship="STORE_DATABASEModel.FK_Bill_Employee" FromRole="Bill" ToRole="Employee" />
+          <NavigationProperty Name="Employee1" Relationship="STORE_DATABASEModel.FK_Bill_Employee1" FromRole="Bill" ToRole="Employee" />
+          <NavigationProperty Name="BillDetails" Relationship="STORE_DATABASEModel.FK_BillDetail_Bill" FromRole="Bill" ToRole="BillDetail" />
+        </EntityType>
+        <EntityType Name="Coupon">
+          <Key>
+            <PropertyRef Name="CouponCode" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CouponCode" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="Price" Type="Double" />
+          <Property Name="DateCreate" Type="DateTime" Precision="3" />
+          <Property Name="DateBegin" Type="DateTime" Precision="3" />
+          <Property Name="DateEnd" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="Int32" />
+          <NavigationProperty Name="Bills" Relationship="STORE_DATABASEModel.FK_Bill_Coupon" FromRole="Coupon" ToRole="Bill" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="QuantityRemaining" Type="Int32" />
+        </EntityType>
+        <Association Name="FK_Bill_Coupon">
+          <End Type="STORE_DATABASEModel.Coupon" Role="Coupon" Multiplicity="0..1" />
+          <End Type="STORE_DATABASEModel.Bill" Role="Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Coupon">
+              <PropertyRef Name="CouponCode" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="CouponCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_Customer">
+          <End Type="STORE_DATABASEModel.Customer" Role="Customer" Multiplicity="0..1" />
+          <End Type="STORE_DATABASEModel.Bill" Role="Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_Employee">
+          <End Type="STORE_DATABASEModel.Employee" Role="Employee" Multiplicity="0..1" />
+          <End Type="STORE_DATABASEModel.Bill" Role="Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_Employee1">
+          <End Type="STORE_DATABASEModel.Employee" Role="Employee" Multiplicity="0..1" />
+          <End Type="STORE_DATABASEModel.Bill" Role="Bill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Bill">
+              <PropertyRef Name="EmployeeConfirm" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BillDetail_Bill">
+          <End Type="STORE_DATABASEModel.Bill" Role="Bill" Multiplicity="0..1" />
+          <End Type="STORE_DATABASEModel.BillDetail" Role="BillDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bill">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BillDetail">
+              <PropertyRef Name="BillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1098,23 +1336,12 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Bills">
-            <EntityTypeMapping TypeName="STORE_DATABASEModel.Bill">
-              <MappingFragment StoreEntitySet="Bill">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="NumberOfProduct" ColumnName="NumberOfProduct" />
-                <ScalarProperty Name="IntoMoney" ColumnName="IntoMoney" />
-                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
-                <ScalarProperty Name="DateConfirmed" ColumnName="DateConfirmed" />
-                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BillDetails">
             <EntityTypeMapping TypeName="STORE_DATABASEModel.BillDetail">
               <MappingFragment StoreEntitySet="BillDetail">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="BillId" ColumnName="BillId" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
@@ -1145,34 +1372,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
                 <ScalarProperty Name="Message" ColumnName="Message" />
                 <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Customers">
-            <EntityTypeMapping TypeName="STORE_DATABASEModel.Customer">
-              <MappingFragment StoreEntitySet="Customer">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
-                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
-                <ScalarProperty Name="Sex" ColumnName="Sex" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Employees">
-            <EntityTypeMapping TypeName="STORE_DATABASEModel.Employee">
-              <MappingFragment StoreEntitySet="Employee">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
-                <ScalarProperty Name="Gender" ColumnName="Gender" />
-                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Permission" ColumnName="Permission" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1210,22 +1409,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
                 <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
                 <ScalarProperty Name="version" ColumnName="version" />
                 <ScalarProperty Name="definition" ColumnName="definition" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Warehouses">
-            <EntityTypeMapping TypeName="STORE_DATABASEModel.Warehouse">
-              <MappingFragment StoreEntitySet="Warehouse">
-                <ScalarProperty Name="Color" ColumnName="Color" />
-                <ScalarProperty Name="DateUpdate" ColumnName="DateUpdate" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="Size" ColumnName="Size" />
-                <ScalarProperty Name="InputPrice" ColumnName="InputPrice" />
-                <ScalarProperty Name="NumberOfImport" ColumnName="NumberOfImport" />
-                <ScalarProperty Name="NumberOfRemaining" ColumnName="NumberOfRemaining" />
-                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1391,6 +1574,127 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="STORE_DATABASEModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="TimeUpdate" ColumnName="TimeUpdate" />
+                <ScalarProperty Name="TimeCreate" ColumnName="TimeCreate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="STORE_DATABASEModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="TimeUpdate" ColumnName="TimeUpdate" />
+                <ScalarProperty Name="TimeCreate" ColumnName="TimeCreate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Birthday" ColumnName="Birthday" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetFeaturedProducts" FunctionName="STORE_DATABASEModel.Store.GetFeaturedProducts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetFeaturedProducts_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="OldPrice" ColumnName="OldPrice" />
+                <ScalarProperty Name="NewPrice" ColumnName="NewPrice" />
+                <ScalarProperty Name="ImageLink" ColumnName="ImageLink" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetListBill" FunctionName="STORE_DATABASEModel.Store.GetListBill">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetListBill_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="NumberOfProduct" ColumnName="NumberOfProduct" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
+                <ScalarProperty Name="DateConfirmed" ColumnName="DateConfirmed" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="EmployeeConfirm" ColumnName="EmployeeConfirm" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Warehouses">
+            <EntityTypeMapping TypeName="STORE_DATABASEModel.Warehouse">
+              <MappingFragment StoreEntitySet="Warehouse">
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="DateUpdate" ColumnName="DateUpdate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
+                <ScalarProperty Name="NumberOfRemaining" ColumnName="NumberOfRemaining" />
+                <ScalarProperty Name="NumberOrder" ColumnName="NumberOrder" />
+                <ScalarProperty Name="NumberOfImport" ColumnName="NumberOfImport" />
+                <ScalarProperty Name="InputPrice" ColumnName="InputPrice" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bills">
+            <EntityTypeMapping TypeName="STORE_DATABASEModel.Bill">
+              <MappingFragment StoreEntitySet="Bill">
+                <ScalarProperty Name="CouponCode" ColumnName="CouponCode" />
+                <ScalarProperty Name="EmployeeConfirm" ColumnName="EmployeeConfirm" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DateConfirmed" ColumnName="DateConfirmed" />
+                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="NumberOfProduct" ColumnName="NumberOfProduct" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Coupons">
+            <EntityTypeMapping TypeName="STORE_DATABASEModel.Coupon">
+              <MappingFragment StoreEntitySet="Coupon">
+                <ScalarProperty Name="QuantityRemaining" ColumnName="QuantityRemaining" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+                <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="CouponCode" ColumnName="CouponCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

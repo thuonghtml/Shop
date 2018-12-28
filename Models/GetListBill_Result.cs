@@ -10,16 +10,9 @@
 namespace Shop.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Bill
+    public partial class GetListBill_Result
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Bill()
-        {
-            this.BillDetails = new HashSet<BillDetail>();
-        }
-    
         public int Id { get; set; }
         public Nullable<int> CustomerId { get; set; }
         public Nullable<int> EmployeeId { get; set; }
@@ -33,14 +26,8 @@ namespace Shop.Models
         public Nullable<System.DateTime> DateCreate { get; set; }
         public Nullable<System.DateTime> DateConfirmed { get; set; }
         public Nullable<int> Status { get; set; }
+        public string Description { get; set; }
         public Nullable<int> EmployeeConfirm { get; set; }
-        public string CouponCode { get; set; }
-    
-        public virtual Coupon Coupon { get; set; }
-        public virtual Customer Customer { get; set; }
-        public virtual Employee Employee { get; set; }
-        public virtual Employee Employee1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BillDetail> BillDetails { get; set; }
+        public string EmployeeName { get; set; }
     }
 }
