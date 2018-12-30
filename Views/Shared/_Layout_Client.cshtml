@@ -106,9 +106,9 @@
                             <i class="zmdi zmdi-shopping-cart"></i>
                         </div>
 
-                        <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+                        @*<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
                             <i class="zmdi zmdi-favorite-outline"></i>
-                        </a>
+                        </a>*@
                     </div>
                 </nav>
             </div>
@@ -515,8 +515,6 @@
         path = decodeURIComponent(path);
         $(".main-menu a").each(function () {
             var href = $(this).attr('href');
-            console.log(href, path.substring(0, href.length))
-
             if (path.substring(0, href.length) === href) {
                 $(".main-menu li.active-menu").removeClass('active-menu');
                 $(this).closest('li').addClass('active-menu')

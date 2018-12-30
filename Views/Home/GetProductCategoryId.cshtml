@@ -2,7 +2,7 @@
 @using Shop.Models;
 @using PagedList.Mvc;
 
-@model IPagedList<Shop.Models.GetProductInMain_Result>
+@model IPagedList<Shop.Models.GetProductShopByCategoryId_Result>
 @if (Model != null)
 {
     <div class="flex-w flex-sb-m p-b-52">
@@ -11,11 +11,11 @@
         </div>
 
         <div class="flex-w flex-c-m m-tb-10">
-            <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
+            @*<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
                 <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
                 <i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
                 Filter
-            </div>
+            </div>*@
 
             <div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
                 <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
@@ -225,7 +225,7 @@
         </div>
     </div>
     <div class="row isotope-grid">
-        @foreach (GetProductInMain_Result product in Model)
+        @foreach (GetProductShopByCategoryId_Result product in Model)
         {
             <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item men">
                 <!-- Block2 -->
@@ -288,7 +288,8 @@
 
 }
 <script>
-    var categoryId = '@ViewBag.Type'
+    var type = '@ViewBag.Type'
+    var categoryid = '@ViewBag.CategoryId'
     var RenderContentProduct = function (data) {
         $("#mymodal1").empty();
         $("#mymodal1").append(data)
@@ -320,12 +321,12 @@
         e.preventDefault();
         if (!($(this).parent().hasClass('active'))) {
             var href = $(this).attr("href")
-            console.log(href)
+            console.log(categoryid)
             $.ajax({
                 type: "GET",
                 url: href,
                 contentType: "application/json; charset=utf-8",
-                data: { "categoryId": categoryId },
+                data: { "type": type, "categoryid": categoryid },
                 success: function (data) {
                     //debugger;
                     $("#contentFrame").html(data)
@@ -355,5 +356,54 @@
             $('.panel-filter').slideUp(400);
         }
     });
+
+    $("#search-product").on("keyup", function () {
+        var isotopeButton = $('.filter-tope-group button');
+        var textClass = ''
+        $(isotopeButton).each(function (index, item) {
+            if (item.classList.contains('how-active1')) {
+                var filterValue = $(this).attr('data-filter');
+                if (filterValue === '*') {
+                    textClass = '.isotope-item'
+                    //console.log(textClass+'1');
+                }
+                else {
+                    textClass = filterValue
+                    //console.log(textClass + '2');
+                }
+
+            }
+
+        });
+
+        var g = $(this).val().toLowerCase();
+        $(textClass + " .block2 .block2-txt .block2-txt-child1 .stext-104").each(function () {
+            var s = $(this).text().toLowerCase();
+            var i = s.indexOf(g);
+            if (i === -1) {
+                $(this).closest('.isotope-item').css('display', 'none');
+            }
+            else {
+                $(this).closest('.isotope-item').css('display', 'block')
+            }
+            var $grid = $('.isotope-grid').each(function () {
+                $(this).isotope({
+                    itemSelector: '.isotope-item',
+                    layoutMode: 'fitRows',
+                    percentPosition: true,
+                    animationEngine: 'best-available',
+                    masonry: {
+                        columnWidth: '.isotope-item'
+                    }
+                });
+            });
+        });
+    });
+    
+    //$(".bor18").on("click", function (e) {
+    //    e.preventDefault();
+    //    console.log($(this).closest("li").find("[class^='menu-child']").slideToggle())
+    //    //$(this).closest("li").find("[class^='menu-child']").slideToggle();
+    //})
 </script>
 

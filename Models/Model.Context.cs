@@ -44,6 +44,7 @@ namespace Shop.Models
         public virtual DbSet<Warehouse> Warehouses { get; set; }
         public virtual DbSet<Bill> Bills { get; set; }
         public virtual DbSet<Coupon> Coupons { get; set; }
+        public virtual DbSet<Blog> Blogs { get; set; }
     
         public virtual ObjectResult<GetCategoryTable_Result> GetCategoryTable(Nullable<int> gender)
         {
@@ -269,6 +270,54 @@ namespace Shop.Models
                 new ObjectParameter("Status", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetListBill_Result>("GetListBill", statusParameter);
+        }
+    
+        public virtual ObjectResult<GetMenuShop_Result> GetMenuShop(Nullable<int> type)
+        {
+            var typeParameter = type.HasValue ?
+                new ObjectParameter("type", type) :
+                new ObjectParameter("type", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetMenuShop_Result>("GetMenuShop", typeParameter);
+        }
+    
+        public virtual ObjectResult<GetProductShopByCategoryId_Result> GetProductShopByCategoryId(Nullable<int> categoryId, Nullable<int> type)
+        {
+            var categoryIdParameter = categoryId.HasValue ?
+                new ObjectParameter("CategoryId", categoryId) :
+                new ObjectParameter("CategoryId", typeof(int));
+    
+            var typeParameter = type.HasValue ?
+                new ObjectParameter("type", type) :
+                new ObjectParameter("type", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductShopByCategoryId_Result>("GetProductShopByCategoryId", categoryIdParameter, typeParameter);
+        }
+    
+        public virtual ObjectResult<GetListBlog_Result> GetListBlog(Nullable<int> id, Nullable<int> status)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            var statusParameter = status.HasValue ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetListBlog_Result>("GetListBlog", idParameter, statusParameter);
+        }
+    
+        public virtual ObjectResult<GetListBlogMain_Result> GetListBlogMain(Nullable<int> tag, Nullable<int> id)
+        {
+            var tagParameter = tag.HasValue ?
+                new ObjectParameter("Tag", tag) :
+                new ObjectParameter("Tag", typeof(int));
+    
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetListBlogMain_Result>("GetListBlogMain", tagParameter, idParameter);
         }
     }
 }

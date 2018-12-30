@@ -100,6 +100,10 @@ namespace Shop
                         "~/assets/pages/advance-elements/moment-with-locales.min.js",
                         "~/assets/pages/bill/bill.js"
                 ));
+            bundles.Add(new ScriptBundle("~/assets/page/blog/js").Include(
+                       "~/assets/pages/advance-elements/moment-with-locales.min.js",
+                       "~/assets/pages/blog/blog.js"
+               ));
             bundles.Add(new StyleBundle("~/assets/page/category/css").Include(
                 //"~/assets/plugins/DataTables/datatables.min.css"
                 ));
@@ -154,6 +158,9 @@ namespace Shop
             bundles.Add(new ScriptBundle("~/assets_client/shop/js").Include(
                         "~/assets_client/page/Shop/Shop.js"
                 ));
+            bundles.Add(new ScriptBundle("~/assets_client/blog/js").Include(
+                        "~/assets_client/page/Blog/blog.js"
+                ));
             bundles.Add(new ScriptBundle("~/asset_client/detail/js").Include(
                         "~/assets_client/page/Detail/details.js"
                 ));
@@ -171,6 +178,16 @@ namespace Shop
                     "~/assets/pages/advance-elements/moment-with-locales.min.js",
                     "~/assets/pages/advance-elements/bootstrap-datetimepicker.min.js",
                     "~/assets/pages/user-profile.js"
+                ));
+            #endregion
+            #region Coupon
+            bundles.Add(new StyleBundle("~/assets/page/coupon/css").Include(
+                    "~/assets/pages/advance-elements/css/bootstrap-datetimepicker.css"
+                ));
+            bundles.Add(new ScriptBundle("~/assets/page/coupon/js").Include(
+                    "~/assets/pages/advance-elements/moment-with-locales.min.js",
+                    "~/assets/pages/advance-elements/bootstrap-datetimepicker.min.js",
+                    "~/assets/pages/coupon/coupon.js"
                 ));
             #endregion
         }

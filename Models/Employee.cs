@@ -19,6 +19,7 @@ namespace Shop.Models
         {
             this.Bills = new HashSet<Bill>();
             this.Bills1 = new HashSet<Bill>();
+            this.Blogs = new HashSet<Blog>();
         }
     
         public int Id { get; set; }
@@ -38,5 +39,7 @@ namespace Shop.Models
         public virtual ICollection<Bill> Bills { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bill> Bills1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Blog> Blogs { get; set; }
     }
 }

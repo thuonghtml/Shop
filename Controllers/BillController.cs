@@ -48,5 +48,36 @@ namespace Shop.Controllers
 
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data }, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        public ActionResult GetProdutByGender(int gender)
+        {
+            try
+            {
+                var result = db.Products.Where(p=>p.Status == 1 && p.Category.Gender== gender && p.Category.Status==1).Join(db.Warehouses.Where(w=>w.Status==1),p=>p.Id,w=>w.ProductId, (p,w)=>p).Select(p => new { id = p.Id, text = p.ProductName }).Distinct().ToList();
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public ActionResult GetSizeAndColor(int productid)
+        {
+            try
+            {
+                var size = db.Warehouses.Where(p => p.Status == 1 && p.ProductId == productid).Select(p => new { size = p.Size }).Distinct();
+                var color = db.Warehouses.Where(p => p.Status == 1 && p.ProductId == productid).Select(p => new { color = p.Color }).Distinct();  
+                return Json(new { size = size, color = color }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

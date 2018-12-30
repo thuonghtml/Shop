@@ -6,6 +6,9 @@
         toastr.options = { "newestOnTop": true, "showMethod": "show", "hideMethod": "hide", "progressBar": true, };
         toastr[type]("<strong>" + mess + "</strong>");
     }
+    $(".js-example-responsive").select2({
+        width: 'resolve' // need to override the changed default
+    });
     $.each(billstatus, function (index, item) {
         $('#billstatus').append('<option value="' + item.Id + '">' + item.Description + '</option>')
     })
@@ -56,10 +59,10 @@
                     }
                     return data;
                 }
-            },        
+            },
             { "data": "Description", "name": "Description", "autoWidth": true, "orderable": false, "searchable": false, "className": "text-left" },
             { "data": "EmployeeName", "name": "EmployeeName", "autoWidth": true, "orderable": false, "searchable": false, "className": "text-left" },
-            
+
             {
                 "data": "Id", "name": "Action", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center dropdown",
                 "render": function (data, type, row) {
@@ -75,4 +78,44 @@
     $('#billstatus').on('change', function () {
         table.draw(false)
     });
+    // ---------------------------------------------------------------------------
+    var GetSizeColor = function (data) {
+        $.get('/Bill/GetSizeAndColor', { productid: data }, function (result) {
+            console.log(result)
+            if (result.size.length > 0) {
+                var html = ""
+                $.each(result.size, function (index, item) {
+                    html += '<option value="' + item.size + '">Size ' + item.size + ' </option>'
+                })
+                $("#size").html(html);
+            }
+            if (result.color.length > 0) {
+                var html = ""
+                $.each(result.color, function (index, item) {
+                    html += '<option value="' + item.color + '"> ' + item.color + ' </option>'
+                })
+                $("#color").html(html);
+            }
+        })
+    }
+    var getdata = function () {
+        $.get('/Bill/GetProdutByGender', { gender: $('input[name=radio_list]:checked', '#GenderRadio_list').val() }, function (result) {
+            $("#ProductId_list").select2({
+                data: result
+            })
+            var data = $('#ProductId_list').val()
+            GetSizeColor(data)
+        })
+    }
+    getdata()
+    $('#GenderRadio_list input').on('change', function () {
+        $('#ProductId_list').val(null).trigger('change');
+        $("#ProductId_list").html('').select2();
+        getdata()
+       
+    });   
+    $('#ProductId_list').on('change', function () {
+        var data = $("#ProductId_list option:selected").val();
+        GetSizeColor(data)
+    })
 });

@@ -149,7 +149,7 @@ namespace Shop.Controllers
                     }
                     else
                     {
-                        return Json(new { success = false, mess = "Nhân viên khách hàng còn tồn tại!" }, JsonRequestBehavior.AllowGet);
+                        return Json(new { success = false, mess = "Nhân viên khách hàng không còn tồn tại!" }, JsonRequestBehavior.AllowGet);
                     }
                 }
                 else if (typeChange == 3)   // create Emp

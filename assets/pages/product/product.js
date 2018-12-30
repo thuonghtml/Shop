@@ -154,7 +154,7 @@ $(document).ready(function () {
         $.each(files, function (index, item) {
             form.append("image_Product", item);
         })
-        if ($("#myFromProduct").valid() == true) {
+        if ($("#myFromProduct").valid() === true) {
             $.ajax({
                 type: "POST",
                 url: "/Product/AddProduct",

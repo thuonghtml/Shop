@@ -11,7 +11,7 @@
         return vars;
     }
     var type = getUrlVars().type
-    $.get("/Home/GetProductCategoryId", { categoryId: type }, function (data) {
+    $.get("/Home/GetProductCategoryId", { type: type}, function (data) {
         $("#contentFrame").html(data)
     })  
     $("#search-product").on("keyup", function () {
@@ -57,7 +57,26 @@
             });
         });
     });
-
+    $('.menucay').on("click", function (e) {
+        //console.log($(this).attr("data-categoryid"))
+        categoryid = $(this).attr("data-categoryid")
+        $.ajax({
+            type: "GET",
+            url: "/Home/GetProductCategoryId",
+            contentType: "application/json; charset=utf-8",
+            data: { "type": type, "categoryid": categoryid },
+            beforeSend: function () {
+                e.preventDefault();
+            },
+            success: function (data) {
+                //debugger;
+                $("#contentFrame").html(data)
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        })
+    })
     //$.ajax({
     //    type: "GET",
     //    url: '/Home/GetProductCategoryId',

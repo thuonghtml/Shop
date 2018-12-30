@@ -386,7 +386,7 @@
         $(".modal-body #hiddenValue").val(my_id_value);
     });
     $("#btn_OK1").on("click", function () {
-        console.log($("#hiddenValue").val())
+       
         $("#my_modal").modal('hide')
         $.ajax({
             type: "GET",
@@ -412,7 +412,7 @@
         })
 
     })
-    $("#ProductId_list")
+    //$("#ProductId_list")
     $('#ProductId_list').on('select2:select', function (e) {
         //var data = e.params.data;
         //console.log($(this).val());

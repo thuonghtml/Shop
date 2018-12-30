@@ -37,6 +37,8 @@
         <AssociationConnector Association="STORE_DATABASEModel.FK_Bill_Employee" />
         <AssociationConnector Association="STORE_DATABASEModel.FK_Bill_Employee1" />
         <AssociationConnector Association="STORE_DATABASEModel.FK_BillDetail_Bill" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.Blog" Width="1.5" PointX="5.25" PointY="3" />
+        <AssociationConnector Association="STORE_DATABASEModel.FK_Blog_Employee" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

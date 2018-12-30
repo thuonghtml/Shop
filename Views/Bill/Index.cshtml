@@ -1,12 +1,31 @@
-﻿@{
+﻿@model Shop.Models.Bill
+@{
     ViewBag.Title = "Bill";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section Css {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" />
+    <style>
+        .select2-container--default .select2-selection--single {
+            background-color: #fff;
+            border: 1px solid rgba(0,0,0,.15);
+            border-radius: 2px;
+            border-width: 2px;
+            height: 37px;
+        }
 
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                height: 33px;
+                line-height: 17px;
+                background-color: #eceeef;
+            }
+    </style>
+}
 @section JavaScript {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
     @Scripts.Render("~/assets/page/bill/js")
 }
 <script>
@@ -39,41 +58,115 @@
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content card-block">
-                            <div class="tab-pane active" id="UpdatNumberOfProduct" role="tabpanel">
-                                <div class="col-sm-8" style="margin:auto">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Product Name</label>
-                                        <div class="col-sm-8">
-                                            <select name="select" class="form-control">
-                                                <option value="">Select One Value Only</option>
-                                                @*<option value="opt2">Áo</option>
-                                                    <option value="opt3">Quần</option>*@
-                                            </select>
+                            @using (Html.BeginForm())
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="tab-pane active row" id="UpdatNumberOfProduct" role="tabpanel">
+                                    <div class="col-sm-6">
+                                        <h3>Thông Tin Khách Hàng</h3>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.CustomerName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Note, htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Product Size</label>
-                                        <div class="col-sm-8">
-                                            <select name="select" class="form-control">
-                                                <option value="opt1">Select One Value Only</option>
-                                                <option value="opt2">S</option>
-                                                <option value="opt3">M</option>
-                                                <option value="opt3">L</option>
-                                            </select>
+                                    <div class="col-sm-6">
+                                       
+                                        <h3>Thông Tin Sản Phẩm</h3>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2">Gender</label>
+                                            <div class="col-md-10">
+                                                <div class="form-radio">
+                                                    <div id="GenderRadio_list" class="group-add-on">
+                                                        <div class="radio radiofill radio-inline">
+                                                            <label>
+                                                                <input a id="Male_list" value="1" type="radio" name="radio_list" checked=""><i class="helper"></i> Male
+                                                            </label>
+                                                        </div>
+                                                        <div class="radio radiofill radio-inline">
+                                                            <label>
+                                                                <input id="Female_list" value="2" type="radio" name="radio_list"><i class="helper"></i> Female
+                                                            </label>
+                                                        </div>
+                                                        <div class="radio radiofill radio-inline">
+                                                            <label>
+                                                                <input id="Couple_list" value="3" type="radio" name="radio_list"><i class="helper"></i> Couple
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4">Product Name</label>
+                                            <div class="col-md-12">
+                                                <select id="ProductId_list" name="ProductId_list" class="js-example-responsive" style="width:100%"></select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6 form-group">
+                                                <label class="control-label col-md-2">Size</label>
+                                                <div class="col-md-12">
+                                                    <select id="size" class="form-control">
+                                                        
+                                                    </select>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 form-group">
+                                                <label class="control-label col-md-2" for="Address">Color</label>
+                                                <div class="col-md-12">
+                                                    <select id="color" class="form-control"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2">Number</label>
+                                            <div class="col-md-12">
+                                                <input class="form-control" type="number" min="1" />
+                                            </div>
+                                            <button id="btnAdd" class="btn btn-primary" style="float:right;margin-right: 15px;margin-top: 15px; "><i class="ti-import"></i> Add</button>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Number</label>
-                                        <div class="col-sm-8">
-                                            <input type="number" min="0" class="form-control" placeholder="Number">
-                                        </div>
-                                    </div>
-                                    <div>
+                                    <div class="col-sm-12">
                                         <hr />
-                                        <button class="btn btn-primary" style="float:right"><i class="ti-import"></i>Save</button>
+                                        <h3>Chi tiết hóa đơn</h3>
                                     </div>
+                                    
+                                    
+
                                 </div>
-                            </div>
+                            }
                             <div class="tab-pane" id="ListNumberProduct" role="tabpanel">
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Bill status</label>

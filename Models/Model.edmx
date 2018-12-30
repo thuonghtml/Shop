@@ -105,6 +105,19 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
           <Property Name="Size" Type="nvarchar" MaxLength="50" />
           <Property Name="Status" Type="int" />
         </EntityType>
+        <EntityType Name="Blog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BlogName" Type="nvarchar" MaxLength="500" />
+          <Property Name="Photo" Type="nvarchar" MaxLength="500" />
+          <Property Name="Content" Type="nvarchar(max)" />
+          <Property Name="TimeCreate" Type="datetime" />
+          <Property Name="EmpployeeCreate" Type="int" />
+          <Property Name="Tag" Type="int" />
+          <Property Name="Status" Type="int" />
+        </EntityType>
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="Id" />
@@ -304,6 +317,18 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Blog_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+          <End Role="Blog" Type="Self.Blog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Blog">
+              <PropertyRef Name="EmpployeeCreate" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Category">
           <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
           <End Role="Product" Type="Self.Product" Multiplicity="*" />
@@ -456,6 +481,14 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
         <Function Name="GetListBill" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Status" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetListBlog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="Status" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetListBlogMain" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Tag" Type="int" Mode="In" />
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetListProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="int" Mode="In" />
           <Parameter Name="gender" Type="int" Mode="In" />
@@ -467,8 +500,15 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Parameter Name="CategoryId" Type="int" Mode="In" />
           <Parameter Name="Gender" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetMenuShop" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="type" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetProductInMain" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CategoryId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetProductShopByCategoryId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CategoryId" Type="int" Mode="In" />
+          <Parameter Name="type" Type="int" Mode="In" />
         </Function>
         <Function Name="RandomNVARCHAR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -509,6 +549,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Bill" EntityType="Self.Bill" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BillDetail" EntityType="Self.BillDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Blog" EntityType="Self.Blog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Conversation" EntityType="Self.Conversation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Coupon" EntityType="Self.Coupon" Schema="dbo" store:Type="Tables" />
@@ -556,6 +597,10 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <AssociationSet Name="FK_BillDetail_Product" Association="Self.FK_BillDetail_Product">
             <End Role="Product" EntitySet="Product" />
             <End Role="BillDetail" EntitySet="BillDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Blog_Employee" Association="Self.FK_Blog_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Blog" EntitySet="Blog" />
           </AssociationSet>
           <AssociationSet Name="FK_Category" Association="Self.FK_Category">
             <End Role="Category" EntitySet="Category" />
@@ -971,6 +1016,26 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             <End Role="Bill" EntitySet="Bills" />
             <End Role="BillDetail" EntitySet="BillDetails" />
           </AssociationSet>
+          <FunctionImport Name="GetMenuShop" ReturnType="Collection(STORE_DATABASEModel.GetMenuShop_Result)">
+          <Parameter Name="type" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetProductShopByCategoryId" ReturnType="Collection(STORE_DATABASEModel.GetProductShopByCategoryId_Result)">
+            <Parameter Name="CategoryId" Mode="In" Type="Int32" />
+            <Parameter Name="type" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Blogs" EntityType="STORE_DATABASEModel.Blog" />
+          <AssociationSet Name="FK_Blog_Employee" Association="STORE_DATABASEModel.FK_Blog_Employee">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Blog" EntitySet="Blogs" />
+          </AssociationSet>
+          <FunctionImport Name="GetListBlog" ReturnType="Collection(STORE_DATABASEModel.GetListBlog_Result)">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="Status" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetListBlogMain" ReturnType="Collection(STORE_DATABASEModel.GetListBlogMain_Result)">
+          <Parameter Name="Tag" Mode="In" Type="Int32" />
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="GetCategoryTable_Result">
           <Property Type="Int32" Name="Id" Nullable="true" />
@@ -1087,6 +1152,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <NavigationProperty Name="AspNetUser" Relationship="STORE_DATABASEModel.FK_Employee_AspNetUsers" FromRole="Employee" ToRole="AspNetUser" />
           <NavigationProperty Name="Bills" Relationship="STORE_DATABASEModel.FK_Bill_Employee" FromRole="Employee" ToRole="Bill" />
           <NavigationProperty Name="Bills1" Relationship="STORE_DATABASEModel.FK_Bill_Employee1" FromRole="Employee" ToRole="Bill" />
+          <NavigationProperty Name="Blogs" Relationship="STORE_DATABASEModel.FK_Blog_Employee" FromRole="Employee" ToRole="Blog" />
           </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -1285,6 +1351,69 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetMenuShop_Result">
+          <Property Type="Int32" Name="Id" Nullable="true" />
+          <Property Type="String" Name="Categoryame" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ParentId" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="Cap" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetProductShopByCategoryId_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="true" MaxLength="500" />
+          <Property Type="Double" Name="OldPrice" Nullable="true" />
+          <Property Type="Double" Name="NewPrice" Nullable="true" />
+          <Property Type="String" Name="ImageLink" Nullable="true" MaxLength="1000" />
+        </ComplexType>
+        <EntityType Name="Blog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BlogName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Photo" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TimeCreate" Type="DateTime" Precision="3" />
+          <Property Name="EmpployeeCreate" Type="Int32" />
+          <NavigationProperty Name="Employee" Relationship="STORE_DATABASEModel.FK_Blog_Employee" FromRole="Blog" ToRole="Employee" />
+          <Property Name="Tag" Type="Int32" />
+          <Property Name="Status" Type="Int32" />
+        </EntityType>
+        <Association Name="FK_Blog_Employee">
+          <End Type="STORE_DATABASEModel.Employee" Role="Employee" Multiplicity="0..1" />
+          <End Type="STORE_DATABASEModel.Blog" Role="Blog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Blog">
+              <PropertyRef Name="EmpployeeCreate" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetListBlog_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="BlogName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Photo" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Content" Nullable="true" />
+          <Property Type="DateTime" Name="TimeCreate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="EmpployeeCreateId" Nullable="true" />
+          <Property Type="String" Name="EmployeeName" Nullable="true" MaxLength="300" />
+          <Property Type="Int32" Name="TagId" Nullable="true" />
+          <Property Type="Int32" Name="Status" Nullable="true" />
+          <Property Type="String" Name="Tag" Nullable="true" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="GetListBlogMain_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="BlogName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Photo" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Content" Nullable="true" />
+          <Property Type="String" Name="TimeCreate" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="EmpployeeCreate" Nullable="true" />
+          <Property Type="Int32" Name="TagId" Nullable="true" />
+          <Property Type="Int32" Name="Status" Nullable="true" />
+          <Property Type="String" Name="Tag" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="EmployeeName" Nullable="true" MaxLength="300" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1695,6 +1824,73 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetMenuShop" FunctionName="STORE_DATABASEModel.Store.GetMenuShop">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetMenuShop_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Categoryame" ColumnName="Categoryame" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="Cap" ColumnName="Cap" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetProductShopByCategoryId" FunctionName="STORE_DATABASEModel.Store.GetProductShopByCategoryId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetProductShopByCategoryId_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="OldPrice" ColumnName="OldPrice" />
+                <ScalarProperty Name="NewPrice" ColumnName="NewPrice" />
+                <ScalarProperty Name="ImageLink" ColumnName="ImageLink" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Blogs">
+            <EntityTypeMapping TypeName="STORE_DATABASEModel.Blog">
+              <MappingFragment StoreEntitySet="Blog">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Tag" ColumnName="Tag" />
+                <ScalarProperty Name="EmpployeeCreate" ColumnName="EmpployeeCreate" />
+                <ScalarProperty Name="TimeCreate" ColumnName="TimeCreate" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="BlogName" ColumnName="BlogName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetListBlog" FunctionName="STORE_DATABASEModel.Store.GetListBlog">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetListBlog_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BlogName" ColumnName="BlogName" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="TimeCreate" ColumnName="TimeCreate" />
+                <ScalarProperty Name="EmpployeeCreateId" ColumnName="EmpployeeCreateId" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="TagId" ColumnName="TagId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Tag" ColumnName="Tag" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetListBlogMain" FunctionName="STORE_DATABASEModel.Store.GetListBlogMain">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.GetListBlogMain_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BlogName" ColumnName="BlogName" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="TimeCreate" ColumnName="TimeCreate" />
+                <ScalarProperty Name="EmpployeeCreate" ColumnName="EmpployeeCreate" />
+                <ScalarProperty Name="TagId" ColumnName="TagId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Tag" ColumnName="Tag" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

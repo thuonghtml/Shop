@@ -72,7 +72,7 @@ namespace Shop.Controllers
             ViewBag.ShopCart = lstCart;
             return View();
         }
-        public ActionResult Blog()
+        public ActionResult Blog(int?tag)
         {
             ViewBag.Menu = db.MasterDatas.Where(m => m.Table == "Category");
             ViewBag.CartCount = 0;
@@ -81,17 +81,15 @@ namespace Shop.Controllers
                 List<Cart> list = Session["Cart"] as List<Cart>;
                 ViewBag.CartCount = list.Count;
             }
+            var lstFeatured = db.GetFeaturedProducts(null);
+            ViewBag.Featured = lstFeatured;
+            ViewBag.TagMenu = db.MasterDatas.Where(m => m.Table == "Blog");
+            ViewBag.Tag = tag;
             return View();
         }
         public ActionResult Blog_Detail()
         {
-            ViewBag.Menu = db.MasterDatas.Where(m => m.Table == "Category");
-            ViewBag.CartCount = 0;
-            if (Session["Cart"] != null)
-            {
-                List<Cart> list = Session["Cart"] as List<Cart>;
-                ViewBag.CartCount = list.Count;
-            }
+            
             return View();
         }
         [HttpGet]
@@ -120,6 +118,9 @@ namespace Shop.Controllers
             var lstFeatured = db.GetFeaturedProducts(type);
             ViewBag.Featured = lstFeatured;
             ViewBag.Type = type;
+            List<GetMenuShop_Result> lstCayMenu = db.GetMenuShop(type).ToList();
+            ViewBag.CayMenu = lstCayMenu;
+            var a = lstCayMenu.Count;
             return View();
         }
         public ActionResult Details(int id)
@@ -142,13 +143,23 @@ namespace Shop.Controllers
             }
 
         }
-        public ActionResult GetProductCategoryId(int? categoryId, int? page)
+        public ActionResult GetProductCategoryId(int? type,int? categoryid , int? page)
         {
-            IQueryable<GetProductInMain_Result> listproduct = db.GetProductInMain(categoryId).AsQueryable();
+            IQueryable<GetProductShopByCategoryId_Result> listproduct = db.GetProductShopByCategoryId(categoryid,type).AsQueryable();
             int pageSize = 12;
             int pageNumber = page ?? 1;
-            ViewBag.Type = categoryId;
+            ViewBag.Type = type;
+            ViewBag.CategoryId = categoryid;
             return PartialView(listproduct.ToList().ToPagedList(pageNumber, pageSize));
+        }
+
+        public ActionResult GetBlogByTag(int? tag, int? page)
+        {
+            IQueryable<GetListBlogMain_Result> listblog = db.GetListBlogMain(tag,null).AsQueryable();
+            int pageSize = 3;
+            int pageNumber = page ?? 1;
+            ViewBag.Tag = tag;
+            return PartialView(listblog.ToList().ToPagedList(pageNumber, pageSize));
         }
         public ActionResult AddToCart(int productId, string color, string size, int number)
         {
@@ -473,6 +484,23 @@ namespace Shop.Controllers
             {
                 throw ex;
             }
+        }
+
+        public ActionResult DetailsBlog(int id)
+        {
+            ViewBag.Menu = db.MasterDatas.Where(m => m.Table == "Category");
+            ViewBag.CartCount = 0;
+            if (Session["Cart"] != null)
+            {
+                List<Cart> list = Session["Cart"] as List<Cart>;
+                ViewBag.CartCount = list.Count;
+            }
+            var lstFeatured = db.GetFeaturedProducts(null);
+            ViewBag.Featured = lstFeatured;
+            ViewBag.TagMenu = db.MasterDatas.Where(m => m.Table == "Blog");
+            GetListBlogMain_Result blog = db.GetListBlogMain(null, id).Single();
+            ViewBag.blog = blog; 
+            return View();
         }
     }
 }
