@@ -27,7 +27,9 @@ namespace Shop.Controllers
             int pageSize = length != null ? Convert.ToInt32(length) : 0;
             int skip = start != null ? Convert.ToInt32(start) : 0;
             int recordsTotal = 0;
+            db.Configuration.ProxyCreationEnabled = false;
             var listEmp = db.Employees.Where(e => e.Status == 1).ToList();
+            db.Configuration.ProxyCreationEnabled = true;
 
             if (!(string.IsNullOrEmpty(searchvalue)))
             {
@@ -79,12 +81,16 @@ namespace Shop.Controllers
             {
                 if (type == 1)
                 {
+                    db.Configuration.ProxyCreationEnabled = false;
                     var emp = db.Employees.Single(e => e.Id == id);
+                    db.Configuration.ProxyCreationEnabled = true;
                     return Json(emp, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
+                    db.Configuration.ProxyCreationEnabled = true;
                     var cus = db.Customers.Single(e => e.Id == id);
+                    db.Configuration.ProxyCreationEnabled = true;
                     return Json(cus, JsonRequestBehavior.AllowGet);
                 }
             }
@@ -249,5 +255,6 @@ namespace Shop.Controllers
                 throw ex;
             }
         }
+
     }
 }

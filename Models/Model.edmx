@@ -457,6 +457,9 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="BodyMailBill" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="GetCategoryTable" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Gender" Type="int" Mode="In" />
@@ -511,6 +514,10 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Parameter Name="type" Type="int" Mode="In" />
         </Function>
         <Function Name="RandomNVARCHAR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Revenue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="date" Type="datetime" Mode="In" />
+          <Parameter Name="Type" Type="int" Mode="In" />
+        </Function>
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
           <Parameter Name="owner_id" Type="int" Mode="In" />
@@ -1033,8 +1040,15 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             <Parameter Name="Status" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetListBlogMain" ReturnType="Collection(STORE_DATABASEModel.GetListBlogMain_Result)">
-          <Parameter Name="Tag" Mode="In" Type="Int32" />
+            <Parameter Name="Tag" Mode="In" Type="Int32" />
             <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="BodyMailBill" ReturnType="Collection(String)">
+          <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Revenue" ReturnType="Collection(STORE_DATABASEModel.Revenue_Result)">
+            <Parameter Name="date" Mode="In" Type="DateTime" />
+            <Parameter Name="Type" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="GetCategoryTable_Result">
@@ -1413,6 +1427,10 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Type="Int32" Name="Status" Nullable="true" />
           <Property Type="String" Name="Tag" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="EmployeeName" Nullable="true" MaxLength="300" />
+        </ComplexType>
+        <ComplexType Name="Revenue_Result">
+          <Property Type="Double" Name="Total" Nullable="true" />
+          <Property Type="String" Name="y" Nullable="true" MaxLength="20" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1888,6 +1906,15 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Tag" ColumnName="Tag" />
                 <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="BodyMailBill" FunctionName="STORE_DATABASEModel.Store.BodyMailBill" />
+          <FunctionImportMapping FunctionImportName="Revenue" FunctionName="STORE_DATABASEModel.Store.Revenue">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="STORE_DATABASEModel.Revenue_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="y" ColumnName="y" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

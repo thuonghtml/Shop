@@ -1,0 +1,46 @@
+﻿@model Shop.Models.CreateAccountModel
+@{
+    Layout = null;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myFromCreateAccount", @class = "form-horizontal", role = "form" }))
+{
+    <div class="modal-body">
+        <input type="hidden" name="id_create" id="id_create" value="" />
+        @Html.AntiForgeryToken()
+        @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+        <div class="form-group">
+            @Html.LabelFor(m => m.UserName, new { @class = "col-md-4 control-label" })
+            <div class="col-md-12">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Password, new { @class = "col-md-4 control-label" })
+            <div class="col-md-12">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-4 control-label" })
+            <div class="col-md-12">
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.UserRoles, new { @class = "col-md-4 control-label" })
+            <div class="col-md-12">
+                @Html.DropDownList("UserRoles", (SelectList)ViewBag.Name as IEnumerable<SelectListItem>, " ", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UserRoles, "", new { @class = "text-danger" })
+                @*@Html.DropDownList("UserRoles", new { @class = "form-control" })*@
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button id="btn_SaveCreateAccount" type="submit" class="btn btn-primary">OK</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </div>
+}
+

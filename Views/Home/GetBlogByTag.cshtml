@@ -40,8 +40,10 @@
                     </a>
                 </h4>
 
-                <p id="@item.Id@item.Tag" class="stext-117 cl6">
-                    @Html.Raw(item.Content).ToHtmlString()
+                <p  class="stext-117 cl6">
+                    <div class="conetentblog">
+                        @Html.Raw(item.Content)
+                    </div> 
                     @*@Html.Raw(!String.IsNullOrEmpty(item.Content) ? item.Content.Substring(0, Math.Min(item.Content.Length, 2)) : item.Content)*@
                 </p>
                 <div class="flex-w flex-sb-m p-t-18">
@@ -112,6 +114,11 @@
                 success: function (data) {
                     //debugger;
                     $("#contentBlog").html(data)
+                    $('.conetentblog').each(function (index, item) {
+                        var txt = $(this).text();
+                        if (txt.length > 200)
+                            $(this).text(txt.substr(0, 200) + '.....');
+                    })
                 },
                 error: function () {
                     alert("Dynamic content load failed.");

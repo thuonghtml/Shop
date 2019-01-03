@@ -86,6 +86,7 @@
 
                                 </div>
                             </div>
+                            <button class="btn btn-danger"><i class="icofont icofont-eye-alt"></i>Danger Button</button>
                             @*@Html.Raw("<p>&aacute;da</p>").ToString().l*@
                             <div class="tab-pane" id="ListBlog" role="tabpanel">
                                 <div class="data_table_main table-responsive dt-responsive">
@@ -165,60 +166,60 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="modal-body row">
-                <input type="hidden" name="hiddenValue_change" id="hiddenValue_change" value="" />
-                <div class="col-md-6">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.BlogName, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.BlogName, new { htmlAttributes = new { @id = "blogname_change", @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.BlogName, "", new { @class = "text-danger" })
+                <div class="modal-body row">
+                    <input type="hidden" name="hiddenValue_change" id="hiddenValue_change" value="" />
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BlogName, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.BlogName, new { htmlAttributes = new { @id = "blogname_change", @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.BlogName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Photo, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Photo, new { htmlAttributes = new { @type = "file", @class = "form-control" }, @id = "file_change" })
+                                @Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tag, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownList("Tag", (SelectList)ViewBag.Tag as IEnumerable<SelectListItem>, " ", new { @id = "tag_change", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Tag, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Image of Blog</h6>
+                        <div class="row" id="viewImageBlog_change">
+                            @*<div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
+                                    <a href="~/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-gallery="example-gallery">
+                                        <img src="~/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                    </a>
+                                </div>*@
                         </div>
                     </div>
-
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Photo, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Photo, new { htmlAttributes = new { @type = "file", @class = "form-control" }, @id = "file_change" })
-                            @Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })
+                        @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-12">
+                            @Html.TextAreaFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" }, @id = "content_change", @name = "content_change" })
+                            @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
                         </div>
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Tag, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("Tag", (SelectList)ViewBag.Tag as IEnumerable<SelectListItem>, " ", new { @id = "tag_change", @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.Tag, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
+                </div>
 
 
+                <div class="modal-footer">
+                    <button id="btn_Save_Blog" type="button" class="btn btn-primary"><i class="ti-import"></i>Save</button>
+                    <button id="btn_Cancel_Blog" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
-                <div class="col-md-6">
-                    <h6>Image of Blog</h6>
-                    <div class="row" id="viewImageBlog_change">
-                        @*<div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12">
-                    <a href="~/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-gallery="example-gallery">
-                        <img src="~/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
-                    </a>
-                </div>*@
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-12">
-                        @Html.TextAreaFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" }, @id = "content_change", @name = "content_change" })
-                        @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </div>
-                
-            
-            <div class="modal-footer">
-                <button id="btn_Save_Blog" type="button" class="btn btn-primary"><i class="ti-import"></i>Save</button>
-                <button id="btn_Cancel_Blog" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            </div>
-        }
+            }
         </div>
     </div>
-    </div>
-    <!--Modal Change Product-->
+</div>
+<!--Modal Change Product-->

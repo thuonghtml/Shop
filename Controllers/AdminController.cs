@@ -12,36 +12,86 @@ namespace Shop.Controllers
     {
         // GET: Admin
         private STORE_DATABASEEntities db = new STORE_DATABASEEntities();
-        public ActionResult Index()
-        {
-            //if (User.IsInRole("Admin"))
-            var A = User.Identity.GetUserId();
-                return View();    
+        //public ActionResult Index()
+        //{
+        //        return View();    
            
-        }
+        //}
         public ActionResult UserProfile()
-        {                                  
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else if (User.IsInRole("Customers"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            string userId = User.Identity.GetUserId();
+            var emp = db.Employees.SingleOrDefault(i => i.UserId.Equals(userId));
+            ViewBag.Employee = emp;
+            ViewBag.IdEmp = emp.Id;
             return View();
         }
 
         public ActionResult Product()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else if (User.IsInRole("Customers"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
         public ActionResult Warehouse()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else if (User.IsInRole("Customers"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
         public ActionResult Bill()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else if (User.IsInRole("Customers"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
         public ActionResult Report()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else if (!User.IsInRole("Manager")||User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
         public ActionResult Blog()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else if (User.IsInRole("Customers"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 

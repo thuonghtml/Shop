@@ -66,11 +66,7 @@
             {
                 "data": "Id", "name": "Action", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center dropdown",
                 "render": function (data, type, row) {
-                    return '<button type="button" class="btn btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-angle-double-down"></i></button>' +
-                        '<div class="dropdown-menu dropdown-menu-right b-none contact-menu">' +
-                        '<a class="ChangeClassEmployee dropdown-item" href="#!" data-toggle="modal" data-target="#myEditCustomer"  data-id="' + data + '"><i class="icofont icofont-edit"></i>Edit</a>' +
-                        '<a href="#" id="abc" data-target="#my_modal" data-toggle="modal" data-type="1" class="identifyingClass dropdown-item" data-id="' + data + '"><i class="icofont icofont-ui-delete"></i> Delete</a>' +
-                        '</div>';
+                    return '<a href="/Bill/BillDetail/' + data + '" class="btn btn-primary btn-square"><i class="icofont icofont-eye-alt"></i>View</a>';
                 }
             }
         ]
@@ -81,18 +77,29 @@
     // ---------------------------------------------------------------------------
     var GetSizeColor = function (data) {
         $.get('/Bill/GetSizeAndColor', { productid: data }, function (result) {
-            console.log(result)
+
             if (result.size.length > 0) {
                 var html = ""
                 $.each(result.size, function (index, item) {
-                    html += '<option value="' + item.size + '">Size ' + item.size + ' </option>'
+                    if (item.size === null) {
+                        html += '<option value=""> ' + "Tùy Chọn" + ' </option>'
+                    }
+                    else {
+                        html += '<option value="' + item.size + '">Size ' + item.size + ' </option>'
+                    }
                 })
                 $("#size").html(html);
             }
             if (result.color.length > 0) {
                 var html = ""
                 $.each(result.color, function (index, item) {
-                    html += '<option value="' + item.color + '"> ' + item.color + ' </option>'
+                    if (item.color === null) {
+                        html += '<option value=""> ' + "Tùy Chọn" + ' </option>'
+                    }
+                    else {
+                        html += '<option value="' + item.color + '"> ' + item.color + ' </option>'
+                    }
+
                 })
                 $("#color").html(html);
             }
@@ -112,10 +119,97 @@
         $('#ProductId_list').val(null).trigger('change');
         $("#ProductId_list").html('').select2();
         getdata()
-       
-    });   
+
+    });
     $('#ProductId_list').on('change', function () {
         var data = $("#ProductId_list option:selected").val();
         GetSizeColor(data)
+    })
+    //----------------------------------------------------------
+    var listbillDetails = []
+    var a = 0;
+    $('#btnAdd').on("click", function (e) {
+        e.preventDefault()
+        var productid = $('#ProductId_list').val();
+        var color = $('#color').val();
+        var size = $('#size').val();
+        var quantity = $('#quantity').val()
+        if (listbillDetails.length > 0) {
+            var checktrung = []
+            $.each(listbillDetails, function (index, item) {
+                console.log(item.ProductId == productid && item.Size == size && item.Color == color)
+                if (item.ProductId == productid && item.Size == size && item.Color == color) {
+                    checktrung.push(item);
+                }
+            })
+          
+            if (checktrung.length > 0) {
+                RenderMess("error", "Sản phẩm đã tồn tại")
+                return false
+            }
+        }
+        if (productid !== "" &&productid !== null) {
+            $.ajax({
+                type: "GET",
+                url: "/Bill/AddBillDetails",
+                contentType: "application/json; charset=utf-8",
+                data: {
+                    "productid": productid,
+                    "color": color,
+                    "size": size,
+                    "number": quantity,
+                    "key": a++
+                },
+                success: function (result) {
+                    //debugger;
+                    if (result.success) {
+                        listbillDetails.push(result.billdetails)
+                        var html = ""
+                        $.each(listbillDetails, function (index, item) {
+                            html += '<tr id="' + (index + 1) + '">'
+                                + '    <td>' + (index + 1) + '</td> '
+                                + '    <td>' + item.ProductName + '</td>  '
+                                + '    <td>' + item.Size + '</td>      '
+                                + '    <td>' + item.Color + '</td>   '
+                                + '    <td>' + numeral(item.Price).format('0,0') + " VNĐ" + '</td> '
+                                + '    <td>' + item.Number + '</td>  '
+                                + '    <td>' + numeral(item.IntoMoney).format('0,0') + " VNĐ" + '</td>  '
+                                + '    <td><button data-key="' + item.Key + '" class="deleteclasss btn btn-danger">Delete</button></td>   '
+                                + '</tr>   '
+                        })
+                        $('#contentbill').html(html)
+                        RenderMess("success", "Đã thêm thànhcông!")
+                    }
+                    else {
+                        RenderMess("error", result.mess)
+                    }
+                },
+                error: function () {
+                    RenderMess("error", "Lỗi");
+                }
+            })
+        }
+        
+    })
+    
+    $(document).on('click', '.deleteclasss', function (e) {
+        var key = $(this).attr("data-key")
+        listbillDetails = listbillDetails.filter(function (object) {
+            return object.Key.toString() !== key;
+        })
+        var html = ""
+        $.each(listbillDetails, function (index, item) {
+            html += '<tr id="' + (index + 1) + '">'
+                + '    <td>' + (index + 1) + '</td> '
+                + '    <td>' + item.ProductName + '</td>  '
+                + '    <td>' + item.Size + '</td>      '
+                + '    <td>' + item.Color + '</td>   '
+                + '    <td>' + numeral(item.Price).format('0,0') + " VNĐ" + '</td> '
+                + '    <td>' + item.Number + '</td>  '
+                + '    <td>' + numeral(item.IntoMoney).format('0,0') + " VNĐ" + '</td>  '
+                + '    <td><button data-key="' + item.Key + '" class="deleteclasss btn btn-danger">Delete</button></td>  '
+                + '</tr>   '
+        })
+        $('#contentbill').html(html)
     })
 });

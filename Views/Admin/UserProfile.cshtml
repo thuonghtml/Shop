@@ -14,8 +14,9 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/assets/page/user_profile/js")
 }
+
 <!--profile cover start-->
-<div class="row">
+<div class="row" style="display:none">
     <div class="col-lg-12">
         <div class="cover-profile">
             <div class="profile-bg-img">
@@ -58,10 +59,13 @@
                     <a class="nav-link active" data-toggle="tab" href="#personal" role="tab">Personal Info</a>
                     <div class="slide" style="width:33.34%"></div>
                 </li>
-                <li class="nav-item" style="width:33.34%">
-                    <a class="nav-link" data-toggle="tab" href="#employees" role="tab">User's Employees</a>
-                    <div class="slide" style="width:33.34%"></div>
-                </li>
+                @if (User.Identity.IsAuthenticated && (User.IsInRole("Manager") || User.IsInRole("Admin")))
+                {
+                    <li class="nav-item" style="width:33.34%">
+                        <a class="nav-link" data-toggle="tab" href="#employees" role="tab">User's Employees</a>
+                        <div class="slide" style="width:33.34%"></div>
+                    </li>
+                }
                 <li class="nav-item" style="width:33.34%">
                     <a class="nav-link" data-toggle="tab" href="#customer" role="tab">User's Customer</a>
                     <div class="slide" style="width:33.34%"></div>
@@ -77,7 +81,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-header-text">About Me</h5>
-                        <button id="edit-btn" type="button" class="btn btn-sm btn-primary waves-effect waves-light f-right">
+                        <button id="edit-btn" data-id="@ViewBag.IdEmp" type="button" class="btn btn-sm btn-primary waves-effect waves-light f-right">
                             <i class="icofont icofont-edit"></i>
                         </button>
                     </div>
@@ -88,19 +92,27 @@
                                     <div class="general-info">
                                         <div class="row">
                                             <div class="col-lg-12 col-xl-6">
-                                                <table class="table m-0 table-responsive">
+                                                <table class="table m-0 ">
                                                     <tbody>
                                                         <tr>
                                                             <th scope="row">Full Name</th>
-                                                            <td>Nguyễn Minh Thương</td>
+                                                            <td>@ViewBag.Employee.EmployeeName</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row">Birth Date</th>
-                                                            <td>October 26th, 1996</td>
+                                                            <td>@ViewBag.Employee.Birthday.ToString("dd/MM/yyyy")</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row">Gender</th>
-                                                            <td>Male</td>
+                                                            @if (@ViewBag.Employee.Gender == false)
+                                                            {
+                                                                <td> Female </td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td> Male </td>
+                                                            }
+
                                                         </tr>
 
                                                     </tbody>
@@ -108,20 +120,21 @@
                                             </div>
                                             <!-- end of table col-lg-6 -->
                                             <div class="col-lg-12 col-xl-6">
-                                                <table class="table table-responsive">
+                                                <table class="table m-0 ">
                                                     <tbody>
                                                         <tr>
                                                             <th scope="row">Email</th>
-                                                            <td><a href="#!">thuonghtml@gmail.com</a></td>
+                                                            <td>@ViewBag.Employee.Email</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row">Mobile Number</th>
-                                                            <td>01696440829</td>
+                                                            <td>@ViewBag.Employee.PhoneNumber</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row">Location</th>
-                                                            <td>112/12A An Bình, Phường 5, Quận 5, Tp.HCM</td>
+                                                            <td >@ViewBag.Employee.Address</td>
                                                         </tr>
+
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -350,6 +363,8 @@
                                                     <th>Mobile Number</th>
                                                     <th>Location</th>
                                                     <th>Status</th>
+
+                                                    <th>Create Account</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -457,6 +472,21 @@
             <div class="modal-footer">
                 <button id="btn_OK1" type="button" class="btn btn-primary">OK</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!---- Modal Delete---->
+<!---- Modal CreateAccount---->
+<div class="modal fade" id="modal_createAccount" tabindex="-1" role="dialog" aria-labelledby="my_modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">CreateAccount</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div id="content_modal">
+
             </div>
         </div>
     </div>

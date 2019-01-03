@@ -83,8 +83,8 @@ namespace Shop.Controllers
             {
                 case SignInStatus.Success:
                     ViewData["User"] = model.UserName;
-                    if (await UserManager.IsInRoleAsync(user.Id, "Admin"))
-                        return RedirectToAction("Index", "Home");
+                    if (await UserManager.IsInRoleAsync(user.Id, "Admin") || await UserManager.IsInRoleAsync(user.Id, "Manager") || await UserManager.IsInRoleAsync(user.Id, "Employee"))
+                        return RedirectToAction("Index", "Bill");
                     else
                         return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
@@ -93,7 +93,7 @@ namespace Shop.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    
+
                     ModelState.AddModelError("errorLogin", "Tên đăng nhập hoặc mật khẩu không đúng!");
                     ViewData["Login"] = ModelState["errorLogin"].Errors[0].ErrorMessage;
                     return View(model);
@@ -166,13 +166,25 @@ namespace Shop.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
                     await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
+                    Customer customer = new Customer
+                    {
+                        CustomerName = model.FullName,
+                        Email = model.Email,
+                        PhoneNumber = model.PhoneNumber,
+                        Address = model.Address,
+                        Status = 1,
+                        TimeCreate = DateTime.Now,
+                        UserId = user.Id
+
+                    };
+                    db.Customers.Add(customer);
+                    db.SaveChanges();
                     return RedirectToAction("Index", "Home");   // muốn return về đầu thì return về đó
                 }
                 AddErrors(result);
@@ -212,7 +224,7 @@ namespace Shop.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
+                var user = await UserManager.FindByEmailAsync(model.Email);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
@@ -221,10 +233,10 @@ namespace Shop.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
@@ -384,10 +396,10 @@ namespace Shop.Controllers
                                 UserId = user.Id
                             };
                             db.Customers.Add(customer);
-                            db.SaveChanges();  
+                            db.SaveChanges();
                             if (returnUrl == null)
                             {
-                                return RedirectToAction("Index", "Home");       
+                                return RedirectToAction("Index", "Home");
                             }
                             else
                             {
@@ -479,6 +491,51 @@ namespace Shop.Controllers
             return View();
         }
 
+        public ActionResult CreateAccountModel()
+        {
+            ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin")&& !u.Name.Contains("Customers")).ToList(), "Name", "Name");
+            return View();
+        }
+        public async Task<ActionResult> CreateAccount(FormCollection form)
+        {
+            try
+            {
+
+                int id = Convert.ToInt32(form["Id"]);
+                string username = Convert.ToString(form["UserName"]); 
+                string pass = Convert.ToString(form["Password"]);
+                string confirm = Convert.ToString(form["ConfirmPassword"]);
+                string role = Convert.ToString(form["UserRoles"]);
+                var emp = db.Employees.SingleOrDefault(e => e.Id == id && e.Status ==1);
+                if (emp != null)
+                {
+                    var user = new ApplicationUser { UserName = username, Email = emp.Email };
+                    var result = await UserManager.CreateAsync(user, pass);
+                    if (result.Succeeded)
+                    {
+                        //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        await this.UserManager.AddToRoleAsync(user.Id, role);
+                        emp.UserId = user.Id;
+                        db.SaveChanges();
+                        return Json(new { success = true, mess = "Tạo tài khoản thành công" }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new { success = false, mess = "Tạo tài khoản thất bại" }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+
+                else
+                {
+                    return Json(new { success = false, mess = "Nhân viên không còn tồn tại" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

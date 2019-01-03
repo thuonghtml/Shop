@@ -46,15 +46,15 @@ namespace Shop.Controllers
                     return Json(new { success = false, mess = "Sản phẩm không tồn tại hoặc đã xóa!" }, JsonRequestBehavior.AllowGet);
                 }
                 else
-                {
-                    var ware = db.Warehouses.Where(w => w.ProductId == productId && w.Status == 1 && w.Size.Equals(size) && w.Color.Equals(color)).ToList();
+                {   
+                    var ware = db.Warehouses.Where(w => w.ProductId == productId && w.Status == 1 && w.Size.Equals(size==""?null:size) && w.Color.Equals(color == "" ? null : color)).ToList();
                     if (ware.Count == 0) // nếu chưa tồn tại sản phẩm có cùng size & color
                     {
                         Warehouse warehouse_add = new Warehouse
                         {
                             ProductId = productId,
                             Size = size,
-                            Color = color,
+                            Color = color==""?null:color,
                             InputPrice = price,
                             NumberOfImport = numberImport,
                             NumberOrder = 0,

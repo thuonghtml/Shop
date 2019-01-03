@@ -22,21 +22,21 @@ $(document).ready(function () {
     $('.edit-info').hide();
 
 
-    $('#edit-btn').on('click', function () {
-        var b = $(this).find("i");
-        var edit_class = b.attr('class');
-        if (edit_class == 'icofont icofont-edit') {
-            b.removeClass('icofont-edit');
-            b.addClass('icofont-close');
-            $('.view-info').hide();
-            $('.edit-info').show();
-        } else {
-            b.removeClass('icofont-close');
-            b.addClass('icofont-edit');
-            $('.view-info').show();
-            $('.edit-info').hide();
-        }
-    });
+    //$('#edit-btn').on('click', function () {
+    //    var b = $(this).find("i");
+    //    var edit_class = b.attr('class');
+    //    if (edit_class == 'icofont icofont-edit') {
+    //        b.removeClass('icofont-edit');
+    //        b.addClass('icofont-close');
+    //        $('.view-info').hide();
+    //        $('.edit-info').show();
+    //    } else {
+    //        b.removeClass('icofont-close');
+    //        b.addClass('icofont-edit');
+    //        $('.view-info').show();
+    //        $('.edit-info').hide();
+    //    }
+    //});
     //edit user description
     $('#edit-cancel-btn').on('click', function () {
 
@@ -301,6 +301,22 @@ $(document).ready(function () {
                 }
             },
             {
+                "data": {
+                    "Id": "Id"
+                    , "UserId": "UserId"
+                }, "name": "Action", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center dropdown",
+                "render": function (data, type, row) {
+                    if (data.UserId == null) {
+
+                        return '<button type="button" data-id="' + data.Id + '" class="btncreateAccount btn btn-primary"><i class="ti-user"></i></button>'
+                    }
+                    else {
+                        return "";
+                    }
+
+                }
+            },
+            {
                 "data": "Id", "name": "Action", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center dropdown",
                 "render": function (data, type, row) {
                     return '<button type="button" class="btn btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-angle-double-down"></i></button>' +
@@ -344,7 +360,7 @@ $(document).ready(function () {
                     else {
                         return "";
                     }
-                   
+
                 }
             },
             {
@@ -552,4 +568,76 @@ $(document).ready(function () {
         })
 
     })
+    $(document).on('click', '.btncreateAccount', function () {
+        var my_id_value = $(this).attr('data-id')
+        $.get("/Account/CreateAccountModel", function (data) {
+            $('#content_modal').html(data);
+            $(".modal-body #id_create").val(my_id_value);
+            $('#modal_createAccount').modal('show');
+        });
+    })
+    $(document).on('click', "#btn_SaveCreateAccount", function (e) {
+        var id = $(".modal-body #id_create").val()
+        $('#myFromCreateAccount').removeData("validator");
+        $.validator.unobtrusive.parse($('#myFromCreateAccount'));
+        if ($('#myFromCreateAccount').valid()) {
+            // $('#myFromCreateAccount').submit();
+            var myform = document.getElementById("myFromCreateAccount");
+            e.preventDefault();
+            var form = new FormData(myform);
+            form.append("Id", id);
+            $.ajax({
+                type: "POST",
+                url: "/Account/CreateAccount",
+                contentType: false,
+                processData: false,
+                data: form,
+                beforeSend: function () {
+                    e.preventDefault();
+                },
+                success: function (data) {
+                    //e.preventDefault();
+                    if (data != null && data.success) {
+                        $("#modal_createAccount").modal('hide')
+                        table_emp.draw(false);
+                        RenderMess("success", data.mess)
+
+                    } else if (data != null && !data.success) {
+                        $("#modal_createAccount").modal('hide')
+                        RenderMess("error", data.mess)
+                    }
+                },
+                error: function (xhr, status, errorThrown) {
+                    $(".modal_createAccount").modal('hide')
+                    RenderMess("error", "Lỗi Action")
+                }
+            })
+        }
+        return false;
+
+    })
+
+    $('#edit-btn').on('click', function () {
+        $("#modalLabel").text("Change Info")
+        var my_id_value = $(this).attr('data-id')
+        $(".modal-body #hiddenValue_change").val(my_id_value);
+        $(".modal-body #typeChange").val(1); //Change Emp
+        $.get('/EmpAndCus/GetInfoEmpOrCust', { type: 1, id: my_id_value }, function (data) {
+            $("#EmployeeName").val(data.EmployeeName)
+            $('#datetimepickerBirthDate_emp').val(moment(data.Birthday).format("DD/MM/YYYY"))
+            $('#Email').val(data.Email)
+            $("#PhoneNumber").val(data.PhoneNumber)
+            $("#Address").val(data.Address)
+            if (data.Gender) {
+                $('#male').prop('checked', true);
+            }
+            else {
+                $('#female').prop('checked', true);
+            }
+            $("#myEditCustomer").modal('show')
+            //$('input[name=radio_list]:checked', '#GenderRadio_list').val()
+        })
+
+    });
 });
+

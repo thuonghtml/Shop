@@ -319,5 +319,27 @@ namespace Shop.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetListBlogMain_Result>("GetListBlogMain", tagParameter, idParameter);
         }
+    
+        public virtual ObjectResult<string> BodyMailBill(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("BodyMailBill", idParameter);
+        }
+    
+        public virtual ObjectResult<Revenue_Result> Revenue(Nullable<System.DateTime> date, Nullable<int> type)
+        {
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("date", date) :
+                new ObjectParameter("date", typeof(System.DateTime));
+    
+            var typeParameter = type.HasValue ?
+                new ObjectParameter("Type", type) :
+                new ObjectParameter("Type", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Revenue_Result>("Revenue", dateParameter, typeParameter);
+        }
     }
 }

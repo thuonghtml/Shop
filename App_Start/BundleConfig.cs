@@ -46,7 +46,8 @@ namespace Shop
                       "~/assets/css/jquery.mCustomScrollbar.css",
                       "~/assets/plugins/jstree/themes/default/style.min.css",
                       "~/assets/plugins/toastr/toastr.min.css",
-                      "~/assets/plugins/DataTables/datatables.min.css"
+                      "~/assets/plugins/DataTables/datatables.min.css",
+                      "~/assets/plugins/chartist/dist/chartist.css"
                       ));
             bundles.Add(new ScriptBundle("~/assets/js").Include(
                        "~/assets/plugins/jquery/dist/jquery.min.js",
@@ -100,10 +101,18 @@ namespace Shop
                         "~/assets/pages/advance-elements/moment-with-locales.min.js",
                         "~/assets/pages/bill/bill.js"
                 ));
+            bundles.Add(new ScriptBundle("~/assets/page/billdetail/js").Include(
+                       "~/assets/pages/advance-elements/moment-with-locales.min.js",
+                       "~/assets/pages/bill/billdetail.js"
+               ));
             bundles.Add(new ScriptBundle("~/assets/page/blog/js").Include(
                        "~/assets/pages/advance-elements/moment-with-locales.min.js",
                        "~/assets/pages/blog/blog.js"
                ));
+            bundles.Add(new ScriptBundle("~/assets/page/report/js").Include(
+                     "~/assets/pages/advance-elements/moment-with-locales.min.js",
+                     "~/assets/pages/Report/report.js"
+             ));
             bundles.Add(new StyleBundle("~/assets/page/category/css").Include(
                 //"~/assets/plugins/DataTables/datatables.min.css"
                 ));

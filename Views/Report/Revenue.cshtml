@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Revenue";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section JavaScript {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/assets/pages/blog/ckeditor/ckeditor.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    @Scripts.Render("~/assets/page/report/js")
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <!-- Tab variant tab card start -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Revenue</h5>
+                <div class="card-header-right">
+                        <input id="input_date" style="margin-left:10px" type="date" class="form-control-info" />
+                        <button id="btn_month" class="btn btn-primary btn-sm">Month</button>
+                        <button id ="btn_year"style="margin-right:10px"class="btn btn-primary btn-sm">Year</button>
+                    
+                </div>
+            </div>
+            <div class="card-block">
+                <!-- Row start -->
+                <h3 id="title" style="text-align:center">Báo cáo doanh thu </h3>
+                <div id="line-example"></div>
+
+                <!-- Row end -->
+            </div>
+        </div>
+        <!-- Tab variant tab card start -->
+    </div>
+</div>

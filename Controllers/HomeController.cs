@@ -30,7 +30,7 @@ namespace Shop.Controllers
             dynamic modelMain = new ExpandoObject();
             ViewBag.Menu = db.MasterDatas.Where(m => m.Table == "Category");
             modelMain.GetProductInMain = db.GetProductInMain(1);
-            modelMain.Blog = 2;
+            modelMain.GetListBlogMain = db.GetListBlogMain(null,null).Take(3);
             return View(modelMain);
         }
 
@@ -118,6 +118,7 @@ namespace Shop.Controllers
             var lstFeatured = db.GetFeaturedProducts(type);
             ViewBag.Featured = lstFeatured;
             ViewBag.Type = type;
+            ViewBag.TitleShop = db.MasterDatas.Single(m => m.Table == "Category" && m.Id== type).Description.ToString();
             List<GetMenuShop_Result> lstCayMenu = db.GetMenuShop(type).ToList();
             ViewBag.CayMenu = lstCayMenu;
             var a = lstCayMenu.Count;
@@ -143,11 +144,24 @@ namespace Shop.Controllers
             }
 
         }
-        public ActionResult GetProductCategoryId(int? type,int? categoryid , int? page)
+        public ActionResult GetProductCategoryId(int? type,int? categoryid , int? page, string searchString)
         {
-            IQueryable<GetProductShopByCategoryId_Result> listproduct = db.GetProductShopByCategoryId(categoryid,type).AsQueryable();
+            IQueryable<GetProductShopByCategoryId_Result> listproduct;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                listproduct = db.GetProductShopByCategoryId(categoryid, type).Where(m=>m.ProductName.Contains(searchString)).AsQueryable();
+            }
+            else
+            {
+                listproduct = db.GetProductShopByCategoryId(categoryid, type).AsQueryable();
+            }    
             int pageSize = 12;
+            if (searchString != null)
+            {
+                page = 1;
+            }
             int pageNumber = page ?? 1;
+
             ViewBag.Type = type;
             ViewBag.CategoryId = categoryid;
             return PartialView(listproduct.ToList().ToPagedList(pageNumber, pageSize));
@@ -164,8 +178,11 @@ namespace Shop.Controllers
         public ActionResult AddToCart(int productId, string color, string size, int number)
         {
             List<Cart> lstCart = new List<Cart>();
-            var Info_Product = db.GetInfoProductCart(productId, size, color).First();
-
+            var Info_Product = db.GetInfoProductCart(productId, size, color).SingleOrDefault();
+            if  (Info_Product == null)
+            {
+                return Json(new { success = false, mess = "Sản phâm chưa được tồn tại trong kho nên không order được!"}, JsonRequestBehavior.AllowGet);
+            }
             if (Session["Cart"] == null) // Nếu giỏ hàng chưa có sản phẩm
             {
                 if (Info_Product.NumberOfRemaining - number < 0)// Nếu số lượng trong kho không đủ cho số lượng order
@@ -376,6 +393,10 @@ namespace Shop.Controllers
         {
             try
             {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
                 string fullname = Convert.ToString(form["CustomerName"]);
                 string phone = Convert.ToString(form["PhoneNumber"]);
                 string address = Convert.ToString(form["Address"]);

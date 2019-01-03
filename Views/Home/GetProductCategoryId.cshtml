@@ -321,12 +321,12 @@
         e.preventDefault();
         if (!($(this).parent().hasClass('active'))) {
             var href = $(this).attr("href")
-            console.log(categoryid)
+            var search = $("#search_product").val()
             $.ajax({
                 type: "GET",
                 url: href,
                 contentType: "application/json; charset=utf-8",
-                data: { "type": type, "categoryid": categoryid },
+                data: { "type": type, "categoryid": categoryid, "searchString": search },
                 success: function (data) {
                     //debugger;
                     $("#contentFrame").html(data)
@@ -399,7 +399,22 @@
             });
         });
     });
-    
+    $("#btn_search_product").on("click", function () {
+        var search = $("#search_product").val()
+        $.ajax({
+            type: "GET",
+            url: "/Home/GetProductCategoryId",
+            contentType: "application/json; charset=utf-8",
+            data: { "type": type, "categoryid": categoryid, "searchString": search },
+            success: function (data) {
+                //debugger;
+                $("#contentFrame").html(data)
+            },
+            error: function () {
+                alert("Dynamic content load failed.");
+            }
+        })
+    })
     //$(".bor18").on("click", function (e) {
     //    e.preventDefault();
     //    console.log($(this).closest("li").find("[class^='menu-child']").slideToggle())

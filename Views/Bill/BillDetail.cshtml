@@ -1,0 +1,127 @@
+﻿@model Shop.Models.Bill
+@{
+    ViewBag.Title = "Bill Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section JavaScript {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/assets_client/page/Cart/min/numeral.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.full.min.js"></script>
+    @Scripts.Render("~/assets/page/billdetail/js")
+}
+<script>
+    var billstatus = @Html.Raw(Json.Encode(ViewBag.BillStatus))
+    var status = @Model.Status
+    var idbill = @Model.Id
+</script>
+<div class="row">
+    <div class="col-sm-12">
+        <!-- Tab variant tab card start -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Blog Detail</h5>
+                <div class="card-header-right">
+                    <i class="icofont icofont-refresh"></i>
+                </div>
+            </div>
+            <div class="card-block tab-icon">
+                <!-- Row start -->
+                <div class="row">
+                    <div class="col-lg-12 col-xl-12">
+                        <div class="tab-content card-block">
+                            <h4 style="text-align:center">Thông tin khách hàng</h4>
+
+                            <table class="table" style="width:50%; margin-left:25%; margin-top:15px">
+                                <tr class="col-lg-4">
+                                    <td style="text-align:right;width:30%"><b>Customer Name:</b></td>
+                                    <td>@Model.CustomerName.ToString()</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;width:30%"><b>Phone Number:</b></td>
+                                    <td>@Model.PhoneNumber.ToString()</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;width:30%"><b>Email:</b></td>
+                                    <td>@Model.Email.ToString()</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;width:30%"><b>Address:</b></td>
+                                    <td>@Model.Address.ToString()</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:right;width:30%"><b>Note:</b></td>
+                                    <td>@Model.Note.ToString()</td>
+                                </tr>
+                            </table>
+                            <hr />
+                            <h4 style="text-align:center">Thông tin đơn hàng</h4>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center">STT</th>
+                                        <th>Product Name</th>
+                                        <th>Size</th>
+                                        <th>Color</th>
+                                        <th style="text-align:right">Price</th>
+                                        <th style="text-align:center">Quantity</th>
+                                        <th style="text-align:right">Into Money</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @{
+                                        int a = 1;
+                                    }
+                                    @foreach (var item in Model.BillDetails)
+                                    {
+                                        <tr>
+                                            <td style="text-align:center">@a</td>
+                                            <td>@item.ProductName</td>
+                                            <td>@item.Size</td>
+                                            <td>@item.Color</td>
+                                            <td style="text-align:right">@item.Price.Value.ToString("#,##0") VNĐ</td>
+                                            <td style="text-align:center">@item.Quantity.Value</td>
+                                            <td style="text-align:right">@item.ToMoney.Value.ToString("#,##0") VNĐ</td>
+                                        </tr>
+                                        a++;
+                                    }
+                                    @if (Model.Coupon != null)
+                                    {
+                                        <tr>
+                                            <td style="text-align:right" colspan="6">Coupon:</td>
+                                            <td  style="text-align:right">
+                                                @Model.Coupon.Price.Value.ToString("#,##0")  VNĐ
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td style="text-align:right" colspan="6">Total:</td>
+                                        <td  style="text-align:right">@Model.Total.Value.ToString("#,##0") VNĐ</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Bill status</label>
+                    <div class="col-sm-6">
+                        <select name="select" id="billstatus" class="form-control">
+                           
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <button id="btnUpdateStatusBill" class="btn btn-primary" style="margin-top: 4px;margin-left: 130px;">
+                            Update Status Bill
+                        </button>
+                    </div>
+                </div>
+                <!-- Row end -->
+            </div>
+        </div>
+        <!-- Tab variant tab card start -->
+    </div>
+</div>

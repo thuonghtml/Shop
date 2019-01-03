@@ -136,6 +136,7 @@
                     CheckGender = $('input[name=radio]:checked', '#GenderRadio').val()
                     GetDataCategory()
                     category = $('#input_Category').val('');
+                    table.draw(false);
                 },
                 error: function (err) {
                     RenderMess("error", err)
