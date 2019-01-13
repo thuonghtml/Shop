@@ -13,11 +13,11 @@ namespace Shop.Models
     
     public partial class GetProductInMain_Result
     {
-        public int Id { get; set; }
+        public Nullable<int> Id { get; set; }
         public string ProductName { get; set; }
         public Nullable<double> OldPrice { get; set; }
         public Nullable<double> NewPrice { get; set; }
         public string ImageLink { get; set; }
-        public Nullable<double> Type { get; set; }
+        public Nullable<int> Type { get; set; }
     }
 }

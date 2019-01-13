@@ -293,6 +293,7 @@ $(document).ready(function () {
                         $('#ValueParentCategory_list').val(r[0].Id);
 
                         $('#divParentSearch_list').hide();
+                        table.draw(false);
                     }
                 }).jstree({
                     'core': { 'data': datas, },
@@ -350,6 +351,7 @@ $(document).ready(function () {
             "url": "/Product/LoadDataTable",
             "data": function (d) {
                 d.gender = CheckGender_list
+                d.category = $('#ValueParentCategory_list').val()
             },
             "type": "POST",
             "datatype": "json",
@@ -363,17 +365,23 @@ $(document).ready(function () {
             {
                 "data": "ImageList", "name": "ImageList", "autoWidth": true, "searchable": false, "orderable": false,
                 "render": function (data, type, row) {
-                    var htmlreturn = '<div class ="row">';
-                    var file = data.toString().split(",")
-                    $.each(file, function (index, item) {
-                        var img = item.toString().split(" - ")
-                        htmlreturn += '<div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12" >' +
-                            '<a href="' + img[1] + '" data-id="' + img[0] + '" data-toggle="lightbox">' +
-                            '<img src="' + img[1] + '" data-id = "' + img[0] + '" class="img-fluid" alt="">' +
-                            '</a>' + '</div>'
-                    })
-                    htmlreturn += '</div>'
-                    return htmlreturn;
+                    if (data !== null && data !== "") {
+                        var htmlreturn = '<div class ="row">';
+                        var file = data.toString().split(",")
+                        $.each(file, function (index, item) {
+                            var img = item.toString().split(" - ")
+                            htmlreturn += '<div class="col-xl-4 col-lg-6 col-sm-6 col-xs-12" >' +
+                                '<a href="' + img[1] + '" data-id="' + img[0] + '" data-toggle="lightbox">' +
+                                '<img src="' + img[1] + '" data-id = "' + img[0] + '" class="img-fluid" alt="">' +
+                                '</a>' + '</div>'
+                        })
+                        htmlreturn += '</div>'
+                        return htmlreturn;
+                    }
+                    else {
+                        return "";
+                    }
+                  
                 }
             },
             {
@@ -386,15 +394,15 @@ $(document).ready(function () {
                     else return "Couple";
                 }
             },
-            {
-                "data": "Status", "name": "Status", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center",
-                "render": function (data, type, row) {
-                    if (data === 1)
-                        return "Active";
-                    else
-                        return "InActive";
-                }
-            },
+            //{
+            //    "data": "Status", "name": "Status", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center",
+            //    "render": function (data, type, row) {
+            //        if (data === 1)
+            //            return "Active";
+            //        else
+            //            return "InActive";
+            //    }
+            //},
             {
                 "data": "Id", "name": "Action", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center dropdown",
                 "render": function (data, type, row) {
@@ -410,7 +418,8 @@ $(document).ready(function () {
     $('#GenderRadio_list input').on('change', function () {
         CheckGender_list = $('input[name=radio_list]:checked', '#GenderRadio_list').val()
         GetDataCategory_list()
-        table.ajax.reload();
+        //table.ajax.reload();
+        table.draw(false)
     });
 
     //$.get('/Product/LoadDataTable', { gender: gender_list }, function (data) {

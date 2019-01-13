@@ -11,16 +11,19 @@ namespace Shop.Models
 {
     using System;
     
-    public partial class GetInfoProductById_Result
+    public partial class GetDetailBillHome_Result
     {
+        public Nullable<double> Total { get; set; }
+        public Nullable<double> Coupon { get; set; }
         public int Id { get; set; }
+        public Nullable<int> BillId { get; set; }
+        public Nullable<int> ProductId { get; set; }
         public string ProductName { get; set; }
-        public string Description { get; set; }
-        public Nullable<double> OldPrice { get; set; }
-        public Nullable<double> NewPrice { get; set; }
-        public string Size { get; set; }
+        public Nullable<double> Price { get; set; }
+        public Nullable<int> Quantity { get; set; }
+        public Nullable<double> ToMoney { get; set; }
         public string Color { get; set; }
-        public string ImageList { get; set; }
-        public Nullable<int> Type { get; set; }
+        public string Size { get; set; }
+        public Nullable<int> Status { get; set; }
     }
 }

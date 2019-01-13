@@ -16,6 +16,7 @@ using System.Web.Configuration;
 using System.Data.Entity.SqlServer;
 using System.Data.SqlClient;
 using System.Data;
+using System.Web.Script.Serialization;
 
 namespace Shop.Controllers
 {
@@ -132,7 +133,16 @@ namespace Shop.Controllers
 
         public ActionResult BillDetail(int id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else if (User.IsInRole("Customers"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             ViewBag.BillStatus = db.MasterDatas.Where(m => m.Table == "Bill");
+            ViewBag.Manager = User.IsInRole("Admin")||User.IsInRole("Manager")?1:0;
             Bill bill = db.Bills.SingleOrDefault(b => b.Id == id);
             return View(bill);
         }
@@ -142,11 +152,17 @@ namespace Shop.Controllers
             try
             {   
                 var bill = db.Bills.SingleOrDefault(b => b.Id == id);
+                if(User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Manager")))
+                {
+                    bill.Status = status;
+                    db.SaveChanges();
+                    return Json(new { success = true, mess = "Đã cập nhật trạng thái đơn hàng thàng công! <br/> Vui lòng kiểm tra lại số lượng sản phẩm trong kho của đơn hàng và cập nhật khi cần thiết" }, JsonRequestBehavior.AllowGet);
+                }
                 if (status == 0)       // Hủy đơn hàng
                 {
                     foreach (BillDetail details in bill.BillDetails)
                     {
-                        Warehouse warehouse = db.Warehouses.Single(w => w.ProductId == details.ProductId && w.Size == details.Size && w.Color == details.Color && w.Status == 1);
+                        Warehouse warehouse = db.Warehouses.Single(w => w.ProductId == details.ProductId && w.Size == (details.Size == "" ? null : details.Size) && w.Color == (details.Color == "" ? null : details.Color) && w.Status == 1);
                         if (warehouse != null)
                         {
                             warehouse.NumberOrder -= details.Quantity;
@@ -231,7 +247,43 @@ namespace Shop.Controllers
                 throw ex;
             }
         }
+        [HttpPost]
+        public ActionResult LoadDataTableHome()
+        {
+            var draw = Request.Form.GetValues("draw").FirstOrDefault();
+            var start = Request.Form.GetValues("start").FirstOrDefault();
+            var length = Request.Form.GetValues("length").FirstOrDefault();
+           // string searchvalue = Request.Form.GetValues("search[value]").FirstOrDefault();
+            var sortColumn = Request.Form.GetValues("columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]").FirstOrDefault();
+            var sortColumnDir = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+            int recordsTotal = 0;
+            string userid = User.Identity.GetUserId();
+            var listBill = db.GetListBillByCustomer(userid).ToList();   
+            if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
+            {
+                listBill = listBill.OrderBy(sortColumn + " " + sortColumnDir).ToList();
+            }
+            recordsTotal = listBill.Count();
+            var data = listBill.Skip(skip).Take(pageSize).ToList();
 
+            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult BillDetailHome(int id)
+        {
+            try
+            {
+
+                var obj = db.GetDetailBillHome(id); 
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+             catch   (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
 

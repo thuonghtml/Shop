@@ -11,16 +11,10 @@ namespace Shop.Models
 {
     using System;
     
-    public partial class GetInfoProductById_Result
+    public partial class GetTagInforBlog_Result
     {
         public int Id { get; set; }
-        public string ProductName { get; set; }
         public string Description { get; set; }
-        public Nullable<double> OldPrice { get; set; }
-        public Nullable<double> NewPrice { get; set; }
-        public string Size { get; set; }
-        public string Color { get; set; }
-        public string ImageList { get; set; }
-        public Nullable<int> Type { get; set; }
+        public string Table { get; set; }
     }
 }

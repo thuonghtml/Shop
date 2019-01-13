@@ -75,18 +75,18 @@
                     var results = pattern.exec(value);
                     var dt = new Date(parseFloat(results[1]));
 
-                    return dt.getDate() + "/" + (dt.getMonth() + 1) + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes();
+                    return dt.getDate() + "/" + (dt.getMonth() + 1) + "/" + dt.getFullYear() ;
                 }
             },
-            {
-                "data": "Status", "name": "Status", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center",
-                "render": function (data, type, row) {
-                    if (data === 1)
-                        return "Active";
-                    else
-                        return "InActive";
-                }
-            },
+            //{
+            //    "data": "Status", "name": "Status", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center",
+            //    "render": function (data, type, row) {
+            //        if (data === 1)
+            //            return "Active";
+            //        else
+            //            return "InActive";
+            //    }
+            //},
             {
                 "data": "Id", "name": "Action", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center dropdown",
                 "render": function (data, type, row) {
@@ -134,8 +134,7 @@
         var my_id_value = $(this).attr('data-id')
         $(".modal-body #hiddenValue_change").val(my_id_value);
         $.get('/Blog/GetInfoBlog', { id: my_id_value }, function (data) {
-   
-                console.log(data);
+  
                 $('#viewImageBlog_change').empty();
                 $('#blogname_change').val(data.BlogName);  
                 //CKEDITOR.instances.content_change.setData(data.Content);

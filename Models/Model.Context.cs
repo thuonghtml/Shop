@@ -222,8 +222,8 @@ namespace Shop.Models
         public virtual ObjectResult<GetProductInMain_Result> GetProductInMain(Nullable<int> categoryId)
         {
             var categoryIdParameter = categoryId.HasValue ?
-                new ObjectParameter("CategoryId", categoryId) :
-                new ObjectParameter("CategoryId", typeof(int));
+                new ObjectParameter("categoryId", categoryId) :
+                new ObjectParameter("categoryId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductInMain_Result>("GetProductInMain", categoryIdParameter);
         }
@@ -340,6 +340,47 @@ namespace Shop.Models
                 new ObjectParameter("Type", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Revenue_Result>("Revenue", dateParameter, typeParameter);
+        }
+    
+        public virtual ObjectResult<GetProductSameKind_Result> GetProductSameKind(Nullable<int> type)
+        {
+            var typeParameter = type.HasValue ?
+                new ObjectParameter("Type", type) :
+                new ObjectParameter("Type", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductSameKind_Result>("GetProductSameKind", typeParameter);
+        }
+    
+        public virtual ObjectResult<GetTagInforBlog_Result> GetTagInforBlog()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetTagInforBlog_Result>("GetTagInforBlog");
+        }
+    
+        public virtual ObjectResult<GetListBillByCustomer_Result> GetListBillByCustomer(string userId)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetListBillByCustomer_Result>("GetListBillByCustomer", userIdParameter);
+        }
+    
+        public virtual ObjectResult<GetDetailBillHome_Result> GetDetailBillHome(Nullable<int> billId)
+        {
+            var billIdParameter = billId.HasValue ?
+                new ObjectParameter("BillId", billId) :
+                new ObjectParameter("BillId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDetailBillHome_Result>("GetDetailBillHome", billIdParameter);
+        }
+    
+        public virtual ObjectResult<GetProductWarehouse_Result> GetProductWarehouse(Nullable<int> category)
+        {
+            var categoryParameter = category.HasValue ?
+                new ObjectParameter("Category", category) :
+                new ObjectParameter("Category", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductWarehouse_Result>("GetProductWarehouse", categoryParameter);
         }
     }
 }

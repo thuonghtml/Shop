@@ -124,11 +124,9 @@
             + '<td style="text-align:right">' + numeral(subtotal - coupon).format('0,0') + " VNĐ" + '</td>'
             + '</tr>'
         $('#table_content_bill').html(html)
-        if (!UserLogin) {
-            $(location).attr('href', '/Account/Login?returnUrl=' + returnUrl)
-            return false;
-        }
-        else {
+        if (UserLogin) {
+            //$(location).attr('href', '/Account/Login?returnUrl=' + returnUrl)
+            //return false;
             $.ajax({
                 type: "GET",
                 url: '/Home/getInfoCustomer',

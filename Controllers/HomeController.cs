@@ -29,8 +29,10 @@ namespace Shop.Controllers
             }
             dynamic modelMain = new ExpandoObject();
             ViewBag.Menu = db.MasterDatas.Where(m => m.Table == "Category");
-            modelMain.GetProductInMain = db.GetProductInMain(1);
-            modelMain.GetListBlogMain = db.GetListBlogMain(null,null).Take(3);
+            modelMain.GetProductInMain1 = db.GetProductInMain(null).Where(m => m.Type == 1).ToList();
+            modelMain.GetProductInMain2 = db.GetProductInMain(null).Where(m => m.Type == 2).ToList();
+            modelMain.GetProductInMain3 = db.GetProductInMain(null).Where(m => m.Type == 3).ToList();
+            modelMain.GetListBlogMain = db.GetListBlogMain(null, null).Take(3);
             return View(modelMain);
         }
 
@@ -72,9 +74,9 @@ namespace Shop.Controllers
             ViewBag.ShopCart = lstCart;
             return View();
         }
-        public ActionResult Blog(int?tag)
+        public ActionResult Blog(int? tag)
         {
-            ViewBag.Menu = db.MasterDatas.Where(m => m.Table == "Category");
+
             ViewBag.CartCount = 0;
             if (Session["Cart"] != null)
             {
@@ -83,13 +85,15 @@ namespace Shop.Controllers
             }
             var lstFeatured = db.GetFeaturedProducts(null);
             ViewBag.Featured = lstFeatured;
-            ViewBag.TagMenu = db.MasterDatas.Where(m => m.Table == "Blog");
+            ViewBag.TagBlog = db.GetTagInforBlog();
             ViewBag.Tag = tag;
+            ViewBag.Menu = db.MasterDatas.Where(a => a.Table == "Category" && a.Table != "Blog");
+            var b = ViewBag.Menu;
             return View();
         }
         public ActionResult Blog_Detail()
         {
-            
+
             return View();
         }
         [HttpGet]
@@ -118,7 +122,7 @@ namespace Shop.Controllers
             var lstFeatured = db.GetFeaturedProducts(type);
             ViewBag.Featured = lstFeatured;
             ViewBag.Type = type;
-            ViewBag.TitleShop = db.MasterDatas.Single(m => m.Table == "Category" && m.Id== type).Description.ToString();
+            ViewBag.TitleShop = db.MasterDatas.Single(m => m.Table == "Category" && m.Id == type).Description.ToString();
             List<GetMenuShop_Result> lstCayMenu = db.GetMenuShop(type).ToList();
             ViewBag.CayMenu = lstCayMenu;
             var a = lstCayMenu.Count;
@@ -136,6 +140,8 @@ namespace Shop.Controllers
                     ViewBag.CartCount = list.Count;
                 }
                 var product = db.GetInfoProductById(id).First();
+                List<GetProductSameKind_Result> lstSameKind = db.GetProductSameKind(product.Type).ToList();
+                ViewBag.SameKid = lstSameKind;
                 return View(product);
             }
             catch (Exception ex)
@@ -144,19 +150,20 @@ namespace Shop.Controllers
             }
 
         }
-        public ActionResult GetProductCategoryId(int? type,int? categoryid , int? page, string searchString)
+        public ActionResult GetProductCategoryId(int? type, int? categoryid, int? page, string searchString)
         {
             IQueryable<GetProductShopByCategoryId_Result> listproduct;
             if (!String.IsNullOrEmpty(searchString))
             {
-                listproduct = db.GetProductShopByCategoryId(categoryid, type).Where(m=>m.ProductName.Contains(searchString)).AsQueryable();
+                listproduct = db.GetProductShopByCategoryId(categoryid, type).Where(m => m.ProductName.Contains(searchString)).AsQueryable();
             }
             else
             {
                 listproduct = db.GetProductShopByCategoryId(categoryid, type).AsQueryable();
-            }    
+            }
+
             int pageSize = 12;
-            if (searchString != null)
+            if (searchString != null && searchString != "")
             {
                 page = 1;
             }
@@ -169,7 +176,7 @@ namespace Shop.Controllers
 
         public ActionResult GetBlogByTag(int? tag, int? page)
         {
-            IQueryable<GetListBlogMain_Result> listblog = db.GetListBlogMain(tag,null).AsQueryable();
+            IQueryable<GetListBlogMain_Result> listblog = db.GetListBlogMain(tag, null).AsQueryable();
             int pageSize = 3;
             int pageNumber = page ?? 1;
             ViewBag.Tag = tag;
@@ -179,9 +186,9 @@ namespace Shop.Controllers
         {
             List<Cart> lstCart = new List<Cart>();
             var Info_Product = db.GetInfoProductCart(productId, size, color).SingleOrDefault();
-            if  (Info_Product == null)
+            if (Info_Product == null)
             {
-                return Json(new { success = false, mess = "Sản phâm chưa được tồn tại trong kho nên không order được!"}, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, mess = "Sản phâm chưa được tồn tại trong kho nên không order được!" }, JsonRequestBehavior.AllowGet);
             }
             if (Session["Cart"] == null) // Nếu giỏ hàng chưa có sản phẩm
             {
@@ -313,7 +320,7 @@ namespace Shop.Controllers
             try
             {
                 string thongbao = "";
-                if(list != null)
+                if (list != null)
                 {
                     foreach (Cart item in list)
                     {
@@ -334,7 +341,7 @@ namespace Shop.Controllers
                         }
 
                     }
-                }  
+                }
                 if (thongbao.Length > 0)
                 {
                     thongbao += ". Bạn vui lòng cập nhât lại giỏ hàng cho phù hợp!";
@@ -351,7 +358,7 @@ namespace Shop.Controllers
                     {
                         return Json(new { success = true, count = 0 }, JsonRequestBehavior.AllowGet);
                     }
-                } 
+                }
             }
             catch (Exception ex)
             {
@@ -393,10 +400,10 @@ namespace Shop.Controllers
         {
             try
             {
-                if (!User.Identity.IsAuthenticated)
-                {
-                    return RedirectToAction("Login", "Account");
-                }
+                //if (!User.Identity.IsAuthenticated)
+                //{
+                //    return RedirectToAction("Login", "Account");
+                //}
                 string fullname = Convert.ToString(form["CustomerName"]);
                 string phone = Convert.ToString(form["PhoneNumber"]);
                 string address = Convert.ToString(form["Address"]);
@@ -415,7 +422,7 @@ namespace Shop.Controllers
                     Note = note,
                     DateCreate = DateTime.Now,
                     Status = 1
-                    
+
                 };
                 List<Cart> list = Session["Cart"] as List<Cart>;
                 double total = 0; int number = 0;
@@ -440,22 +447,24 @@ namespace Shop.Controllers
                 bill.NumberOfProduct = number;
                 // trừ số lượng coupon
                 Coupon coupon = db.Coupons.FirstOrDefault(c => c.CouponCode.Equals(CouponCode) && c.Status == 1);
-                if(coupon!= null && coupon.QuantityRemaining > 1)
+                if (coupon != null && coupon.QuantityRemaining > 1)
                 {
                     coupon.QuantityRemaining -= 1;
                     bill.CouponCode = CouponCode;
                     bill.Total = total - priceCoupon;
-                } 
-                if (User.IsInRole("Customers"))// Nếu là khách hàng thì update thông tin khách hàng
-                {
-                    var customer = db.Customers.Single(c => c.UserId == UserId);
-                    bill.CustomerId = customer.Id;
                 }
-                else
-                {
-                    var empoyee = db.Employees.Single(c => c.UserId == UserId);
-                    bill.EmployeeId = empoyee.Id;
-                }
+                if(User.Identity.IsAuthenticated) {
+                    if (User.IsInRole("Customers"))// Nếu là khách hàng thì update thông tin khách hàng
+                    {
+                        var customer = db.Customers.Single(c => c.UserId == UserId);
+                        bill.CustomerId = customer.Id;
+                    }
+                    else
+                    {
+                        var empoyee = db.Employees.Single(c => c.UserId == UserId);
+                        bill.EmployeeId = empoyee.Id;
+                    }
+                }  
                 db.Bills.Add(bill);
                 db.SaveChanges();
                 Warehouse warehouse;
@@ -484,16 +493,16 @@ namespace Shop.Controllers
         {
             try
             {
-                Coupon coupon = db.Coupons.FirstOrDefault(c => c.CouponCode.Equals(code) && c.Status==1 && c.DateBegin<=DateTime.Now && c.DateEnd>= DateTime.Now);
-                if(coupon != null)
+                Coupon coupon = db.Coupons.FirstOrDefault(c => c.CouponCode.Equals(code) && c.Status == 1 && c.DateBegin <= DateTime.Now && c.DateEnd >= DateTime.Now);
+                if (coupon != null)
                 {
-                      if(coupon.QuantityRemaining > 0)
+                    if (coupon.QuantityRemaining > 0)
                     {
                         return Json(new { success = true, price = coupon.Price, couponCode = code });
                     }
-                      else
+                    else
                     {
-                        return Json(new { success = false, mess="Số lượng coupon đã hết!" });
+                        return Json(new { success = false, mess = "Số lượng coupon đã hết!" });
                     }
                 }
                 else
@@ -501,7 +510,7 @@ namespace Shop.Controllers
                     return Json(new { success = false, mess = "Mã coupon không đúng!" });
                 }
             }
-            catch  (Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -518,9 +527,25 @@ namespace Shop.Controllers
             }
             var lstFeatured = db.GetFeaturedProducts(null);
             ViewBag.Featured = lstFeatured;
-            ViewBag.TagMenu = db.MasterDatas.Where(m => m.Table == "Blog");
+            ViewBag.TagBlog = db.GetTagInforBlog();
             GetListBlogMain_Result blog = db.GetListBlogMain(null, id).Single();
-            ViewBag.blog = blog; 
+            ViewBag.blog = blog;
+            return View();
+        }
+
+        public ActionResult ListBill()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            ViewBag.Menu = db.MasterDatas.Where(m => m.Table == "Category");
+            ViewBag.CartCount = 0;
+            if (Session["Cart"] != null)
+            {
+                List<Cart> list = Session["Cart"] as List<Cart>;
+                ViewBag.CartCount = list.Count;
+            }
             return View();
         }
     }

@@ -17,6 +17,18 @@ namespace Shop.Controllers
         private STORE_DATABASEEntities db = new STORE_DATABASEEntities();
         public ActionResult Index()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else if (User.IsInRole("Customers"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else if (User.IsInRole("Employee"))
+            {
+                return RedirectToAction("Index", "Bill");
+            }
             return View();
         }
         [HttpPost]

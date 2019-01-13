@@ -72,5 +72,9 @@
     //    $('#mymodal1').removeClass('show-modal1');
     //})
   
-   
+    $('.contentblog').each(function (index, item) {
+        var txt = $(this).text();
+        if (txt.length > 200)
+            $(this).text(txt.substr(0, 200) + '.....');
+    })
 });

@@ -29,7 +29,7 @@
                         </h4>
 
                         <ul>
-                            @foreach (var item in ViewBag.TagMenu)
+                            @foreach (var item in ViewBag.TagBlog)
                             {
                                 <li class="bor18">
                                     <a href="@Url.Action("Blog","Home", new { tag = item.Id })" data-tag="@item.Id" class="dis-block stext-115 cl6 hov-cl1 trans-04 p-tb-8 p-lr-4">
@@ -103,9 +103,9 @@
                                 <span class="cl12 m-l-4 m-r-6">|</span>
                             </span>
 
-                            <span>
-                                8 Comments
-                            </span>
+                            @*<span>
+                                    8 Comments
+                                </span>*@
                         </span>
 
                         <h4 class="ltext-109 cl2 p-b-28">
@@ -140,13 +140,18 @@
                         </p>
 
                         <form>
-                            <div class="bor19 m-b-20">
-                                <textarea class="stext-111 cl2 plh3 size-124 p-lr-18 p-tb-15" name="cmt" placeholder="Comment..."></textarea>
-                            </div>
+                            <div id="comments" class="fb-comments">
+                                <fb:comments href="@Request.Url.AbsoluteUri" num_posts="10"></fb:comments>
 
-                            <button class="flex-c-m stext-101 cl0 size-125 bg3 bor2 hov-btn3 p-lr-15 trans-04">
-                                Post Comment
-                            </button>
+                                <div id="fb-root"></div>
+                            </div>
+                            @*<div class="bor19 m-b-20">
+                                    <textarea class="stext-111 cl2 plh3 size-124 p-lr-18 p-tb-15" name="cmt" placeholder="Comment..."></textarea>
+                                </div>
+
+                                <button class="flex-c-m stext-101 cl0 size-125 bg3 bor2 hov-btn3 p-lr-15 trans-04">
+                                    Post Comment
+                                </button>*@
                         </form>
                     </div>
                 </div>

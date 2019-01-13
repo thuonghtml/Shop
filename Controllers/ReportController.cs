@@ -29,7 +29,7 @@ namespace Shop.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            else if (!User.IsInRole("Admin")||!User.IsInRole("Manager"))
+            else if (!User.IsInRole("Employee")||!User.IsInRole("Customers"))
             {
                 return RedirectToAction("Index", "Home");
             }

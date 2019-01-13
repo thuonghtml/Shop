@@ -43,7 +43,7 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
   font-family: Poppins-Regular;
   src: url('../fonts/Poppins/Poppins-Regular.ttf'); 
 }
-
+/*
 @font-face {
   font-family: Poppins-Light;
   src: url('../fonts/Poppins/Poppins-Light.ttf'); 
@@ -72,11 +72,11 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 @font-face {
   font-family: Poppins-SemiBold;
   src: url('../fonts/Poppins/Poppins-SemiBold.ttf'); 
-}
+}*/
 
 
 /*---------------------------------------------*/
-@font-face {
+/*@font-face {
   font-family: PlayfairDisplay-Regular;
   src: url('../fonts/PlayfairDisplay/PlayfairDisplay-Regular.ttf'); 
 }
@@ -84,10 +84,10 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 @font-face {
   font-family: PlayfairDisplay-Bold;
   src: url('../fonts/PlayfairDisplay/PlayfairDisplay-Bold.ttf'); 
-}
+}*/
 
 /*---------------------------------------------*/
-@font-face {
+/*@font-face {
   font-family: Montserrat-Regular;
   src: url('../fonts/Montserrat/Montserrat-Regular.ttf'); 
 }
@@ -95,7 +95,7 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 @font-face {
   font-family: Montserrat-Bold;
   src: url('../fonts/Montserrat/Montserrat-Bold.ttf'); 
-}
+}*/
 
 
 /*//////////////////////////////////////////////////////////////////
@@ -1899,6 +1899,21 @@ input.num-product::-webkit-inner-spin-button {
     visibility: hidden;
     opacity: 0;
 }
+.wrap-modal3 {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 9000;
+    overflow: auto;
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    transition: all 0.4s;
+    visibility: hidden;
+    opacity: 0;
+}
 .overlay-modal1 {
   position: fixed;
   z-index: -1;
@@ -1919,11 +1934,25 @@ input.num-product::-webkit-inner-spin-button {
     background: #000;
     opacity: 0.8;
 }
+.overlay-modal3 {
+    position: fixed;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #000;
+    opacity: 0.8;
+}
 .show-modal1 {
   visibility: visible;
   opacity: 1;
 }
 .show-modal2 {
+    visibility: visible;
+    opacity: 1;
+}
+.show-modal3 {
     visibility: visible;
     opacity: 1;
 }
@@ -2142,6 +2171,62 @@ input.num-product::-webkit-inner-spin-button {
   top: 12px;
   left: 12px;
 }
+/*---------------------------------------------*/
+.label-sale {
+    position: relative;
+}
+
+    .label-sale::after {
+        content: attr(data-label);
+        font-family: Montserrat-Regular;
+        font-size: 12px;
+        color: #fff;
+        line-height: 1.2;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        min-width: 50px;
+        height: 22px;
+        border-radius: 10px;
+        padding: 0 6px;
+        background-color: chartreuse;
+        top: 12px;
+        left: 12px;
+    }
+
+/*---------------------------------------------*/
+.label-featured {
+    position: relative;
+}
+
+    .label-featured::after {
+        content: attr(data-label);
+        font-family: Montserrat-Regular;
+        font-size: 12px;
+        color: #fff;
+        line-height: 1.2;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        min-width: 50px;
+        height: 22px;
+        border-radius: 10px;
+        padding: 0 6px;
+        background-color: darkorange;
+        top: 12px;
+        left: 12px;
+    }
+
 
 
 

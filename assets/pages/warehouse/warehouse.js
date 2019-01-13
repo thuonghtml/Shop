@@ -169,7 +169,7 @@
             return false;
         }
 
-        if ($("#myFrom").valid() == true) {
+        if ($("#myFrom").valid() === true) {
 
             $.ajax({
                 type: "POST",
@@ -182,13 +182,13 @@
                 },
                 success: function (data) {
                     //e.preventDefault();
-                    if (data != null && data.success) {
+                    if (data !== null && data.success) {
                         Refresh_Input_Warehouse();
                         //table.ajax.reload();
                         table.draw(false);
                         RenderMess("success", data.mess)
 
-                    } else if (data != null && !data.success) {
+                    } else if (data !== null && !data.success) {
                         Refresh_Input_Warehouse();
                         RenderMess("error", data.mess)
                     }
@@ -423,10 +423,69 @@
     })
     $(document).on('click', '.ChangeClass', function () {
         var my_id_value = $(this).attr('data-id')
-        $(".modal-body #hiddenValue_change").val(my_id_value);  
+        $(".modal-body #hiddenValue_change").val(my_id_value);
+        $.get('/Warehouse/GetInfoWarehouseById', { id: my_id_value }, function (data) {
+            console.log(data)
+            $("#category_change").val(data[0].CategoryName)
+            $("#productName_change").val(data[0].ProductName)
+            $("#inputPrice_change").val(data[0].InputPrice)
+            $("#numberImport").val(data[0].NumberOfImport)
+            $("#numberRemaining").val(data[0].NumberOfRemaining)
+            $("#numberOrder").val(data[0].NumberOrder)
+            $("#my_modal_EditWarehouse").modal('show')
+        });   
         //console.log($('#GenderRadio_tab'))
 
     });
+    $("#btn_Save_Warehouse").on("click", function (e) {
+        var myform = document.getElementById("myFromWarehouse_change");
+        var form = new FormData(myform);
+        form.append("Id", $("#hiddenValue_change").val());
+        //form.append("typeChange", $("#typeChange").val());
+        if ($("#myFromWarehouse_change").valid() == true) {
+            $.ajax({
+                type: "POST",
+                url: "/Warehouse/UpdateWarehouse",
+                contentType: false,
+                processData: false,
+                data: form,
+                beforeSend: function () {
+                    e.preventDefault();
+                },
+                success: function (data) {
+                    //e.preventDefault();
+                    if (data != null && data.success) {
+                        $("#my_modal_EditWarehouse").modal('hide')
+                        table.draw(false);
+                        $('.modal-body #category_change').val('')
+                        $('.modal-body #productName_change').val('')
+                        $('.modal-body #inputPrice_change').val('')
+                        $('.modal-body #numberImport').val('')
+                        $('.modal-body #numberRemaining').val('')
+                        $('.modal-body #numberOrder').val('')
+                        RenderMess("success", data.mess)
+                    }
+                    else {
+                        $("#my_modal_EditWarehouse").modal('hide')
+                        RenderMess("error", data.mess)
+                    }
+                   
+                },
+                error: function (xhr, status, errorThrown) {
+                    $("#myEditCoupon").modal('hide')
+                    $('.modal-body #hiddenValue_change').val("");
+                    $('.modal-body #CouponCode').val("");
+                    $('.modal-body #DateBegin').val("");
+                    $('.modal-body #DateEnd').val("");
+                    $('.modal-body #Price').val("");
+                    $('.modal-body #Quantity').val("");
+                    $('.modal-body #QuantityRemaining').val("");
+                    RenderMess("error", errorThrown)
+                }
+            })
+        }
+    })
+
 });
 
 //$('#tree').on("select_node.jstree", function (e, data) { alert("node_id: " + data.node.id); })

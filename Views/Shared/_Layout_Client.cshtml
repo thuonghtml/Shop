@@ -39,8 +39,8 @@
                             @User.Identity.Name
                             <a href="@Url.Action("LogOff", "Account")">
 
-                                <img src="~/assets_client/images/icons/logo-logout-png-2.png" style="padding-left:5px" width="20" height="20"/>   
-    @*<img src="~/assets_client/images/icons/log-out-icon-1513550.png" style="padding-left:5px" width="20" height="20" />*@
+                                <img src="~/assets_client/images/icons/logo-logout-png-2.png" style="padding-left:5px" width="20" height="20" />
+                                @*<img src="~/assets_client/images/icons/log-out-icon-1513550.png" style="padding-left:5px" width="20" height="20" />*@
                             </a>
 
                         </div>
@@ -102,8 +102,8 @@
                     <!-- Icon header -->
                     <div class="wrap-icon-header flex-w flex-r-m">
                         @*<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
-                            <i class="zmdi zmdi-search"></i>
-                        </div>*@
+                                <i class="zmdi zmdi-search"></i>
+                            </div>*@
 
                         <div id="cart_icon" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="@ViewBag.CartCount">
                             <i class="zmdi zmdi-shopping-cart"></i>
@@ -127,16 +127,16 @@
             <!-- Icon header -->
             <div class="wrap-icon-header flex-w flex-r-m m-r-15">
                 @*<div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
-                    <i class="zmdi zmdi-search"></i>
-                </div>*@
+                        <i class="zmdi zmdi-search"></i>
+                    </div>*@
 
                 <div id="cart_icon" class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="@ViewBag.CartCount">
                     <i class="zmdi zmdi-shopping-cart"></i>
                 </div>
 
                 @*<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
-                    <i class="zmdi zmdi-favorite-outline"></i>
-                </a>*@
+                        <i class="zmdi zmdi-favorite-outline"></i>
+                    </a>*@
             </div>
 
             <!-- Button show menu -->
@@ -339,7 +339,7 @@
                     </h4>
 
                     <p class="stext-107 cl7 size-201">
-                        Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us on (+1) 96 716 6879
+                        Any questions? Let us know in store at 447 Ho Hoc Lam, NY 10018 or call us on (+84) 396 440 829
                     </p>
 
                     <div class="p-t-27">
@@ -427,6 +427,34 @@
         <div class="overlay-modal2 js-hide-modal2"></div>
         @Html.Partial("InfoCartModal", new Shop.Models.Customer())
     </div>
+    <!-- Modal3 -->
+    <div class="wrap-modal3 js-modal3 p-t-60 p-b-20">
+        <div class="overlay-modal3 js-hide-modal3"></div>
+        <div class="container">
+            <div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
+                <button class="how-pos3 hov3 trans-04 js-hide-modal3">
+                    <img src="/assets_client/images/icons/icon-close.png" alt="CLOSE">
+                </button>
+                <div class="col-md-12 col-lg-12 p-b-30">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center">STT</th>
+                                <th>Product Name</th>
+                                <th style="text-align:center">Size</th>
+                                <th style="text-align:center">Color</th>
+                                <th style="text-align:right">Price</th>
+                                <th style="text-align:center">Quantity</th>
+                                <th style="text-align:right">Into Money</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table_bill_details">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
     @Scripts.Render("~/assets_client/js")
     @RenderSection("JavaScript", required: false)
     <div id="fb-root"></div>
@@ -453,8 +481,8 @@
     <script>
         window.fbAsyncInit = function () {
             FB.init({
-                appId: '495048514244108',
-                cookie: true,
+                appId: '326001238223791',
+                //cookie: true,
                 autoLogAppEvents: true,
                 xfbml: true,
                 version: 'v3.2',

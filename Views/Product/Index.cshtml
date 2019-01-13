@@ -116,7 +116,7 @@
                                                     <input type="file" id="image_Product" name="image_Product" class="form-control" multiple accept='image/*' onchange="myFunction(this)">
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
+                                            <div style="display:none" class="form-group row">
                                                 <label class="col-sm-4 col-form-label">Status</label>
                                                 <div class="col-sm-8">
                                                     <select id="statusProduct" name="statusProduct" class="form-control">
@@ -213,7 +213,7 @@
                                                 <th>Price</th>
                                                 <th>Image</th>
                                                 <th>Gender</th>
-                                                <th>Status</th>
+                                                @*<th>Status</th>*@
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -286,7 +286,7 @@
                                 <input type="file" id="image_Product_change" class="form-control" multiple accept='image/*' onchange="myFunction_change(this)">
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div style="display:none" class="form-group row">
                             <label class="col-sm-4 col-form-label">Status</label>
                             <div class="col-sm-8">
                                 <select id="statusProduct_change" name="statusProduct_change" class="form-control">

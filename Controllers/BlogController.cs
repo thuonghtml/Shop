@@ -20,6 +20,14 @@ namespace Shop.Controllers
         private STORE_DATABASEEntities db = new STORE_DATABASEEntities();
         public ActionResult Index()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else if (User.IsInRole("Customers"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             ViewBag.Tag = new SelectList(db.MasterDatas.Where(u => u.Table.Equals("Blog")).ToList(), "Id", "Description");
             return View();
         }
@@ -147,16 +155,17 @@ namespace Shop.Controllers
                 for (int i = 0; i < Request.Files.Count; i++)
                 {
                     HttpPostedFileBase file = Request.Files[i];
+                    if(file.FileName != null && file.FileName != "")
+                    {
+                        var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + Path.GetFileName(file.FileName);
+                        var orginalDirectory = new DirectoryInfo(Server.MapPath("~/Upload/Image"));
+                        string pathString = Path.Combine(orginalDirectory.ToString(), "");
+                        var path = string.Format("{0}\\{1}", pathString, fileName);
+                        file.SaveAs(path);
 
-                    var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + Path.GetFileName(file.FileName);
-                    var orginalDirectory = new DirectoryInfo(Server.MapPath("~/Upload/Image"));
-                    string pathString = Path.Combine(orginalDirectory.ToString(), "");
-                    var path = string.Format("{0}\\{1}", pathString, fileName);
-                    file.SaveAs(path);
 
-
-                    blog.Photo = "Upload/Image/" + fileName.ToString();
-                       
+                        blog.Photo = "Upload/Image/" + fileName.ToString();
+                    }      
                     
                 }
                 db.SaveChanges();

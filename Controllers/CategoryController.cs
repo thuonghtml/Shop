@@ -16,6 +16,18 @@ namespace Shop.Controllers
         // GET: Category
         public ActionResult Category()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else if (User.IsInRole("Customers"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else if (User.IsInRole("Employee"))
+            {
+                return RedirectToAction("Index", "Bill");
+            }
             return View();
         }
         public ActionResult GetCategories(int? gender )

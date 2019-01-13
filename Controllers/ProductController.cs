@@ -17,6 +17,14 @@ namespace Shop.Controllers
         // GET: Product
         public ActionResult Index()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else if (User.IsInRole("Customers"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
         [HttpPost]
@@ -43,7 +51,7 @@ namespace Shop.Controllers
                 for (int i = 0; i < Request.Files.Count; i++)
                 {
                     HttpPostedFileBase file = Request.Files[i];
-                    if(file.FileName != "" && file.FileName != null)
+                    if (file.FileName != "" && file.FileName != null)
                     {
                         var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + Path.GetFileName(file.FileName);
                         var orginalDirectory = new DirectoryInfo(Server.MapPath("~/Upload/Image"));
@@ -58,16 +66,16 @@ namespace Shop.Controllers
                             Status = 1
                         };
                         db.FileAttaches.Add(fileimg);
-                    }           
+                    }
                 }
                 db.SaveChanges();
                 return Json(new { success = true, mess = "Thêm sản phẩm " + productName + " thành công!" }, JsonRequestBehavior.AllowGet);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
-            
+
         }
 
         [HttpPost]
@@ -82,7 +90,7 @@ namespace Shop.Controllers
             int pageSize = length != null ? Convert.ToInt32(length) : 0;
             int skip = start != null ? Convert.ToInt32(start) : 0;
             int recordsTotal = 0;
-            var listProduct = db.GetListProduct(null,gender,category).ToList();
+            var listProduct = db.GetListProduct(null, gender, category).ToList();
 
             if (!(string.IsNullOrEmpty(searchvalue)))
             {
@@ -131,9 +139,9 @@ namespace Shop.Controllers
                 product.DateUpdate = DateTime.Now;
                 foreach (int item in listimgdelete)
                 {
-                    FileAttach fi = new FileAttach { Id = item};  
+                    FileAttach fi = new FileAttach { Id = item };
                     db.Entry(fi).State = EntityState.Deleted;
-                    
+
                 }
                 for (int i = 0; i < Request.Files.Count; i++)
                 {
@@ -148,12 +156,13 @@ namespace Shop.Controllers
                     {
                         ProductId = product.Id,
                         ImageLink = "Upload/Image/" + fileName.ToString(),
-                        DateCreate = DateTime.Now
+                        DateCreate = DateTime.Now,
+                        Status = 1
                     };
                     db.FileAttaches.Add(fileimg);
                 }
                 db.SaveChanges();
-                return Json(new { success = true, mess ="Cập nhật thông tin sản phẩm "+ productName +" thành công!" }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = true, mess = "Cập nhật thông tin sản phẩm " + productName + " thành công!" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -173,12 +182,12 @@ namespace Shop.Controllers
                     {
                         item.Status = 0;
                     }
-                    foreach(var item in product.Warehouses)  // Xóa line trong kho
+                    foreach (var item in product.Warehouses)  // Xóa line trong kho
                     {
                         item.Status = 0;
                     }
                     db.SaveChanges();
-                    return Json(new { success = true, mess ="Đã xóa thành công "+ product.ProductName }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = true, mess = "Đã xóa thành công " + product.ProductName }, JsonRequestBehavior.AllowGet);
                 }
                 else
                     return Json(new { success = false }, JsonRequestBehavior.AllowGet);
@@ -187,8 +196,8 @@ namespace Shop.Controllers
             {
                 throw ex;
             }
-         
+
         }
-        
+
     }
 }

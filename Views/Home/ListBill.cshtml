@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "List Bill";
+    Layout = "~/Views/Shared/_Layout_Client.cshtml";
+}
+@section Css {
+
+    <link href="~/assets/plugins/DataTables/datatables.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+}
+@section JavaScript {
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/assets_client/page/listbill/js")
+
+}
+<!-- Title page -->
+<section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('../../assets_client/images/bg-01.jpg'); ">
+    <h2 class="ltext-105 cl0 txt-center">
+        List Bill
+    </h2>
+</section>
+
+
+<!-- Content page -->
+<section class="bg0 p-t-75 p-b-120">
+    <div class="container">
+        <table id="tableBill" class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Customer Name</th>
+                    <th>Adress</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Note</th>
+                    <th>Number</th>
+                    <th>Total</th>
+                    <th>Coupon</th>
+                    <th>Status</th>
+                    <th>Date Create</th>
+                    <th>Date Confirm</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</section>
