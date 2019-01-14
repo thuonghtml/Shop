@@ -18,7 +18,6 @@ namespace Shop.Models
         public Product()
         {
             this.BillDetails = new HashSet<BillDetail>();
-            this.Conversations = new HashSet<Conversation>();
             this.FileAttaches = new HashSet<FileAttach>();
             this.Warehouses = new HashSet<Warehouse>();
         }
@@ -36,8 +35,6 @@ namespace Shop.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BillDetail> BillDetails { get; set; }
         public virtual Category Category { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Conversation> Conversations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FileAttach> FileAttaches { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

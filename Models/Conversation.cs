@@ -11,16 +11,15 @@ namespace Shop.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Conversation
     {
         public int Id { get; set; }
-        public Nullable<int> ProductId { get; set; }
-        public string Sender { get; set; }
+        public string Email { get; set; }
+        [Required]
         public string Message { get; set; }
         public Nullable<System.DateTime> DateCreate { get; set; }
         public Nullable<bool> Status { get; set; }
-    
-        public virtual Product Product { get; set; }
     }
 }

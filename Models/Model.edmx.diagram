@@ -11,7 +11,6 @@
         <EntityTypeShape EntityType="STORE_DATABASEModel.AspNetUser" Width="1.5" PointX="12" PointY="2.25" IsExpanded="true" />
         <EntityTypeShape EntityType="STORE_DATABASEModel.BillDetail" Width="1.5" PointX="7.5" PointY="4" IsExpanded="true" />
         <EntityTypeShape EntityType="STORE_DATABASEModel.Category" Width="1.5" PointX="3" PointY="7.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="STORE_DATABASEModel.Conversation" Width="1.5" PointX="7.5" PointY="7.5" IsExpanded="true" />
         <EntityTypeShape EntityType="STORE_DATABASEModel.FileAttach" Width="1.5" PointX="7.5" PointY="10.625" IsExpanded="true" />
         <EntityTypeShape EntityType="STORE_DATABASEModel.Product" Width="1.5" PointX="5.25" PointY="6.5" IsExpanded="true" />
         <EntityTypeShape EntityType="STORE_DATABASEModel.sysdiagram" Width="1.5" PointX="9.75" PointY="7.625" IsExpanded="true" />
@@ -20,7 +19,6 @@
         <AssociationConnector Association="STORE_DATABASEModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="STORE_DATABASEModel.FK_BillDetail_Product" ManuallyRouted="false" />
         <AssociationConnector Association="STORE_DATABASEModel.FK_Category" ManuallyRouted="false" />
-        <AssociationConnector Association="STORE_DATABASEModel.FK_Conversation_Product" ManuallyRouted="false" />
         <AssociationConnector Association="STORE_DATABASEModel.FK_FileAttach_Product" ManuallyRouted="false" />
         <AssociationConnector Association="STORE_DATABASEModel.AspNetUserRoles" ManuallyRouted="false" />
         <EntityTypeShape EntityType="STORE_DATABASEModel.MasterData" Width="1.5" PointX="0.75" PointY="3.375" />
@@ -39,6 +37,7 @@
         <AssociationConnector Association="STORE_DATABASEModel.FK_BillDetail_Bill" />
         <EntityTypeShape EntityType="STORE_DATABASEModel.Blog" Width="1.5" PointX="5.25" PointY="3" />
         <AssociationConnector Association="STORE_DATABASEModel.FK_Blog_Employee" />
+        <EntityTypeShape EntityType="STORE_DATABASEModel.Conversation" Width="1.5" PointX="12.375" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

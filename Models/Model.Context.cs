@@ -33,7 +33,6 @@ namespace Shop.Models
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<BillDetail> BillDetails { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<Conversation> Conversations { get; set; }
         public virtual DbSet<FileAttach> FileAttaches { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
@@ -45,6 +44,7 @@ namespace Shop.Models
         public virtual DbSet<Bill> Bills { get; set; }
         public virtual DbSet<Coupon> Coupons { get; set; }
         public virtual DbSet<Blog> Blogs { get; set; }
+        public virtual DbSet<Conversation> Conversations { get; set; }
     
         public virtual ObjectResult<GetCategoryTable_Result> GetCategoryTable(Nullable<int> gender)
         {

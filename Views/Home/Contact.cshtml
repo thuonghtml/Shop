@@ -1,6 +1,11 @@
-﻿@{
+﻿@model Shop.Models.Conversation
+@{
     ViewBag.Title = "Contact";
     Layout = "~/Views/Shared/_Layout_Client.cshtml";
+}
+@section JavaScript {
+    @Scripts.Render("~/bundles/jqueryval")   
+    <script src="~/assets_client/page/Contact/contact.js"></script>
 }
 <!-- Title page -->
 <section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('../../assets_client/images/bg-01.jpg');">
@@ -15,24 +20,30 @@
     <div class="container">
         <div class="flex-w flex-tr">
             <div class="size-210 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md">
-                <form>
-                    <h4 class="mtext-105 cl2 txt-center p-b-30">
-                        Send Us A Message
-                    </h4>
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myFromConversation", @class = "validateDontSubmit" }))
+    {
+            @Html.AntiForgeryToken()
+            <h4 class="mtext-105 cl2 txt-center p-b-30">
+                Send Us A Message
+            </h4>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="bor8 m-b-20 how-pos4-parent">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "stext-111 cl2 plh3 size-116 p-l-62 p-r-30", @placeholder = "Your Email Address", @style = "margin-top:1px" } })
+                @*<input style="margin-top:5px" class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="email" placeholder="Your Email Address">*@
+                <img class="how-pos4 pointer-none" src="~/assets_client/images/icons/icon-email.png" alt="ICON">
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
 
-                    <div class="bor8 m-b-20 how-pos4-parent">
-                        <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="email" placeholder="Your Email Address">
-                        <img class="how-pos4 pointer-none" src="~/assets_client/images/icons/icon-email.png" alt="ICON">
-                    </div>
-
-                    <div class="bor8 m-b-30">
-                        <textarea class="stext-111 cl2 plh3 size-120 p-lr-28 p-tb-25" name="msg" placeholder="How Can We Help?"></textarea>
-                    </div>
-
-                    <button class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">
-                        Submit
-                    </button>
-                </form>
+            <div class="bor8 m-b-30">
+                @Html.TextAreaFor(model => model.Message, new { @class = "stext-111 cl2 plh3 size-120 p-lr-28 p-tb-25", @placeholder = "How Can We Help?" })
+                @*<textarea class="stext-111 cl2 plh3 size-120 p-lr-28 p-tb-25" name="msg" placeholder="How Can We Help?"></textarea>*@
+                @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+            </div>
+            
+            <button id="btn_summit_contact" type="submit" class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">
+                Submit
+            </button>
+}
             </div>
 
             <div class="size-210 bor10 flex-w flex-col-m p-lr-93 p-tb-30 p-lr-15-lg w-full-md">

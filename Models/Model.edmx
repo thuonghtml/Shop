@@ -133,8 +133,7 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.__MigrationHistory' does not ha
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ProductId" Type="int" />
-          <Property Name="Sender" Type="varchar" MaxLength="200" />
+          <Property Name="Email" Type="nvarchar" MaxLength="500" />
           <Property Name="Message" Type="nvarchar(max)" />
           <Property Name="DateCreate" Type="datetime" />
           <Property Name="Status" Type="bit" />
@@ -338,18 +337,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             </Principal>
             <Dependent Role="Product">
               <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Conversation_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
-          <End Role="Conversation" Type="Self.Conversation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Conversation">
-              <PropertyRef Name="ProductId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -626,10 +613,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             <End Role="Category" EntitySet="Category" />
             <End Role="Product" EntitySet="Product" />
           </AssociationSet>
-          <AssociationSet Name="FK_Conversation_Product" Association="Self.FK_Conversation_Product">
-            <End Role="Product" EntitySet="Product" />
-            <End Role="Conversation" EntitySet="Conversation" />
-          </AssociationSet>
           <AssociationSet Name="FK_Customer_AspNetUsers" Association="Self.FK_Customer_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="Customer" EntitySet="Customer" />
@@ -746,18 +729,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Name="Status" Type="Int32" />
           <NavigationProperty Name="Products" Relationship="Self.FK_Category" FromRole="Category" ToRole="Product" />
         </EntityType>
-        <EntityType Name="Conversation">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductId" Type="Int32" />
-          <Property Name="Sender" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DateCreate" Type="DateTime" Precision="3" />
-          <Property Name="Status" Type="Boolean" />
-          <NavigationProperty Name="Product" Relationship="Self.FK_Conversation_Product" FromRole="Conversation" ToRole="Product" />
-        </EntityType>
         <EntityType Name="FileAttach">
           <Key>
             <PropertyRef Name="Id" />
@@ -784,7 +755,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Name="Status" Type="Int32" />
           <NavigationProperty Name="BillDetails" Relationship="Self.FK_BillDetail_Product" FromRole="Product" ToRole="BillDetail" />
           <NavigationProperty Name="Category" Relationship="Self.FK_Category" FromRole="Product" ToRole="Category" />
-          <NavigationProperty Name="Conversations" Relationship="Self.FK_Conversation_Product" FromRole="Product" ToRole="Conversation" />
           <NavigationProperty Name="FileAttaches" Relationship="Self.FK_FileAttach_Product" FromRole="Product" ToRole="FileAttach" />
           <NavigationProperty Name="Warehouses" Relationship="STORE_DATABASEModel.FK_Warehouse_Product" FromRole="Product" ToRole="Warehouse" />
         </EntityType>
@@ -862,18 +832,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Conversation_Product">
-          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
-          <End Role="Conversation" Type="Self.Conversation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Product">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Conversation">
-              <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_FileAttach_Product">
           <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
           <End Role="FileAttach" Type="Self.FileAttach" Multiplicity="*" />
@@ -897,7 +855,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
           <EntitySet Name="BillDetails" EntityType="Self.BillDetail" />
           <EntitySet Name="Categories" EntityType="Self.Category" />
-          <EntitySet Name="Conversations" EntityType="Self.Conversation" />
           <EntitySet Name="FileAttaches" EntityType="Self.FileAttach" />
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
@@ -917,10 +874,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <AssociationSet Name="FK_Category" Association="Self.FK_Category">
             <End Role="Category" EntitySet="Categories" />
             <End Role="Product" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Conversation_Product" Association="Self.FK_Conversation_Product">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="Conversation" EntitySet="Conversations" />
           </AssociationSet>
           <AssociationSet Name="FK_FileAttach_Product" Association="Self.FK_FileAttach_Product">
             <End Role="Product" EntitySet="Products" />
@@ -1074,8 +1027,9 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Parameter Name="BillId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetProductWarehouse" ReturnType="Collection(STORE_DATABASEModel.GetProductWarehouse_Result)">
-            <Parameter Name="Category" Mode="In" Type="Int32" />
+          <Parameter Name="Category" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Conversations" EntityType="STORE_DATABASEModel.Conversation" />
         </EntityContainer>
         <ComplexType Name="GetCategoryTable_Result">
           <Property Type="Int32" Name="Id" Nullable="true" />
@@ -1508,6 +1462,16 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
           <Property Type="Int32" Name="id" Nullable="false" />
           <Property Type="String" Name="text" Nullable="true" MaxLength="500" />
         </ComplexType>
+        <EntityType Name="Conversation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreate" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="Boolean" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1582,18 +1546,6 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
                 <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
                 <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="ParentId" ColumnName="ParentId" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Conversations">
-            <EntityTypeMapping TypeName="STORE_DATABASEModel.Conversation">
-              <MappingFragment StoreEntitySet="Conversation">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
-                <ScalarProperty Name="Sender" ColumnName="Sender" />
-                <ScalarProperty Name="Message" ColumnName="Message" />
-                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2064,6 +2016,17 @@ warning 6002: The table/view 'STORE_DATABASE.dbo.MasterData' does not have a pri
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Conversations">
+            <EntityTypeMapping TypeName="STORE_DATABASEModel.Conversation">
+              <MappingFragment StoreEntitySet="Conversation">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
