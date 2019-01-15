@@ -291,15 +291,15 @@ $(document).ready(function () {
             { "data": "Address", "name": "Address", "autoWidth": true, "orderable": false, "searchable": false, "className": "text-left" },
 
 
-            {
-                "data": "Status", "name": "Status", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center",
-                "render": function (data, type, row) {
-                    if (data === 1)
-                        return "Active";
-                    else
-                        return "InActive";
-                }
-            },
+            //{
+            //    "data": "Status", "name": "Status", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center",
+            //    "render": function (data, type, row) {
+            //        if (data === 1)
+            //            return "Active";
+            //        else
+            //            return "InActive";
+            //    }
+            //},
             {
                 "data": {
                     "Id": "Id"
@@ -308,22 +308,34 @@ $(document).ready(function () {
                 "render": function (data, type, row) {
                     if (data.UserId == null) {
 
-                        return '<button type="button" data-id="' + data.Id + '" class="btncreateAccount btn btn-primary"><i class="ti-user"></i></button>'
+                        return '<button type="button" data-id="' + data.Id + '" class="btncreateAccount btn btn-primary"><i class="ti-user"></i>Create Account</button>'
                     }
                     else {
+                        if (data.UserId !== userId) {
+                            return '<button type="button" data-id="' + data.UserId + '" class="btnUpDateAccount btn btn-primary"><i class="ti-user"></i>Update Role</button>';
+                        }
                         return "";
                     }
 
                 }
             },
             {
-                "data": "Id", "name": "Action", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center dropdown",
+                "data": {
+                    "Id": "Id"
+                    , "UserId": "UserId"
+                }, "name": "Action", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center dropdown",
                 "render": function (data, type, row) {
-                    return '<button type="button" class="btn btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-angle-double-down"></i></button>' +
-                        '<div class="dropdown-menu dropdown-menu-right b-none contact-menu">' +
-                        '<a class="ChangeClassEmployee dropdown-item" href="#!" data-toggle="modal" data-target="#myEditCustomer"  data-id="' + data + '"><i class="icofont icofont-edit"></i>Edit</a>' +
-                        '<a href="#" id="abc" data-target="#my_modal" data-toggle="modal" data-type="1" class="identifyingClass dropdown-item" data-id="' + data + '"><i class="icofont icofont-ui-delete"></i> Delete</a>' +
-                        '</div>';
+                    if (data.UserId !== userId) {
+                        return '<button type="button" class="btn btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-angle-double-down"></i></button>' +
+                            '<div class="dropdown-menu dropdown-menu-right b-none contact-menu">' +
+                            '<a class="ChangeClassEmployee dropdown-item" href="#!" data-toggle="modal" data-target="#myEditCustomer"  data-id="' + data.Id + '"><i class="icofont icofont-edit"></i>Edit</a>' +
+                            '<a href="#" id="abc" data-target="#my_modal" data-toggle="modal" data-type="1" class="identifyingClass dropdown-item" data-id="' + data.Id + '"><i class="icofont icofont-ui-delete"></i> Delete</a>' +
+                            '</div>';
+                    }
+                    else {
+                        return "";
+                    }
+                   
                 }
             }
         ]
@@ -395,15 +407,15 @@ $(document).ready(function () {
             },
 
 
-            {
-                "data": "Status", "name": "Status", "autoWidth": true, "orderable": false, "searchable": false, "orderable": false, "className": "text-center",
-                "render": function (data, type, row) {
-                    if (data === 1)
-                        return "Active";
-                    else
-                        return "InActive";
-                }
-            },
+            //{
+            //    "data": "Status", "name": "Status", "autoWidth": true, "orderable": false, "searchable": false, "orderable": false, "className": "text-center",
+            //    "render": function (data, type, row) {
+            //        if (data === 1)
+            //            return "Active";
+            //        else
+            //            return "InActive";
+            //    }
+            //},
             {
                 "data": "Id", "name": "Action", "autoWidth": true, "searchable": false, "orderable": false, "className": "text-center dropdown",
                 "render": function (data, type, row) {
@@ -434,10 +446,22 @@ $(document).ready(function () {
         }
     });
     $("#btn_create_customer").on("click", function () {
+        $('.modal-body #hiddenValue_change').val("");
+        $('.modal-body #EmployeeName').val("");
+        $('.modal-body #datetimepickerBirthDate_emp').val("");
+        $('.modal-body #Email').val("");
+        $('.modal-body #PhoneNumber').val("");
+        $('.modal-body #Address').val("");
         $("#modalLabel").text("Create Customer")
         $(".modal-body #typeChange").val(4);
     })
     $("#btn_create_employee").on("click", function () {
+        $('.modal-body #hiddenValue_change').val("");
+        $('.modal-body #EmployeeName').val("");
+        $('.modal-body #datetimepickerBirthDate_emp').val("");
+        $('.modal-body #Email').val("");
+        $('.modal-body #PhoneNumber').val("");
+        $('.modal-body #Address').val("");
         $("#modalLabel").text("Create Employee")
         $(".modal-body #typeChange").val(3);
     })
@@ -570,9 +594,19 @@ $(document).ready(function () {
     })
     $(document).on('click', '.btncreateAccount', function () {
         var my_id_value = $(this).attr('data-id')
-        $.get("/Account/CreateAccountModel", function (data) {
+        $.get("/Account/CreateAccountModel", function (data) {  
             $('#content_modal').html(data);
             $(".modal-body #id_create").val(my_id_value);
+            $("#myModalLabelCreateACC").text("Create Account")  
+            $('#modal_createAccount').modal('show');
+        });
+    })
+    $(document).on('click', '.btnUpDateAccount', function () {
+        var my_id_value = $(this).attr('data-id')
+        $.get("/Account/UpdateRoleModel", function (data) {
+            $('#content_modal').html(data);
+            $(".modal-body #id_create").val(my_id_value);
+            $("#myModalLabelCreateACC").text("Update Role Account")
             $('#modal_createAccount').modal('show');
         });
     })
@@ -589,6 +623,48 @@ $(document).ready(function () {
             $.ajax({
                 type: "POST",
                 url: "/Account/CreateAccount",
+                contentType: false,
+                processData: false,
+                data: form,
+                beforeSend: function () {
+                    e.preventDefault();
+                },
+                success: function (data) {
+                    //e.preventDefault();
+                    if (data != null && data.success) {
+                        $("#modal_createAccount").modal('hide')
+                        table_emp.draw(false);
+                        RenderMess("success", data.mess)
+
+                    } else if (data != null && !data.success) {
+                        $("#modal_createAccount").modal('hide')
+                        RenderMess("error", data.mess)
+                    }
+                },
+                error: function (xhr, status, errorThrown) {
+                    $(".modal_createAccount").modal('hide')
+                    RenderMess("error", "Lỗi Action")
+                }
+            })
+        }
+        return false;
+
+    })
+    $(document).on('click', "#btn_SaveRole", function (e) {
+        console.log(1111)
+        var id = $(".modal-body #id_create").val()
+        $('#myFromUpdateRole').removeData("validator");
+        $.validator.unobtrusive.parse($('#myFromUpdateRole'));
+        
+        if ($('#myFromUpdateRole').valid()) {
+            // $('#myFromCreateAccount').submit();
+            var myform = document.getElementById("myFromUpdateRole");
+            e.preventDefault();
+            var form = new FormData(myform);
+            form.append("Id", id);
+            $.ajax({
+                type: "POST",
+                url: "/Account/UpdateRole",
                 contentType: false,
                 processData: false,
                 data: form,

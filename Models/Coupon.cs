@@ -11,7 +11,8 @@ namespace Shop.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Coupon
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,13 +22,23 @@ namespace Shop.Models
         }
     
         public int Id { get; set; }
+        [Required]
+        [StringLength(100)]
         public string CouponCode { get; set; }
+        [Required]
+        [Range(5000,500000)]
         public Nullable<double> Price { get; set; }
         public Nullable<System.DateTime> DateCreate { get; set; }
+        [Required]
         public Nullable<System.DateTime> DateBegin { get; set; }
+        [Required]
         public Nullable<System.DateTime> DateEnd { get; set; }
         public Nullable<int> Status { get; set; }
+        [Required]
+        [Range(0,100)]
         public Nullable<int> Quantity { get; set; }
+        [Required]
+        [Range(0, 100)]
         public Nullable<int> QuantityRemaining { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

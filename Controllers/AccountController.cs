@@ -99,6 +99,34 @@ namespace Shop.Controllers
                     return View(model);
             }
         }
+        [AllowAnonymous]
+        public ActionResult ChangePassword()
+        {
+            ViewData["Login"] = null;
+            return View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(FogotPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+               
+                var result = await UserManager.FindAsync(model.UserName, model.PasswordOld);  
+                if (result != null)
+                {
+                    await UserManager.RemovePasswordAsync(result.Id);
+                    await UserManager.AddPasswordAsync(result.Id, model.PasswordNew);
+                    return RedirectToAction("Login", "Account");   // muốn return về đầu thì return về đó
+                }     
+                ModelState.AddModelError("errorLogin", "User name or password is incorrect!"); 
+                ViewData["Login"] = ModelState["errorLogin"].Errors[0].ErrorMessage;
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
 
         //
         // GET: /Account/VerifyCode
@@ -233,10 +261,10 @@ namespace Shop.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
@@ -493,7 +521,7 @@ namespace Shop.Controllers
 
         public ActionResult CreateAccountModel()
         {
-            ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin")&& !u.Name.Contains("Customers")).ToList(), "Name", "Name");
+            ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin") && !u.Name.Contains("Customers")).ToList(), "Name", "Name");
             return View();
         }
         public async Task<ActionResult> CreateAccount(FormCollection form)
@@ -502,11 +530,11 @@ namespace Shop.Controllers
             {
 
                 int id = Convert.ToInt32(form["Id"]);
-                string username = Convert.ToString(form["UserName"]); 
+                string username = Convert.ToString(form["UserName"]);
                 string pass = Convert.ToString(form["Password"]);
                 string confirm = Convert.ToString(form["ConfirmPassword"]);
                 string role = Convert.ToString(form["UserRoles"]);
-                var emp = db.Employees.SingleOrDefault(e => e.Id == id && e.Status ==1);
+                var emp = db.Employees.SingleOrDefault(e => e.Id == id && e.Status == 1);
                 if (emp != null)
                 {
                     var user = new ApplicationUser { UserName = username, Email = emp.Email };
@@ -533,6 +561,42 @@ namespace Shop.Controllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+
+        }
+
+        public ActionResult UpdateRoleModel()
+        {
+
+            ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin") && !u.Name.Contains("Customers")).ToList(), "Name", "Name");
+            return View();
+        }
+        public async Task<ActionResult> UpdateRole(FormCollection form)
+        {
+            try
+            {
+                string id = Convert.ToString(form["Id"]);
+                string role = Convert.ToString(form["UserRoles"]);
+                var user = UserManager.FindById(id);
+                string roleold = UserManager.GetRoles(user.Id).FirstOrDefault();
+                
+                if (user != null)
+                {
+                    await this.UserManager.RemoveFromRolesAsync(id,roleold);
+                    await this.UserManager.AddToRoleAsync(id, role);
+                    return Json(new { success = true, mess = "Đã cập nhật thành công!" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { success = false, mess = "Nhân viên không còn tồn tại" }, JsonRequestBehavior.AllowGet);
+                }
+                
+
+            }
+            catch (Exception ex)
+            {
+               
+                return Json(new { success = false, mess = "Lỗi:"+ ex}, JsonRequestBehavior.AllowGet);
             }
 
         }

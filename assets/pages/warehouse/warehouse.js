@@ -402,7 +402,7 @@
                     
                 }
                 else {
-                    RenderMess("error", "Xóa thất bại!");
+                    RenderMess("error", result.messs);
                 }
             },
             error: function (err) {

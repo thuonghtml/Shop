@@ -110,15 +110,24 @@ namespace Shop.Controllers
         {
             try
             {
-                var war = db.Warehouses.Single(p => p.Id == id);
+                var war = db.Warehouses.Single(p => p.Id == id && p.Status == 1);
                 if (war != null)
                 {
-                    war.Status = 0;
-                    db.SaveChanges();
-                    return Json(new { success = true, mess = "Đã xóa thành công " + war.Product.ProductName + " - " + war.Size + " - " + war.Color }, JsonRequestBehavior.AllowGet);
+                    if (war.NumberOrder > 0 && User.IsInRole("Employee"))
+                    {
+                        return Json(new { success = false, mess = "Sản phẩm đang có đơn hàng order không thể xóa!" }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        war.Status = 0;
+                        db.SaveChanges();
+                        return Json(new { success = true, mess = "Đã xóa thành công " + war.Product.ProductName + " - " + war.Size + " - " + war.Color }, JsonRequestBehavior.AllowGet);
+                    }
+
                 }
+
                 else
-                    return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = false, mess = "Không tồn sản phẩm trong kho" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

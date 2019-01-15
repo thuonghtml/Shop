@@ -7,7 +7,7 @@
 <html lang="en">
 
 <head>
-    <title>Mash Able Light</title>
+    <title>Register</title>
     <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -62,32 +62,40 @@
     {
                             @Html.AntiForgeryToken()
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            <div class="input-group">
+                            <div class="form-group">
                                 @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", @placeholder = "FullName" })
+                                @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger", @style = "float: left" })
                                 <span class="md-line"></span>
                             </div>
-                            <div class="input-group">
+                            <div class="form-group">
                                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email" })
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger", @style = "float: left" })
                                 <span class="md-line"></span>
                             </div>
-                            <div class="input-group">
+
+                            <div class="form-group">
                                 @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", @placeholder = "PhoneNumber" })
+                                @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger", @style = "float: left" })
                                 <span class="md-line"></span>
                             </div>
-                            <div class="input-group">
+                            <div class="form-group">
                                 @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @placeholder = "Address" })
+                                @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger", @style = "float: left" })
                                 <span class="md-line"></span>
                             </div>
-                            <div class="input-group">
+                            <div class="form-group">
                                 @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Username" })
+                                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger", @style = "float: left" })
                                 <span class="md-line"></span>
                             </div>
-                            <div class="input-group">
+                            <div class="form-group">
                                 @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger", @style = "float: left" })
                                 <span class="md-line"></span>
                             </div>
                             <div class="input-group">
                                 @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Confirm Password" })
+                                @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger", @style = "float: left" })
                                 <span class="md-line"></span>
                             </div>
 

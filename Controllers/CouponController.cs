@@ -151,7 +151,7 @@ namespace Shop.Controllers
 
                 var coupon = db.Coupons.Single(e => e.Id == id && e.Status == 1);
                 if (coupon != null)
-                {
+                {        
                     coupon.Status = 0;
                     db.SaveChanges();
                     return Json(new { success = true, mess = "Đã xóa thành công " + coupon.CouponCode }, JsonRequestBehavior.AllowGet);

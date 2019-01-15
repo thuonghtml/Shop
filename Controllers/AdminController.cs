@@ -30,6 +30,7 @@ namespace Shop.Controllers
             string userId = User.Identity.GetUserId();
             var emp = db.Employees.SingleOrDefault(i => i.UserId.Equals(userId));
             ViewBag.Employee = emp;
+            ViewBag.UserId = userId;
             ViewBag.IdEmp = emp.Id;
             return View();
         }

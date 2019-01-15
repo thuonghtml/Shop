@@ -174,9 +174,21 @@ namespace Shop.Controllers
         {
             try
             {
-                var product = db.Products.Single(p => p.Id == id);
+                var product = db.Products.Single(p => p.Id == id && p.Status==1);
                 if (product != null)
                 {
+                    bool ckeckkho = true;
+                    foreach (var item in product.Warehouses)  // Xóa line trong kho
+                    {
+                        if (item.NumberOrder > 0)
+                        {
+                            ckeckkho = false;
+                        }
+                    }
+                    if(ckeckkho== false && User.IsInRole("Employee"))
+                    {
+                        return Json(new { success = false, mess = "Sản phẩm đang được order đơn hàng nên không thể xóa" }, JsonRequestBehavior.AllowGet);
+                    }
                     product.Status = 0;
                     foreach (var item in product.FileAttaches) // Xóa file 
                     {
@@ -190,7 +202,7 @@ namespace Shop.Controllers
                     return Json(new { success = true, mess = "Đã xóa thành công " + product.ProductName }, JsonRequestBehavior.AllowGet);
                 }
                 else
-                    return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = false,mess= "Không còn tồn tại sản phẩm" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

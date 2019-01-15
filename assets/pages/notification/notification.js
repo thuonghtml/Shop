@@ -65,7 +65,7 @@ $(document).ready(function() {
 
     if (loginnotify !== '')
     {
-        notify("top","right","fa fa-check" ,"danger", "animated fadeInRight", "animated fadeOutRight", "Login: ", loginnotify);
+        notify("top","right","fa fa-check" ,"danger", "animated fadeInRight", "animated fadeOutRight", " ", loginnotify);
     }
    
 });
